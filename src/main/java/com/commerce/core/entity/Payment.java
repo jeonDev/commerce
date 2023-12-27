@@ -1,6 +1,6 @@
 package com.commerce.core.entity;
 
-import com.commerce.core.vo.type.PaymentStatus;
+import com.commerce.core.vo.common.type.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

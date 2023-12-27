@@ -1,4 +1,4 @@
-package com.commerce.core.service;
+package com.commerce.core.service.product;
 
 public interface ProductStockService {
     void register();

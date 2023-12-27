@@ -1,26 +1,27 @@
-package com.commerce.core.service;
+package com.commerce.core.service.product;
 
 import com.commerce.core.entity.Product;
-import com.commerce.core.vo.ProductDto;
+import com.commerce.core.vo.product.ProductDto;
 
 import java.util.List;
 
 public interface ProductService {
+
     /**
-     * 상품 등록
+     * Product Add
      * @param dto
      */
     ProductDto add(ProductDto dto);
 
     /**
-     * 상품 조회 (List)
+     * Select Product List
      * @param dto
      * @return
      */
     List<Product> selectProductList(ProductDto dto);
 
     /**
-     * 상품 조회
+     * Select Product Detail
      * @param dto
      * @return
      */

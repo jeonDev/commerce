@@ -1,6 +1,6 @@
 package com.commerce.core.entity;
 
-import com.commerce.core.vo.type.OrderStatus;
+import com.commerce.core.vo.common.type.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
