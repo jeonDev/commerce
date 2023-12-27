@@ -25,9 +25,8 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public ProductDto add(ProductDto dto) {
-        return productRepository.save(dto.dtoToEntity())
-                .entityToDto();
+    public Product add(ProductDto dto) {
+        return productRepository.save(dto.dtoToEntity());
     }
 
     /**
@@ -47,9 +46,8 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public ProductDto selectProduct(ProductDto dto) {
+    public Product selectProduct(ProductDto dto) {
         return productRepository.findById(dto.getProductSeq())
-                .orElseThrow()
-                .entityToDto();
+                .orElseThrow();
     }
 }

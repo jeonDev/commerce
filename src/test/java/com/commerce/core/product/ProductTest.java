@@ -1,5 +1,6 @@
 package com.commerce.core.product;
 
+import com.commerce.core.entity.Product;
 import com.commerce.core.service.product.ProductService;
 import com.commerce.core.vo.product.ProductDto;
 import org.junit.jupiter.api.Test;
@@ -21,8 +22,8 @@ public class ProductTest {
         String productName = "BB";
         ProductDto dto = new ProductDto();
         dto.setProductName(productName);
-        ProductDto result = productService.add(dto);
+        Product result = productService.add(dto);
 
-        assertThat(productName).isEqualTo(productService.selectProduct(result).getProductName());
+        assertThat(productName).isEqualTo(productService.selectProduct(result.entityToDto()).getProductName());
     }
 }

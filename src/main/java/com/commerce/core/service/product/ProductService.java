@@ -11,7 +11,7 @@ public interface ProductService {
      * Product Add
      * @param dto
      */
-    ProductDto add(ProductDto dto);
+    Product add(ProductDto dto);
 
     /**
      * Select Product List
@@ -25,5 +25,5 @@ public interface ProductService {
      * @param dto
      * @return
      */
-    ProductDto selectProduct(ProductDto dto);
+    Product selectProduct(ProductDto dto);
 }

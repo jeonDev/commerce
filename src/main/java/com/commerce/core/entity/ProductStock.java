@@ -25,4 +25,8 @@ public class ProductStock extends BaseEntity {
     @Column(name = "STOCK")
     private Long stock;
 
+    public void inventoryAdjustment(Long stock) {
+        this.stock += stock;
+    }
+
 }

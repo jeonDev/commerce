@@ -1,0 +1,21 @@
+package com.commerce.core.vo.product;
+
+import com.commerce.core.entity.ProductStock;
+import lombok.*;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class ProductStockDto {
+
+    private Long productSeq;
+    private Long stock;
+
+    public ProductStock dtoToEntity() {
+        return ProductStock.builder()
+                .productSeq(productSeq)
+                .stock(stock)
+                .build();
+    }
+}
