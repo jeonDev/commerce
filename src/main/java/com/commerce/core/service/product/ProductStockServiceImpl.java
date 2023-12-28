@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -26,9 +27,9 @@ public class ProductStockServiceImpl implements ProductStockService {
     private final ProductStockHistoryRepository productStockHistoryRepository;
     private final ProductService productService;
 
-    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
-    @Transactional
     @Override
+    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ProductStock adjustment(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크
         Product product = this.getProductDetail(dto);
@@ -42,6 +43,9 @@ public class ProductStockServiceImpl implements ProductStockService {
         } else {
             entity = dto.dtoToEntity();
         }
+
+        if(STOCK_SOLD_OUT_COUNT >= entity.getStock())
+            throw new IllegalStateException("재고 0");
 
         entity = productStockRepository.save(entity);
 
