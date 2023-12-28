@@ -22,7 +22,7 @@ public class RedissonLockAspect {
 
     private final RedissonClient redissonClient;
 
-    @Around("@annotation(com.commerce.core.config.redis.RedissonLockTarget)")
+    @Around("@annotation(com.commerce.core.common.redis.RedissonLockTarget)")
     public Object redisLockAspect(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("Redisson Proxy 호출!!");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
