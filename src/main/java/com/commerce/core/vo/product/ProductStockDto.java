@@ -13,11 +13,9 @@ public class ProductStockDto {
     private Long productSeq;
     private Long stock;
 
-    public ProductStock dtoToEntity() {
+    public ProductStock dtoToEntity(Product product) {
         return ProductStock.builder()
-                .product(Product.builder()
-                        .productSeq(productSeq)
-                        .build())
+                .product(product)
                 .stock(stock)
                 .build();
     }

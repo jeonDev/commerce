@@ -1,5 +1,6 @@
 package com.commerce.core.product;
 
+import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.entity.ProductStock;
 import com.commerce.core.service.product.ProductStockService;
 import com.commerce.core.vo.product.ProductStockDto;
@@ -20,9 +21,15 @@ public class ProductStockTest {
         ProductStockDto dto = new ProductStockDto();
         dto.setProductSeq(1L);
         dto.setStock(100L);
-        ProductStock productStock = productStockService.selectProductStock(dto);
+        Long beforeStock = 0L;
+        try {
+            ProductStock productStock = productStockService.selectProductStock(dto);
+            beforeStock = productStock.getStock();
+        } catch (CommerceException e) {
+
+        }
         ProductStock register = productStockService.adjustment(dto);
 
-        assertThat(register.getStock()).isEqualTo(productStock.getStock() + dto.getStock());
+        assertThat(register.getStock()).isEqualTo(beforeStock + dto.getStock());
     }
 }

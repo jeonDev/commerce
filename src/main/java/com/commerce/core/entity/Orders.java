@@ -24,8 +24,4 @@ public class Orders extends BaseEntity {
     @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
 
-    @Column(name = "ORDER_STATUS")
-    private OrderStatus orderStatus;
-
-
 }
