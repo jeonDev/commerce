@@ -1,4 +1,4 @@
-package com.commerce.core.config.redis;
+package com.commerce.core.common.redis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

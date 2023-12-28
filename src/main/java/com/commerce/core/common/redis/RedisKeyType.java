@@ -1,4 +1,4 @@
-package com.commerce.core.config.redis;
+package com.commerce.core.common.redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

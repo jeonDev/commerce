@@ -1,4 +1,4 @@
-package com.commerce.core.config;
+package com.commerce.core.common.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
