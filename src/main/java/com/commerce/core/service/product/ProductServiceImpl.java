@@ -1,5 +1,7 @@
 package com.commerce.core.service.product;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.entity.Product;
 import com.commerce.core.entity.repository.dsl.ProductDslRepository;
 import com.commerce.core.entity.repository.ProductRepository;
@@ -48,6 +50,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product selectProduct(ProductDto dto) {
         return productRepository.findById(dto.getProductSeq())
-                .orElseThrow();
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
 }

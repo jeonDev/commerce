@@ -1,5 +1,7 @@
 package com.commerce.core.service.product;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.entity.Product;
 import com.commerce.core.entity.ProductStock;
 import com.commerce.core.entity.repository.ProductStockHistoryRepository;
@@ -31,7 +33,7 @@ public class ProductStockTestImpl implements ProductStockService {
         // 1. 상품 존재 여부 체크
         Product product = this.getProductDetail(dto);
 
-        // 2. 재고 조정 (기존 데이터 존재여부 체크)
+        // 2. 재고 조정 (기존 데이터 존재 여부 체크)
         ProductStock entity = null;
         Optional<ProductStock> optionalProductStock = productStockRepository.findWithPessimisticLockByProductSeq(product.getProductSeq());
         if(optionalProductStock.isPresent()) {
@@ -42,7 +44,7 @@ public class ProductStockTestImpl implements ProductStockService {
         }
 
         if(STOCK_SOLD_OUT_COUNT >= entity.getStock())
-            throw new IllegalStateException("재고 0");
+            throw new CommerceException(ExceptionStatus.SOLD_OUT);
 
         entity = productStockRepository.save(entity);
 
@@ -54,7 +56,7 @@ public class ProductStockTestImpl implements ProductStockService {
     @Override
     public ProductStock selectProductStock(ProductStockDto dto) {
         return productStockRepository.findById(dto.getProductSeq())
-                .orElseThrow();
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
 
     /**
@@ -64,9 +66,7 @@ public class ProductStockTestImpl implements ProductStockService {
      */
     private Product getProductDetail(ProductStockDto dto) {
         ProductDto productDto = ProductDto.builder().productSeq(dto.getProductSeq()).build();
-        Product product = productService.selectProduct(productDto);
-        if(product == null) throw new IllegalArgumentException();
-        return product;
+        return productService.selectProduct(productDto);
     }
 
     /**
