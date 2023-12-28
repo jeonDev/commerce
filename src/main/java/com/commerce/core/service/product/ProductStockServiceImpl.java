@@ -1,7 +1,7 @@
 package com.commerce.core.service.product;
 
-import com.commerce.core.config.redis.RedissonLockTarget;
-import com.commerce.core.config.redis.RedisKeyType;
+import com.commerce.core.common.redis.RedissonLockTarget;
+import com.commerce.core.common.redis.RedisKeyType;
 import com.commerce.core.entity.Product;
 import com.commerce.core.entity.ProductStock;
 import com.commerce.core.entity.repository.ProductStockRepository;
@@ -27,15 +27,13 @@ public class ProductStockServiceImpl implements ProductStockService {
     @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
     @Transactional
     @Override
-    public ProductStock register(ProductStockDto dto) {
+    public ProductStock adjustment(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크
-        ProductDto productDto = ProductDto.builder().productSeq(dto.getProductSeq()).build();
-        Product product = productService.selectProduct(productDto);
-        if(product == null) throw new IllegalArgumentException();
+        Product product = this.getProductDetail(dto);
 
         // 2. 재고 조정 (기존 데이터 존재여부 체크)
         ProductStock entity = null;
-        Optional<ProductStock> optionalProductStock = productStockRepository.findById(dto.getProductSeq());
+        Optional<ProductStock> optionalProductStock = productStockRepository.findById(product.getProductSeq());
         if(optionalProductStock.isPresent()) {
             entity = optionalProductStock.get();
             entity.inventoryAdjustment(dto.getStock());
@@ -46,12 +44,20 @@ public class ProductStockServiceImpl implements ProductStockService {
     }
 
     @Override
-    public ProductStock released(ProductStockDto dto) {
-        return null;
+    public ProductStock selectProductStock(ProductStockDto dto) {
+        return productStockRepository.findById(dto.getProductSeq())
+                .orElseThrow();
     }
 
-    @Override
-    public ProductStock selectProductStock(ProductStockDto dto) {
-        return null;
+    /**
+     * 상품 존재 여부 체크
+     * @param dto
+     * @return
+     */
+    private Product getProductDetail(ProductStockDto dto) {
+        ProductDto productDto = ProductDto.builder().productSeq(dto.getProductSeq()).build();
+        Product product = productService.selectProduct(productDto);
+        if(product == null) throw new IllegalArgumentException();
+        return product;
     }
 }

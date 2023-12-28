@@ -8,18 +8,11 @@ import com.commerce.core.vo.product.ProductStockDto;
  */
 public interface ProductStockService {
     /**
-     * Product Stock Register
+     * Product Stock Adjustment
      * @param dto
      * @return
      */
-    ProductStock register(ProductStockDto dto);
-
-    /**
-     * Product Stock released
-     * @param dto
-     * @return
-     */
-    ProductStock released(ProductStockDto dto);
+    ProductStock adjustment(ProductStockDto dto);
 
     /**
      * Select Product Stock

@@ -16,12 +16,13 @@ public class ProductStockTest {
     private ProductStockService productStockService;
 
     @Test
-    void productStockAdd() {
+    void productStockAdjustment() {
         ProductStockDto dto = new ProductStockDto();
         dto.setProductSeq(1L);
         dto.setStock(100L);
-        ProductStock register = productStockService.register(dto);
+        ProductStock productStock = productStockService.selectProductStock(dto);
+        ProductStock register = productStockService.adjustment(dto);
 
-        assertThat(register.getStock()).isEqualTo(100L);
+        assertThat(register.getStock()).isEqualTo(productStock.getStock() + dto.getStock());
     }
 }

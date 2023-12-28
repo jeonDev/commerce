@@ -1,11 +1,16 @@
 package com.commerce.core.service.product;
 
+import com.commerce.core.entity.Product;
 import com.commerce.core.entity.ProductStock;
+import com.commerce.core.entity.repository.ProductStockRepository;
+import com.commerce.core.vo.product.ProductDto;
 import com.commerce.core.vo.product.ProductStockDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -13,18 +18,41 @@ import org.springframework.stereotype.Service;
 @Profile("test")
 public class ProductStockTestImpl implements ProductStockService {
 
-    @Override
-    public ProductStock register(ProductStockDto dto) {
-        return null;
-    }
+    private final ProductStockRepository productStockRepository;
+    private final ProductService productService;
 
     @Override
-    public ProductStock released(ProductStockDto dto) {
-        return null;
+    public ProductStock adjustment(ProductStockDto dto) {
+        // 1. 상품 존재 여부 체크
+        Product product = this.getProductDetail(dto);
+
+        // 2. 재고 조정 (기존 데이터 존재여부 체크)
+        ProductStock entity = null;
+        Optional<ProductStock> optionalProductStock = productStockRepository.findById(product.getProductSeq());
+        if(optionalProductStock.isPresent()) {
+            entity = optionalProductStock.get();
+            entity.inventoryAdjustment(dto.getStock());
+        } else {
+            entity = dto.dtoToEntity();
+        }
+        return productStockRepository.save(entity);
     }
 
     @Override
     public ProductStock selectProductStock(ProductStockDto dto) {
-        return null;
+        return productStockRepository.findById(dto.getProductSeq())
+                .orElseThrow();
+    }
+
+    /**
+     * 상품 존재 여부 체크
+     * @param dto
+     * @return
+     */
+    private Product getProductDetail(ProductStockDto dto) {
+        ProductDto productDto = ProductDto.builder().productSeq(dto.getProductSeq()).build();
+        Product product = productService.selectProduct(productDto);
+        if(product == null) throw new IllegalArgumentException();
+        return product;
     }
 }
