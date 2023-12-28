@@ -1,10 +1,7 @@
 package com.commerce.core.entity;
 
 import com.commerce.core.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +17,12 @@ public class ProductStock extends BaseEntity {
 
     @Id
     @Column(name = "PRODUCT_SEQ")
-    private Long productSeq;
+    private Long id;
+
+    @MapsId
+    @OneToOne
+    @JoinColumn(name = "PRODUCT_SEQ")
+    private Product product;
 
     @Column(name = "STOCK")
     private Long stock;
@@ -35,7 +37,7 @@ public class ProductStock extends BaseEntity {
      */
     public ProductStockHistory generateHistoryEntity() {
         return ProductStockHistory.builder()
-                .productHistorySeq(productSeq)
+                .product(product)
                 .stock(stock)
                 .build();
     }

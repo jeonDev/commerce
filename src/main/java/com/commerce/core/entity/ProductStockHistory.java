@@ -19,8 +19,9 @@ public class ProductStockHistory extends BaseEntity {
     @Column(name = "PRODUCT_HISTORY_SEQ")
     private Long productHistorySeq;
 
-    @Column(name = "PRODUCT_SEQ")
-    private Long productSeq;
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_SEQ")
+    private Product product;
 
     @Column(name = "STOCK")
     private Long stock;

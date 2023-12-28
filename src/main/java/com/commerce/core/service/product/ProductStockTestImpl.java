@@ -35,7 +35,7 @@ public class ProductStockTestImpl implements ProductStockService {
 
         // 2. 재고 조정 (기존 데이터 존재 여부 체크)
         ProductStock entity = null;
-        Optional<ProductStock> optionalProductStock = productStockRepository.findWithPessimisticLockByProductSeq(product.getProductSeq());
+        Optional<ProductStock> optionalProductStock = productStockRepository.findWithPessimisticLockById(product.getProductSeq());
         if(optionalProductStock.isPresent()) {
             entity = optionalProductStock.get();
             entity.inventoryAdjustment(dto.getStock());

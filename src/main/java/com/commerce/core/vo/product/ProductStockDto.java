@@ -1,5 +1,6 @@
 package com.commerce.core.vo.product;
 
+import com.commerce.core.entity.Product;
 import com.commerce.core.entity.ProductStock;
 import lombok.*;
 
@@ -14,7 +15,9 @@ public class ProductStockDto {
 
     public ProductStock dtoToEntity() {
         return ProductStock.builder()
-                .productSeq(productSeq)
+                .product(Product.builder()
+                        .productSeq(productSeq)
+                        .build())
                 .stock(stock)
                 .build();
     }
