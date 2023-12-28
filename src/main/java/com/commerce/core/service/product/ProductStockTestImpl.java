@@ -2,6 +2,7 @@ package com.commerce.core.service.product;
 
 import com.commerce.core.entity.Product;
 import com.commerce.core.entity.ProductStock;
+import com.commerce.core.entity.repository.ProductStockHistoryRepository;
 import com.commerce.core.entity.repository.ProductStockRepository;
 import com.commerce.core.vo.product.ProductDto;
 import com.commerce.core.vo.product.ProductStockDto;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class ProductStockTestImpl implements ProductStockService {
 
     private final ProductStockRepository productStockRepository;
+    private final ProductStockHistoryRepository productStockHistoryRepository;
     private final ProductService productService;
 
     @Override
@@ -28,14 +30,19 @@ public class ProductStockTestImpl implements ProductStockService {
 
         // 2. 재고 조정 (기존 데이터 존재여부 체크)
         ProductStock entity = null;
-        Optional<ProductStock> optionalProductStock = productStockRepository.findById(product.getProductSeq());
+        Optional<ProductStock> optionalProductStock = productStockRepository.findWithPessimisticLockByProductSeq(product.getProductSeq());
         if(optionalProductStock.isPresent()) {
             entity = optionalProductStock.get();
             entity.inventoryAdjustment(dto.getStock());
         } else {
             entity = dto.dtoToEntity();
         }
-        return productStockRepository.save(entity);
+
+        entity = productStockRepository.save(entity);
+
+        // 3. 재고 처리 내역 저장
+        this.saveHistoryEntity(entity);
+        return entity;
     }
 
     @Override
@@ -54,5 +61,13 @@ public class ProductStockTestImpl implements ProductStockService {
         Product product = productService.selectProduct(productDto);
         if(product == null) throw new IllegalArgumentException();
         return product;
+    }
+
+    /**
+     * 재고 처리 내역 저장
+     * @param entity
+     */
+    private void saveHistoryEntity(ProductStock entity) {
+        productStockHistoryRepository.save(entity.generateHistoryEntity());
     }
 }

@@ -29,4 +29,15 @@ public class ProductStock extends BaseEntity {
         this.stock += stock;
     }
 
+    /**
+     * History Entity Generate
+     * @return
+     */
+    public ProductStockHistory generateHistoryEntity() {
+        return ProductStockHistory.builder()
+                .productHistorySeq(productSeq)
+                .stock(stock)
+                .build();
+    }
+
 }

@@ -4,6 +4,7 @@ import com.commerce.core.common.redis.RedissonLockTarget;
 import com.commerce.core.common.redis.RedisKeyType;
 import com.commerce.core.entity.Product;
 import com.commerce.core.entity.ProductStock;
+import com.commerce.core.entity.repository.ProductStockHistoryRepository;
 import com.commerce.core.entity.repository.ProductStockRepository;
 import com.commerce.core.vo.product.ProductDto;
 import com.commerce.core.vo.product.ProductStockDto;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class ProductStockServiceImpl implements ProductStockService {
 
     private final ProductStockRepository productStockRepository;
+    private final ProductStockHistoryRepository productStockHistoryRepository;
     private final ProductService productService;
 
     @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
@@ -40,7 +42,12 @@ public class ProductStockServiceImpl implements ProductStockService {
         } else {
             entity = dto.dtoToEntity();
         }
-        return productStockRepository.save(entity);
+
+        entity = productStockRepository.save(entity);
+
+        // 3. 재고 처리 내역 저장
+        this.saveHistoryEntity(entity);
+        return entity;
     }
 
     @Override
@@ -59,5 +66,13 @@ public class ProductStockServiceImpl implements ProductStockService {
         Product product = productService.selectProduct(productDto);
         if(product == null) throw new IllegalArgumentException();
         return product;
+    }
+
+    /**
+     * 재고 처리 내역 저장
+     * @param entity
+     */
+    private void saveHistoryEntity(ProductStock entity) {
+        productStockHistoryRepository.save(entity.generateHistoryEntity());
     }
 }
