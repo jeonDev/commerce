@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 @Order(1)
+@Profile("basic")
 public class RedissonLockAspect {
 
     private final RedissonClient redissonClient;
