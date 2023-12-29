@@ -1,6 +1,5 @@
 package com.commerce.core.entity;
 
-import com.commerce.core.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

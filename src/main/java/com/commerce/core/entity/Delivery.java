@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Table(name = "DELIVERY")
-public class Delivery {
+public class Delivery extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
