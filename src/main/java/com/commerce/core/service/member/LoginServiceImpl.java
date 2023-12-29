@@ -4,7 +4,7 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.entity.Member;
 import com.commerce.core.entity.repository.MemberRepository;
-import com.commerce.core.vo.member.MemberDto;
+import com.commerce.core.vo.member.LoginDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,20 +12,23 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MemberServiceImpl implements MemberService {
+public class LoginServiceImpl implements LoginService {
 
     private final MemberRepository memberRepository;
 
     @Override
-    public Member createMember(MemberDto dto) {
-        dto.setPassword("");
-        Member member = dto.dtoToEntity();
-        return memberRepository.save(member);
-    }
+    public void login(LoginDto dto) {
+        String id = dto.getId();
+        String encPassword = dto.getPassword(); // TODO: 암호화
 
-    @Override
-    public Member selectMember(Long memberSeq) {
-        return memberRepository.findById(memberSeq)
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+
+        // Login Success
+        if(member.getPassword() != null && member.getPassword().equals(encPassword)) {
+
+        }
+
+        throw new CommerceException(ExceptionStatus.LOGIN_FAIL);
     }
 }

@@ -20,7 +20,7 @@ public class Member extends BaseEntity {
     @Column(name = "MEMBER_SEQ")
     private Long memberSeq;
 
-    @Column(name = "ID")
+    @Column(name = "ID", unique = true)
     private String id;
 
     @Column(name = "PASSWORD")

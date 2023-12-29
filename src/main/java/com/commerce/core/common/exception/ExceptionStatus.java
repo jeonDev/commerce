@@ -6,6 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExceptionStatus {
+
+    // MEMBER LOGIN
+    LOGIN_FAIL("ML", "로그인에 실패하였습니다."),
+
     // PRODUCT_STOCK
     SOLD_OUT("PS001", "재고가 품절되었습니다."),
 
