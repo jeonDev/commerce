@@ -25,5 +25,5 @@ public interface ProductService {
      * @param dto
      * @return
      */
-    Product selectProduct(ProductDto dto);
+    Product selectProduct(Long productSeq);
 }

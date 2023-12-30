@@ -1,6 +1,5 @@
 package com.commerce.core.entity;
 
-import com.commerce.core.vo.product.ProductDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,11 +21,4 @@ public class Product extends BaseEntity {
 
     @Column(name = "PRODUCT_NAME")
     private String productName;
-
-    public ProductDto entityToDto() {
-        return ProductDto.builder()
-                .productSeq(productSeq)
-                .productName(productName)
-                .build();
-    }
 }

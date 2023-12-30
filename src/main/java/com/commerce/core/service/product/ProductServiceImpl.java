@@ -44,12 +44,12 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * Select Product Detail
-     * @param dto
+     * @param productSeq
      * @return
      */
     @Override
-    public Product selectProduct(ProductDto dto) {
-        return productRepository.findById(dto.getProductSeq())
+    public Product selectProduct(Long productSeq) {
+        return productRepository.findById(productSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
 }

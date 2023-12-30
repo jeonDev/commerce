@@ -24,6 +24,6 @@ public class ProductTest {
         dto.setProductName(productName);
         Product result = productService.add(dto);
 
-        assertThat(productName).isEqualTo(productService.selectProduct(result.entityToDto()).getProductName());
+        assertThat(productName).isEqualTo(productService.selectProduct(result.getProductSeq()).getProductName());
     }
 }

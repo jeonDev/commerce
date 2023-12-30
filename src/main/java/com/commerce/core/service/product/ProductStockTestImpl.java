@@ -30,7 +30,7 @@ public class ProductStockTestImpl implements ProductStockService {
     @Transactional
     public ProductStock adjustment(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크
-        Product product = this.getProductDetail(dto);
+        Product product = this.getProductDetail(dto.getProductSeq());
 
         // 2. 재고 조정 (기존 데이터 존재 여부 체크)
         ProductStock entity = null;
@@ -63,9 +63,8 @@ public class ProductStockTestImpl implements ProductStockService {
      * @param dto
      * @return
      */
-    private Product getProductDetail(ProductStockDto dto) {
-        ProductDto productDto = ProductDto.builder().productSeq(dto.getProductSeq()).build();
-        return productService.selectProduct(productDto);
+    private Product getProductDetail(Long productSeq) {
+        return productService.selectProduct(productSeq);
     }
 
     /**
