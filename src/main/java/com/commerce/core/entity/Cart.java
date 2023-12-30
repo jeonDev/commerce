@@ -19,12 +19,15 @@ public class Cart extends BaseEntity {
     @Column(name = "CARD_SEQ")
     private Long cartSeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
+
+    @Column(name = "CART_COUNT")
+    private Long cartCount;
 
 }
