@@ -16,4 +16,9 @@ public interface OrderService {
      * Order Status Update
      */
     OrderDetail updateOrderStatus(OrderDto dto);
+
+    /**
+     * Select Order Detail
+     */
+    OrderDetail selectOrderDetail(Long orderDetailSeq);
 }

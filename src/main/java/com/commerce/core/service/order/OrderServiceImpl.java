@@ -1,5 +1,7 @@
 package com.commerce.core.service.order;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.entity.*;
 import com.commerce.core.entity.repository.OrderDetailHistoryRepository;
 import com.commerce.core.entity.repository.OrderDetailsRepository;
@@ -68,5 +70,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetail updateOrderStatus(OrderDto dto) {
         return null;
+    }
+
+    @Override
+    public OrderDetail selectOrderDetail(Long orderDetailSeq) {
+        return orderDetailsRepository.findById(orderDetailSeq).orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
 }

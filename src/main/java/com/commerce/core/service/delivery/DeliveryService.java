@@ -1,6 +1,7 @@
 package com.commerce.core.service.delivery;
 
 import com.commerce.core.entity.Delivery;
+import com.commerce.core.entity.OrderDetail;
 import com.commerce.core.vo.delivery.DeliveryDto;
 
 public interface DeliveryService {
@@ -11,4 +12,9 @@ public interface DeliveryService {
      * @return
      */
     Delivery registerDeliveryInfo(DeliveryDto dto);
+
+    /**
+     * Select MAX History
+     */
+    Delivery selectDeliveryTopDetail(OrderDetail orderDetail);
 }
