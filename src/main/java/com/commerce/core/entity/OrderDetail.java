@@ -24,7 +24,7 @@ public class OrderDetail extends BaseEntity {
     @JoinColumn(name = "ORDER_SEQ")
     private Orders orders;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 

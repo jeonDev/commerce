@@ -14,11 +14,18 @@ public interface ProductStockService {
     Long STOCK_SOLD_OUT_COUNT = 0L;
     
     /**
-     * Product Stock Adjustment
+     * Product Stock Add
      * @param dto
      * @return
      */
-    ProductStock adjustment(ProductStockDto dto);
+    ProductStock add(ProductStockDto dto);
+
+    /**
+     * Product Stock Consume
+     * @param dto
+     * @return
+     */
+    ProductStock consume(ProductStockDto dto);
 
     /**
      * Select Product Stock

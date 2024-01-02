@@ -45,10 +45,10 @@ public class OrderServiceImpl implements OrderService {
                 .forEach(item -> {
                     ProductStockDto stock = ProductStockDto.builder()
                             .productSeq(item)
-                            .stock(1L)
+                            .stock(-1L)
                             .build();
                     // TODO: 품절 시, 예외 처리 어떻게?
-                    ProductStock productStock = productStockService.adjustment(stock);
+                    ProductStock productStock = productStockService.consume(stock);
 
                     OrderDetail orderDetail = OrderDetail.builder()
                             .product(productStock.getProduct())

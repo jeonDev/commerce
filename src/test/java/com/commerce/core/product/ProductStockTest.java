@@ -20,7 +20,7 @@ public class ProductStockTest {
     void productStockAdjustment() {
         ProductStockDto dto = new ProductStockDto();
         dto.setProductSeq(1L);
-        dto.setStock(100L);
+        dto.setStock(1L);
         Long beforeStock = 0L;
         try {
             ProductStock productStock = productStockService.selectProductStock(dto);
@@ -28,7 +28,7 @@ public class ProductStockTest {
         } catch (CommerceException e) {
 
         }
-        ProductStock register = productStockService.adjustment(dto);
+        ProductStock register = productStockService.add(dto);
 
         assertThat(register.getStock()).isEqualTo(beforeStock + dto.getStock());
     }

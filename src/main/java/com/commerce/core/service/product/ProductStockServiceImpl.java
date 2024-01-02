@@ -8,7 +8,6 @@ import com.commerce.core.entity.Product;
 import com.commerce.core.entity.ProductStock;
 import com.commerce.core.entity.repository.ProductStockHistoryRepository;
 import com.commerce.core.entity.repository.ProductStockRepository;
-import com.commerce.core.vo.product.ProductDto;
 import com.commerce.core.vo.product.ProductStockDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class ProductStockServiceImpl implements ProductStockService {
     @Override
     @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
     @Transactional
-    public ProductStock adjustment(ProductStockDto dto) {
+    public ProductStock add(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크
         Product product = this.getProductDetail(dto.getProductSeq());
 
@@ -46,6 +45,28 @@ public class ProductStockServiceImpl implements ProductStockService {
         }
 
         if(STOCK_SOLD_OUT_COUNT >= entity.getStock())
+            throw new CommerceException(ExceptionStatus.SOLD_OUT);
+
+        entity = productStockRepository.save(entity);
+
+        // 3. 재고 처리 내역 저장
+        this.saveHistoryEntity(entity);
+        return entity;
+    }
+
+    @Override
+    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
+    @Transactional
+    public ProductStock consume(ProductStockDto dto) {
+        // 1. 상품 존재 여부 체크
+        Product product = this.getProductDetail(dto.getProductSeq());
+
+        // 2. 재고 조정 (기존 데이터 존재 여부 체크)
+        ProductStock entity = productStockRepository.findById(product.getProductSeq())
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.SOLD_OUT));
+        entity.inventoryAdjustment(dto.getStock());
+
+        if(STOCK_SOLD_OUT_COUNT > entity.getStock())
             throw new CommerceException(ExceptionStatus.SOLD_OUT);
 
         entity = productStockRepository.save(entity);
