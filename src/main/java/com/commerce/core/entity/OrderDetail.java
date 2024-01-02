@@ -12,16 +12,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-@IdClass(OrderDetailsId.class)
 @Table(name = "ORDER_DETAIL")
 public class OrderDetail extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ORDER_DETAIL_SEQ")
+    private Long orderDetailSeq;
+
     @ManyToOne
     @JoinColumn(name = "ORDER_SEQ")
     private Orders orders;
 
-    @Id
     @OneToOne
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
@@ -47,6 +49,7 @@ public class OrderDetail extends BaseEntity {
 
     public OrderDetailHistory generateHistoryEntity() {
         return OrderDetailHistory.builder()
+                .orderDetail(this)
                 .orders(orders)
                 .product(product)
                 .orderStatus(orderStatus)

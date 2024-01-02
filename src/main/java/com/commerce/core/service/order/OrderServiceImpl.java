@@ -64,4 +64,9 @@ public class OrderServiceImpl implements OrderService {
 
         return order;
     }
+
+    @Override
+    public OrderDetail updateOrderStatus(OrderDto dto) {
+        return null;
+    }
 }

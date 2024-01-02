@@ -21,6 +21,10 @@ public class OrderDetailHistory extends BaseEntity {
     private Long orderDetailHistorySeq;
 
     @ManyToOne
+    @JoinColumn(name = "ORDER_DETAIL_SEQ")
+    private OrderDetail orderDetail;
+
+    @ManyToOne
     @JoinColumn(name = "ORDER_SEQ")
     private Orders orders;
 

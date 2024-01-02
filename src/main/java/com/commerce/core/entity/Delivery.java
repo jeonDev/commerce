@@ -20,7 +20,7 @@ public class Delivery extends BaseEntity{
     private Long deliverySeq;
 
     @ManyToOne
-    @JoinColumn(name = "ORDER_SEQ")
-    private Orders orders;
+    @JoinColumn(name = "ORDER_DETAUK_SEQ")
+    private OrderDetail orderDetail;
 
 }

@@ -1,5 +1,6 @@
 package com.commerce.core.service.order;
 
+import com.commerce.core.entity.OrderDetail;
 import com.commerce.core.entity.Orders;
 import com.commerce.core.vo.order.OrderDto;
 
@@ -10,4 +11,9 @@ public interface OrderService {
      * @return
      */
     Orders order(OrderDto dto);
+
+    /**
+     * Order Status Update
+     */
+    OrderDetail updateOrderStatus(OrderDto dto);
 }
