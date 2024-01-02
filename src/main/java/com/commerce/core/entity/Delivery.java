@@ -1,5 +1,6 @@
 package com.commerce.core.entity;
 
+import com.commerce.core.vo.common.type.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,11 @@ public class Delivery extends BaseEntity{
     private Long deliverySeq;
 
     @ManyToOne
-    @JoinColumn(name = "ORDER_DETAUK_SEQ")
+    @JoinColumn(name = "ORDER_DETAIL_SEQ")
     private OrderDetail orderDetail;
+
+    @Column(name = "DELIVERY_STATUS")
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus deliveryStatus;
 
 }
