@@ -20,7 +20,7 @@ public class Payment extends BaseEntity {
     @Column(name = "PAYMENT_SEQ")
     private Long paymentSeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_SEQ")
     private Orders orderSeq;
 

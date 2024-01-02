@@ -19,7 +19,7 @@ public class Orders extends BaseEntity {
     @Column(name = "ORDER_SEQ")
     private Long orderSeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
 

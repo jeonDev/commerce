@@ -19,7 +19,7 @@ public class ProductStockHistory extends BaseEntity {
     @Column(name = "PRODUCT_HISTORY_SEQ")
     private Long productHistorySeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 

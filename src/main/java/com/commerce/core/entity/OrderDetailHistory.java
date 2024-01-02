@@ -20,15 +20,15 @@ public class OrderDetailHistory extends BaseEntity {
     @Column(name = "ORDER_DETAIL_HISTORY_SEQ")
     private Long orderDetailHistorySeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_DETAIL_SEQ")
     private OrderDetail orderDetail;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_SEQ")
     private Orders orders;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 

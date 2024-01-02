@@ -19,7 +19,7 @@ public class ProductStock extends BaseEntity {
     private Long id;
 
     @MapsId
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 

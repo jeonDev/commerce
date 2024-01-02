@@ -20,7 +20,7 @@ public class Delivery extends BaseEntity{
     @Column(name = "DELIVERY_SEQ")
     private Long deliverySeq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_DETAIL_SEQ")
     private OrderDetail orderDetail;
 
