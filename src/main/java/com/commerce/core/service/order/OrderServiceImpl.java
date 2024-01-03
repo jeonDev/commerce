@@ -68,8 +68,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Orders selectOrder(Long orderSeq) {
+        return ordersRepository.findById(orderSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    }
+
+    @Override
     public OrderDetail updateOrderStatus(OrderDto dto) {
-        return null;
+        Long orderDetailSeq = dto.getOrderDetailSeq();
+        OrderDetail orderDetail = this.selectOrderDetail(orderDetailSeq);
+        orderDetail.updateOrderStatus(OrderStatus.of(dto.getOrderStatus()));
+        orderDetail = orderDetailsRepository.save(orderDetail);
+
+        OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();
+        orderDetailHistoryRepository.save(orderDetailHistory);
+
+        return orderDetail;
     }
 
     @Override

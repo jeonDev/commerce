@@ -47,6 +47,10 @@ public class OrderDetail extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    /**
+     * History Generator
+     * @return
+     */
     public OrderDetailHistory generateHistoryEntity() {
         return OrderDetailHistory.builder()
                 .orderDetail(this)
@@ -55,4 +59,13 @@ public class OrderDetail extends BaseEntity {
                 .orderStatus(orderStatus)
                 .build();
     }
+
+    /**
+     * Order Status Update
+     * @param orderStatus
+     */
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
 }

@@ -13,6 +13,13 @@ public interface OrderService {
     Orders order(OrderDto dto);
 
     /**
+     * Select Orders
+     * @param orderSeq
+     * @return
+     */
+    Orders selectOrder(Long orderSeq);
+
+    /**
      * Order Status Update
      */
     OrderDetail updateOrderStatus(OrderDto dto);

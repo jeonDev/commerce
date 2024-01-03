@@ -3,6 +3,8 @@ package com.commerce.core.vo.common.type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum OrderStatus {
@@ -15,4 +17,11 @@ public enum OrderStatus {
     REQUEST_CANCEL("6");        // 취소 요청
 
     private final String status;
+
+    public static OrderStatus of(String status) {
+        return Arrays.stream(values())
+                .filter(value -> value.status.equals(status))
+                .findAny()
+                .orElse(null);
+    }
 }
