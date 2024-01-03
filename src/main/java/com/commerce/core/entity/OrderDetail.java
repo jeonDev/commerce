@@ -44,7 +44,7 @@ public class OrderDetail extends BaseEntity {
      * 주문 상태
      */
     @Column(name = "ORDER_STATUS")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
 
     /**

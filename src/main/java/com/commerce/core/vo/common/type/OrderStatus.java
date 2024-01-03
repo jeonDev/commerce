@@ -9,12 +9,12 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum OrderStatus {
 
-    NEW_ORDER("1"),             // 신규 주문
-    WAITING_FOR_SHIPMENT("2"),  // 발송 대기
-    DELIVERY("3"),              // 배송 중
-    DELIVERY_COMPLETE("4"),     // 배송 완료
-    PURCHASE_CONFIRM("5"),      // 구매 확정
-    REQUEST_CANCEL("6");        // 취소 요청
+    NEW_ORDER("0"),             // 신규 주문
+    WAITING_FOR_SHIPMENT("1"),  // 발송 대기
+    DELIVERY("2"),              // 배송 중
+    DELIVERY_COMPLETE("3"),     // 배송 완료
+    PURCHASE_CONFIRM("4"),      // 구매 확정
+    REQUEST_CANCEL("5");        // 취소 요청
 
     private final String status;
 

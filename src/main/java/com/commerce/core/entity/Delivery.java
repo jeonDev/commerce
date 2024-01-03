@@ -25,7 +25,7 @@ public class Delivery extends BaseEntity{
     private OrderDetail orderDetail;
 
     @Column(name = "DELIVERY_STATUS")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private DeliveryStatus deliveryStatus;
 
 }
