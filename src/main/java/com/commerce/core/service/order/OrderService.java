@@ -4,6 +4,8 @@ import com.commerce.core.entity.OrderDetail;
 import com.commerce.core.entity.Orders;
 import com.commerce.core.vo.order.OrderDto;
 
+import java.util.List;
+
 public interface OrderService {
     /**
      * Product Order
@@ -28,4 +30,11 @@ public interface OrderService {
      * Select Order Detail
      */
     OrderDetail selectOrderDetail(Long orderDetailSeq);
+
+    /**
+     * Select Order Detail List
+     * @param orderSeq
+     * @return
+     */
+    List<OrderDetail> selectOrderDetailList(Long orderSeq);
 }

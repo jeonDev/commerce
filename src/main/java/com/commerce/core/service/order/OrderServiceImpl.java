@@ -90,4 +90,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderDetail selectOrderDetail(Long orderDetailSeq) {
         return orderDetailsRepository.findById(orderDetailSeq).orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
+
+    @Override
+    public List<OrderDetail> selectOrderDetailList(Long orderSeq) {
+        return orderDetailsRepository.findByOrders_OrderSeq(orderSeq);
+    }
 }

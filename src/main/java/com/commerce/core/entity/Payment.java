@@ -25,6 +25,24 @@ public class Payment extends BaseEntity {
     private Orders orderSeq;
 
     @Column(name = "PAYMENT_STATUS")
+    @Enumerated(EnumType.ORDINAL)
     private PaymentStatus paymentStatus;
 
+    /**
+     * 최초 결제 금액
+     */
+    @Column(name = "INIT_PAYMENT_AMOUNT")
+    private Long initPaymentAmount;
+
+    /**
+     * 결제 금액
+     */
+    @Column(name = "PAYMENT_AMOUNT")
+    private Long paymentAmount;
+
+    /**
+     * 환불 금액
+     */
+    @Column(name = "REFUND_AMOUNT")
+    private Long refundAmount;
 }
