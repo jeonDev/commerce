@@ -1,9 +1,9 @@
 package com.commerce.core.cart;
 
-import com.commerce.core.entity.Cart;
-import com.commerce.core.entity.Member;
-import com.commerce.core.service.cart.CartService;
-import com.commerce.core.vo.cart.CartDto;
+import com.commerce.core.cart.entity.Cart;
+import com.commerce.core.member.entity.Member;
+import com.commerce.core.cart.service.CartService;
+import com.commerce.core.cart.vo.CartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

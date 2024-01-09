@@ -1,8 +1,8 @@
 package com.commerce.core.payment;
 
-import com.commerce.core.entity.Payment;
-import com.commerce.core.service.payment.PaymentService;
-import com.commerce.core.vo.payment.PaymentDto;
+import com.commerce.core.payment.entity.Payment;
+import com.commerce.core.payment.service.PaymentService;
+import com.commerce.core.payment.vo.PaymentDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

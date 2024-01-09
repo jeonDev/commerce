@@ -1,8 +1,8 @@
 package com.commerce.core.product;
 
-import com.commerce.core.entity.Product;
-import com.commerce.core.service.product.ProductService;
-import com.commerce.core.vo.product.ProductDto;
+import com.commerce.core.product.entity.Product;
+import com.commerce.core.product.service.ProductService;
+import com.commerce.core.product.vo.ProductDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,8 +1,8 @@
 package com.commerce.core.member;
 
-import com.commerce.core.entity.Member;
-import com.commerce.core.service.member.MemberService;
-import com.commerce.core.vo.member.MemberDto;
+import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.service.MemberService;
+import com.commerce.core.member.vo.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

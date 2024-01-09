@@ -1,10 +1,10 @@
 package com.commerce.core.order;
 
-import com.commerce.core.entity.OrderDetail;
-import com.commerce.core.entity.Orders;
-import com.commerce.core.service.order.OrderService;
-import com.commerce.core.vo.common.type.OrderStatus;
-import com.commerce.core.vo.order.OrderDto;
+import com.commerce.core.order.entity.OrderDetail;
+import com.commerce.core.order.entity.Orders;
+import com.commerce.core.order.service.OrderService;
+import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.vo.OrderDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

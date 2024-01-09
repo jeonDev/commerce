@@ -1,11 +1,11 @@
 package com.commerce.core.delivery;
 
-import com.commerce.core.entity.Delivery;
-import com.commerce.core.entity.OrderDetail;
-import com.commerce.core.service.delivery.DeliveryService;
-import com.commerce.core.service.order.OrderService;
-import com.commerce.core.vo.common.type.DeliveryStatus;
-import com.commerce.core.vo.delivery.DeliveryDto;
+import com.commerce.core.delivery.entity.Delivery;
+import com.commerce.core.order.entity.OrderDetail;
+import com.commerce.core.delivery.service.DeliveryService;
+import com.commerce.core.order.service.OrderService;
+import com.commerce.core.delivery.vo.DeliveryStatus;
+import com.commerce.core.delivery.vo.DeliveryDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
