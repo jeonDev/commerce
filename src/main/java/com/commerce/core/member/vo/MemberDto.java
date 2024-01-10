@@ -25,6 +25,8 @@ public class MemberDto {
                 .addr(addr)
                 .addrDetail(addrDetail)
                 .zipCode(zipCode)
+                .passwordFailCount(0L)
+                .useYn("Y")
                 .build();
     }
 }

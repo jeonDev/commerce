@@ -1,6 +1,7 @@
 package com.commerce.core.member.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.common.utils.DateUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,7 +42,25 @@ public class Member extends BaseEntity {
     @Column(name = "ZIP_CODE")
     private String zipCode;
 
+    @Column(name = "LAST_LOGIN_DTTM")
+    private String lastLoginDttm;
+
+    @Column(name = "PASSWORD_FAIL_COUNT")
+    private Long passwordFailCount;
+
+    @Column(name = "USE_YN")
+    private String useYn;
+
     public void passwordEncrypt(String encPassword) {
         this.password = encPassword;
+    }
+
+    public void loginFailed() {
+        if(this.passwordFailCount == null) this.passwordFailCount = 0L;
+        this.passwordFailCount += 1;
+    }
+
+    public void loginSuccess() {
+        this.lastLoginDttm = DateUtils.getNowDate("yyyyMMdd");
     }
 }
