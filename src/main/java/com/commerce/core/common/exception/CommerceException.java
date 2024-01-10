@@ -11,4 +11,9 @@ public class CommerceException extends RuntimeException {
         super(exceptionStatus.getMessage());
         this.code = exceptionStatus.getCode();
     }
+
+    public CommerceException(Exception e) {
+        super(e);
+        this.code = "error";
+    }
 }

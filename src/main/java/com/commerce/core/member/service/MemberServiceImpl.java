@@ -2,6 +2,7 @@ package com.commerce.core.member.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.common.utils.EncryptUtils;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.repository.MemberRepository;
 import com.commerce.core.member.vo.MemberDto;
@@ -18,8 +19,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member createMember(MemberDto dto) {
-        dto.setPassword("");
         Member member = dto.dtoToEntity();
+        member.passwordEncrypt(EncryptUtils.encryptSHA256(dto.getPassword()));
         return memberRepository.save(member);
     }
 

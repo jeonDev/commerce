@@ -1,5 +1,6 @@
 package com.commerce.core.member;
 
+import com.commerce.core.common.utils.EncryptUtils;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.member.vo.MemberDto;
@@ -29,6 +30,7 @@ public class MemberTest {
 
         Member result = memberService.selectMember(member.getMemberSeq());
         assertThat(result.getId()).isEqualTo(dto.getId());
+        assertThat(result.getPassword()).isEqualTo(EncryptUtils.encryptSHA256(dto.getPassword()));
     }
 
     @Test

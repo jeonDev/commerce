@@ -25,3 +25,5 @@ TODO
 
 5. RabbitMQ
     5-1. NoSql 정보 Update를 위한 이벤트 기반 메시지 큐 구현
+
+6. Swagger

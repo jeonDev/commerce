@@ -40,4 +40,8 @@ public class Member extends BaseEntity {
 
     @Column(name = "ZIP_CODE")
     private String zipCode;
+
+    public void passwordEncrypt(String encPassword) {
+        this.password = encPassword;
+    }
 }
