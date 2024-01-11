@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product add(ProductDto dto) {
+        // TODO: 상품 부가 엔티티 조회 후 저장 - 테스트 코드 추가
         return productRepository.save(dto.dtoToEntity());
     }
 
@@ -51,5 +52,10 @@ public class ProductServiceImpl implements ProductService {
     public Product selectProduct(Long productSeq) {
         return productRepository.findById(productSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    }
+
+    @Override
+    public List<?> selectSalesProducts() {
+        return null;
     }
 }

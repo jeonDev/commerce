@@ -26,4 +26,11 @@ public interface ProductService {
      * @return
      */
     Product selectProduct(Long productSeq);
+
+    /**
+     * Select Sales Products
+     * TODO: nosql로 상품 정보 조회
+     */
+    List<?> selectSalesProducts();
+
 }
