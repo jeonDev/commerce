@@ -34,7 +34,7 @@ public class OrderTest {
         dto.setOrderStatus(orderStatus.getStatus());
         OrderDetail result = orderService.updateOrderStatus(dto);
 
-        OrderDetail orderDetail = orderService.selectOrderDetail(dto.getOrderDetailSeq());
+        OrderDetail orderDetail = orderService.selectOrderDetail(dto.getOrderDetailSeq()).get();
 
         assertThat(orderStatus).isEqualTo(orderDetail.getOrderStatus());
     }

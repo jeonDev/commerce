@@ -36,7 +36,7 @@ public class MemberTest {
         dto.setZipCode("00000");
         Member member = memberService.createMember(dto);
 
-        Member result = memberService.selectMember(member.getMemberSeq());
+        Member result = memberService.selectMember(member.getMemberSeq()).get();
         assertThat(result.getId()).isEqualTo(dto.getId());
         assertThat(result.getPassword()).isEqualTo(EncryptUtils.encryptSHA256(dto.getPassword()));
     }

@@ -30,8 +30,8 @@ public class DeliveryTest {
         dto.setDeliveryStatus("3");
         Delivery delivery = deliveryService.registerDeliveryInfo(dto);
 
-        OrderDetail orderDetail = orderService.selectOrderDetail(dto.getOrderDetailSeq());
-        Delivery maxDelivery = deliveryService.selectDeliveryTopDetail(orderDetail);
+        OrderDetail orderDetail = orderService.selectOrderDetail(dto.getOrderDetailSeq()).get();
+        Delivery maxDelivery = deliveryService.selectDeliveryTopDetail(orderDetail).get();
 
         assertThat(delivery.getDeliveryStatus().getStatus()).isEqualTo(DeliveryStatus.DELIVERY_COMPLETE.getStatus());
         assertThat(delivery.getDeliveryStatus().getStatus()).isEqualTo(maxDelivery.getDeliveryStatus().getStatus());

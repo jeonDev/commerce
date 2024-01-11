@@ -23,7 +23,7 @@ public class ProductStockTest {
         dto.setStock(1L);
         Long beforeStock = 0L;
         try {
-            ProductStock productStock = productStockService.selectProductStock(dto);
+            ProductStock productStock = productStockService.selectProductStock(dto).get();
             beforeStock = productStock.getStock();
         } catch (CommerceException e) {
 
