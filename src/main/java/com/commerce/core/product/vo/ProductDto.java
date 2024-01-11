@@ -16,7 +16,6 @@ public class ProductDto extends PageDto {
     public Product dtoToEntity() {
         return Product.builder()
                 .productSeq(productSeq)
-                .productName(productName)
                 .build();
     }
 }

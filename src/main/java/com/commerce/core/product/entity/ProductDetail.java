@@ -8,34 +8,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 상품
+ * 상품 상세 구분
  */
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-@Table(name = "PRODUCT")
-public class Product extends BaseEntity {
+@Table(name = "PRODUCT_DETAIL")
+public class ProductDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PRODUCT_SEQ", length = 20)
-    private Long productSeq;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_DETAIL_SEQ")
-    private ProductDetail productDetail;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_INFO_SEQ")
-    private ProductInfo productInfo;
+    @Column(name = "PRODUCT_DETAIL_SEQ")
+    private Long productDetailSeq;
 
     /**
-     * 상품 상세 (사이즈 등)
+     * 상품 상세 구분 (색상 등)
      */
     @Column(name = "PRODUCT_DETAIL_CODE")
     private String productDetailCode;
-
-
 }
