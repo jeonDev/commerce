@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,7 +41,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Orders order(OrderDto dto) {
-        Member member = memberService.selectMember(dto.getMemberSeq());
+        Member member = memberService.selectMember(dto.getMemberSeq())
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
         final List<OrderDetail> orderDetails = new ArrayList<>();
         final List<OrderDetailHistory> orderDetailHistories = new ArrayList<>();
         final Orders order = ordersRepository.save(Orders.builder()
@@ -72,15 +74,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Orders selectOrder(Long orderSeq) {
-        return ordersRepository.findById(orderSeq)
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    public Optional<Orders> selectOrder(Long orderSeq) {
+        return ordersRepository.findById(orderSeq);
     }
 
     @Override
     public OrderDetail updateOrderStatus(OrderDto dto) {
         Long orderDetailSeq = dto.getOrderDetailSeq();
-        OrderDetail orderDetail = this.selectOrderDetail(orderDetailSeq);
+        OrderDetail orderDetail = this.selectOrderDetail(orderDetailSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
         orderDetail.updateOrderStatus(OrderStatus.of(dto.getOrderStatus()));
         orderDetail = orderDetailsRepository.save(orderDetail);
 
@@ -91,8 +93,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDetail selectOrderDetail(Long orderDetailSeq) {
-        return orderDetailsRepository.findById(orderDetailSeq).orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    public Optional<OrderDetail> selectOrderDetail(Long orderDetailSeq) {
+        return orderDetailsRepository.findById(orderDetailSeq);
     }
 
     @Override

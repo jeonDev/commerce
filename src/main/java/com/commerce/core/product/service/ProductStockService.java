@@ -3,6 +3,8 @@ package com.commerce.core.product.service;
 import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.vo.ProductStockDto;
 
+import java.util.Optional;
+
 /**
  * 상품 재고 Service
  */
@@ -32,5 +34,5 @@ public interface ProductStockService {
      * @param dto
      * @return
      */
-    ProductStock selectProductStock(ProductStockDto dto);
+    Optional<ProductStock> selectProductStock(ProductStockDto dto);
 }

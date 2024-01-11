@@ -3,6 +3,8 @@ package com.commerce.core.product.service;
 import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.vo.ProductInfoDto;
 
+import java.util.Optional;
+
 public interface ProductInfoService {
 
     /**
@@ -17,5 +19,5 @@ public interface ProductInfoService {
      * @param productInfoSeq
      * @return
      */
-    ProductInfo selectProductInfo(Long productInfoSeq);
+    Optional<ProductInfo> selectProductInfo(Long productInfoSeq);
 }

@@ -5,6 +5,7 @@ import com.commerce.core.order.entity.Orders;
 import com.commerce.core.order.vo.OrderDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
     /**
@@ -19,7 +20,7 @@ public interface OrderService {
      * @param orderSeq
      * @return
      */
-    Orders selectOrder(Long orderSeq);
+    Optional<Orders> selectOrder(Long orderSeq);
 
     /**
      * Order Status Update
@@ -29,7 +30,7 @@ public interface OrderService {
     /**
      * Select Order Detail
      */
-    OrderDetail selectOrderDetail(Long orderDetailSeq);
+    Optional<OrderDetail> selectOrderDetail(Long orderDetailSeq);
 
     /**
      * Select Order Detail List

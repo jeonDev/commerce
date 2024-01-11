@@ -1,7 +1,5 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.common.exception.CommerceException;
-import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.repository.dsl.ProductDslRepository;
 import com.commerce.core.product.repository.ProductRepository;
@@ -12,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,9 +48,8 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public Product selectProduct(Long productSeq) {
-        return productRepository.findById(productSeq)
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    public Optional<Product> selectProduct(Long productSeq) {
+        return productRepository.findById(productSeq);
     }
 
     @Override

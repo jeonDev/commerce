@@ -4,6 +4,7 @@ import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.vo.ProductDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
 
@@ -25,7 +26,7 @@ public interface ProductService {
      * @param dto
      * @return
      */
-    Product selectProduct(Long productSeq);
+    Optional<Product> selectProduct(Long productSeq);
 
     /**
      * Select Sales Products

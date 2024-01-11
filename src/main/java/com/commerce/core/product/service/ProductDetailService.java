@@ -3,6 +3,8 @@ package com.commerce.core.product.service;
 import com.commerce.core.product.entity.ProductDetail;
 import com.commerce.core.product.vo.ProductDetailDto;
 
+import java.util.Optional;
+
 public interface ProductDetailService {
     /**
      * Product Detail Add
@@ -16,5 +18,5 @@ public interface ProductDetailService {
      * @param productDetailSeq
      * @return
      */
-    ProductDetail selectProductDetail(Long productDetailSeq);
+    Optional<ProductDetail> selectProductDetail(Long productDetailSeq);
 }

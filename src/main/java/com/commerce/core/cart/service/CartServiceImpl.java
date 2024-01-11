@@ -1,6 +1,8 @@
 package com.commerce.core.cart.service;
 
 import com.commerce.core.cart.entity.Cart;
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.cart.repository.CartRepository;
@@ -27,8 +29,10 @@ public class CartServiceImpl implements CartService {
     public Cart add(CartDto dto) {
         Long memberSeq = dto.getMemberSeq();
         Long productSeq = dto.getProductSeq();
-        Member member = memberService.selectMember(memberSeq);
-        Product product = productService.selectProduct(productSeq);
+        Member member = memberService.selectMember(memberSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+        Product product = productService.selectProduct(productSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         Cart cart = Cart.builder()
                 .product(product)

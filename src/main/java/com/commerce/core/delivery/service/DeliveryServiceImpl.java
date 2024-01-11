@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -23,14 +25,14 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public Delivery registerDeliveryInfo(DeliveryDto dto) {
         Long orderDetailSeq = dto.getOrderDetailSeq();
-        OrderDetail orderDetail = orderService.selectOrderDetail(orderDetailSeq);
+        OrderDetail orderDetail = orderService.selectOrderDetail(orderDetailSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
         Delivery delivery = dto.dtoToEntity(orderDetail);
         return deliveryRepository.save(delivery);
     }
 
     @Override
-    public Delivery selectDeliveryTopDetail(OrderDetail orderDetail) {
-        return deliveryRepository.findTopByOrderDetailOrderByLastModifiedDtDesc(orderDetail)
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    public Optional<Delivery> selectDeliveryTopDetail(OrderDetail orderDetail) {
+        return deliveryRepository.findTopByOrderDetailOrderByLastModifiedDtDesc(orderDetail);
     }
 }

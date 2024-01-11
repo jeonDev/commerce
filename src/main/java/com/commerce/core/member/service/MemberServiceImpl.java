@@ -1,7 +1,5 @@
 package com.commerce.core.member.service;
 
-import com.commerce.core.common.exception.CommerceException;
-import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.utils.EncryptUtils;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.repository.MemberRepository;
@@ -9,6 +7,8 @@ import com.commerce.core.member.vo.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,8 +25,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member selectMember(Long memberSeq) {
-        return memberRepository.findById(memberSeq)
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    public Optional<Member> selectMember(Long memberSeq) {
+        return memberRepository.findById(memberSeq);
     }
 }

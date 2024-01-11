@@ -32,7 +32,8 @@ public class ProductStockServiceImpl implements ProductStockService {
     @Transactional
     public ProductStock add(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크
-        Product product = this.getProductDetail(dto.getProductSeq());
+        Product product = this.getProductDetail(dto.getProductSeq())
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. 재고 조정 (기존 데이터 존재 여부 체크)
         ProductStock entity = null;
@@ -59,7 +60,8 @@ public class ProductStockServiceImpl implements ProductStockService {
     @Transactional
     public ProductStock consume(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크
-        Product product = this.getProductDetail(dto.getProductSeq());
+        Product product = this.getProductDetail(dto.getProductSeq())
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. 재고 조정 (기존 데이터 존재 여부 체크)
         ProductStock entity = productStockRepository.findById(product.getProductSeq())
@@ -77,9 +79,8 @@ public class ProductStockServiceImpl implements ProductStockService {
     }
 
     @Override
-    public ProductStock selectProductStock(ProductStockDto dto) {
-        return productStockRepository.findById(dto.getProductSeq())
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    public Optional<ProductStock> selectProductStock(ProductStockDto dto) {
+        return productStockRepository.findById(dto.getProductSeq());
     }
 
     /**
@@ -87,7 +88,7 @@ public class ProductStockServiceImpl implements ProductStockService {
      * @param dto
      * @return
      */
-    private Product getProductDetail(Long productSeq) {
+    private Optional<Product> getProductDetail(Long productSeq) {
         return productService.selectProduct(productSeq);
     }
 

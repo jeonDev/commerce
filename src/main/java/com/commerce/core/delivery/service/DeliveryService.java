@@ -4,6 +4,8 @@ import com.commerce.core.delivery.entity.Delivery;
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.delivery.vo.DeliveryDto;
 
+import java.util.Optional;
+
 public interface DeliveryService {
 
     /**
@@ -16,5 +18,5 @@ public interface DeliveryService {
     /**
      * Select MAX History
      */
-    Delivery selectDeliveryTopDetail(OrderDetail orderDetail);
+    Optional<Delivery> selectDeliveryTopDetail(OrderDetail orderDetail);
 }

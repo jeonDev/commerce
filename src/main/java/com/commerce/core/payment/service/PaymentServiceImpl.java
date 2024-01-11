@@ -1,5 +1,7 @@
 package com.commerce.core.payment.service;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.order.entity.Orders;
 import com.commerce.core.payment.entity.Payment;
@@ -23,7 +25,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment payment(PaymentDto dto) {
         Long orderSeq = dto.getOrderSeq();
-        Orders orders = orderService.selectOrder(orderSeq);
+        Orders orders = orderService.selectOrder(orderSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
         long paymentAmount = orderService.selectOrderDetailList(orderSeq)
                 .stream()
                 .mapToLong(OrderDetail::getBuyAmount)
