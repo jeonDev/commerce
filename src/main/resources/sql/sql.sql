@@ -1,4 +1,6 @@
 select * from product;
+select * from product_detail;
+select * from product_info;
 select * from product_stock;
 select * from member;
 select * from delivery;

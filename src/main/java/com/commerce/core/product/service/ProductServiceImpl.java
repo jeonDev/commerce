@@ -1,9 +1,15 @@
 package com.commerce.core.product.service;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.product.entity.Product;
+import com.commerce.core.product.entity.ProductDetail;
+import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.repository.dsl.ProductDslRepository;
 import com.commerce.core.product.repository.ProductRepository;
+import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductDto;
+import com.commerce.core.product.vo.ProductInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +26,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductDslRepository productDslRepository;
 
+    private final ProductInfoService productInfoService;
+    private final ProductDetailService productDetailService;
     /**
      * Product Add
      * @param dto
@@ -27,8 +35,14 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product add(ProductDto dto) {
-        // TODO: 상품 부가 엔티티 조회 후 저장 - 테스트 코드 추가
-        return productRepository.save(dto.dtoToEntity());
+        // 1. 상품 정보 조회
+        ProductInfo productInfo = this.mergeProductInfo(dto.getProductInfoDto());
+
+        // 2. 상품 상세 구분 조회
+        ProductDetail productDetail = this.mergeProductDetail(dto.getProductDetailDto());
+
+        // 3. 상품 save
+        return productRepository.save(dto.dtoToEntity(productInfo, productDetail));
     }
 
     /**
@@ -55,5 +69,37 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<?> selectSalesProducts() {
         return null;
+    }
+
+    /**
+     * Product Info Setting
+     * @param dto
+     * @return
+     */
+    private ProductInfo mergeProductInfo(ProductInfoDto dto) {
+        // 1-1. 상품 정보 존재 시, 세팅
+        Long productInfoSeq = dto.getProductInfoSeq();
+        if(productInfoSeq == null) {
+            return productInfoService.add(dto);
+        }
+        // 1-2. 상품 정보 없을 시, 등록 및 세팅
+        return productInfoService.selectProductInfo(productInfoSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    }
+
+    /**
+     * Product Detail Setting
+     * @param dto
+     * @return
+     */
+    private ProductDetail mergeProductDetail(ProductDetailDto dto) {
+        // 1-1. 상품 상세 구분 존재 시, 세팅
+        Long productDetailSeq = dto.getProductDetailSeq();
+        if(productDetailSeq == null) {
+            return productDetailService.add(dto);
+        }
+        // 1-2. 상품 상세 구분 없을 시, 등록 및 세팅
+        return productDetailService.selectProductDetail(productDetailSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
 }

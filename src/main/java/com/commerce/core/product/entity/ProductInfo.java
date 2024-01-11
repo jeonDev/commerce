@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 상품 상세 정상
+ * 상품 정보
  */
 @Entity
 @AllArgsConstructor

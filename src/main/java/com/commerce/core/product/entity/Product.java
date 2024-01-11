@@ -34,8 +34,8 @@ public class Product extends BaseEntity {
     /**
      * 상품 상세 (사이즈 등)
      */
-    @Column(name = "PRODUCT_DETAIL_CODE")
-    private String productDetailCode;
+    @Column(name = "PRODUCT_OPTION_CODE")
+    private String productOptionCode;
 
 
 }
