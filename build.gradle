@@ -43,6 +43,9 @@ dependencies {
     // redisson
     implementation 'org.redisson:redisson-spring-boot-starter:3.19.0'
 
+    // mongodb
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
