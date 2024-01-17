@@ -10,10 +10,12 @@ import com.commerce.core.product.repository.ProductRepository;
 import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductDto;
 import com.commerce.core.product.vo.ProductInfoDto;
+import com.commerce.core.product.vo.ProductViewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +30,14 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductInfoService productInfoService;
     private final ProductDetailService productDetailService;
+    private final ProductViewService productViewService;
+
     /**
      * Product Add
      * @param dto
      * @return
      */
+    @Transactional
     @Override
     public Product add(ProductDto dto) {
         // 1. 상품 정보 조회
@@ -42,7 +47,26 @@ public class ProductServiceImpl implements ProductService {
         ProductDetail productDetail = this.mergeProductDetail(dto.getProductDetailDto());
 
         // 3. 상품 save
-        return productRepository.save(dto.dtoToEntity(productInfo, productDetail));
+        Product product = productRepository.save(dto.dtoToEntity(productInfo, productDetail));
+
+        // TODO: Transaction 처리 되는지 확인.
+        productViewService.selectProductViewForProductDetail(productInfo.getProductInfoSeq())
+                .ifPresentOrElse(item -> {
+                    // TODO: 수정
+                }, () -> {
+                    ProductViewDto productViewDto = ProductViewDto.builder()
+                            .productInfoSeq(productInfo.getProductInfoSeq())
+                            .productName(productInfo.getProductName())
+                            .productDetail(productInfo.getProductDetail())
+                            .price(productInfo.getPrice())
+                            .useYn("Y")
+                            .productOptions(List.of(product.getProductOptionCode()))
+                            .productDetailCodes(List.of(productDetail.getProductDetailCode()))
+                            .build();
+                    productViewService.register(productViewDto);
+                });
+
+        return product;
     }
 
     /**

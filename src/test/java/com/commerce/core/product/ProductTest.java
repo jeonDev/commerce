@@ -30,6 +30,7 @@ public class ProductTest {
         ProductInfoDto infoDto = ProductInfoDto.builder()
                 .productName(productName)
                 .productDetail(productDetail)
+                .price(10000L)
                 .build();
         ProductDetailDto detailDto = ProductDetailDto.builder()
                 .productDetailCode(productDetailCode)

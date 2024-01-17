@@ -35,5 +35,11 @@ public class ProductInfo extends BaseEntity {
     @Column(name = "PRODUCT_DETAIL")
     private String productDetail;
 
+    /**
+     * 가격
+     */
+    @Column(name = "PRICE")
+    private Long price;
+
 
 }
