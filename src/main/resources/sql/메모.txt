@@ -1,40 +1,18 @@
 TODO
-1. Member
-    1-1. 암호화        O
-        1-1-1. EncryptUtils 단방향 암호화
-        1-1-2. Member 생성 시, 패스워드 암호화
-    1-2. 로그인 구현
-        1-2-1. 로그인 로직 구현
-            1-2-1-1. JWT ? Session ?
-        1-2-2. 로그인 정보 가져오는 Util 생성
-2. Product
-    1-1. Entity 세부 추가
-        1-1-1. 상품 부가 정보 추가
-        1-1-2. 상품 상세 테이블 추가
-            Product : 실제 상품 (사이즈)
-            ProductInfo : 상품 상세 정보
-            ProductDetail : 상품 정보 (색상 등)
-            Product <N - 1> ProductInfo
-            ProductDetail <N - 1> ProductInfo
-            ProductDetail <N - 1> Product
-    1-2. Product Stock 수정
-        - 위 변경 사항에 따른 타겟 테이블 수정 (재고)
-            수정사항 없음.
-    1-3. Service 로직 추가 및 수정
-3. Payment
-    1-1. 연동 모듈에 따른 컬럼 추가
-
-4. NoSql
-    4-1. 상품 정보 추가
-        - 상품이 등록될 때
-        - 상품(기타 정보)이 수정될 때
-        -
-    4-2. 주문 정보 추가
-    4-3. 결제 정보 추가
-
-5. RabbitMQ
-    5-1. NoSql 정보 Update를 위한 이벤트 기반 메시지 큐 구현
-
-6. Swagger
-
-7. Docker-Compose
+1. 로직
+    1-1. 로그인 구현
+        - 구현 방식 결정 (JWT ? Session ?)
+        - 로그인 정보 가져오는 Util 생성
+2. 연동
+    2-1. NoSql (Mongo)
+        - 상품 정보 추가
+            - 상품이 등록될 때
+            - 상품(기타 정보)이 수정될 때
+            - 재고 변동될 때
+        - 주문 정보 추가
+        - 결제 정보 추가
+    2-2. Kafka
+        - NoSql 정보 Update를 위한 이벤트 기반 메시지 큐 구현
+3. 설정
+    3-1. Docker-Compose
+    3-2. api별 Thread 갯수 제한
