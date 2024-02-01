@@ -1,10 +1,7 @@
 package com.commerce.core.product.vo;
 
 import com.commerce.core.product.entity.mongo.ProductView;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@ToString
 public class ProductViewDto {
     private Long productViewSeq;
     private Long productInfoSeq;

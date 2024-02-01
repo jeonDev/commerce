@@ -1,5 +1,6 @@
 package com.commerce.core.kafka.producer;
 
+import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,6 @@ public class KafkaProducerTest {
     @Test
     void name() {
 
-        kafkaEventSender.send("test");
+        kafkaEventSender.send(EventTopic.TOPIC_TEST.getTopic(), "test");
     }
 }

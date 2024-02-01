@@ -13,9 +13,9 @@ public class KafkaEventSender implements EventSender {
     private final KafkaTemplate<String ,Object> kafkaTemplate;
 
     @Override
-    public void send(Object data) {
-        log.info("Kafka Producer Send (Data : {})", data.toString());
+    public void send(String topic, Object data) {
+        log.info("Kafka Producer Send (Topic : {} Data : {})", topic, data.toString());
 
-        kafkaTemplate.send("topic-test", data.toString());
+        kafkaTemplate.send(topic, data.toString());
     }
 }

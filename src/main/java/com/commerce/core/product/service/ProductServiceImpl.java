@@ -2,6 +2,8 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.event.EventTopic;
+import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductDetail;
 import com.commerce.core.product.entity.ProductInfo;
@@ -30,7 +32,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductInfoService productInfoService;
     private final ProductDetailService productDetailService;
-    private final ProductViewService productViewService;
+
+    private final EventSender eventSender;
 
     /**
      * Product Add
@@ -49,22 +52,17 @@ public class ProductServiceImpl implements ProductService {
         // 3. 상품 save
         Product product = productRepository.save(dto.dtoToEntity(productInfo, productDetail));
 
-        // TODO: Transaction 처리 되는지 확인.
-        productViewService.selectProductViewForProductDetail(productInfo.getProductInfoSeq())
-                .ifPresentOrElse(item -> {
-                    // TODO: 수정
-                }, () -> {
-                    ProductViewDto productViewDto = ProductViewDto.builder()
-                            .productInfoSeq(productInfo.getProductInfoSeq())
-                            .productName(productInfo.getProductName())
-                            .productDetail(productInfo.getProductDetail())
-                            .price(productInfo.getPrice())
-                            .useYn("Y")
-                            .productOptions(List.of(product.getProductOptionCode()))
-                            .productDetailCodes(List.of(productDetail.getProductDetailCode()))
-                            .build();
-                    productViewService.register(productViewDto);
-                });
+        // 4. Event Producer Push
+        ProductViewDto productViewDto = ProductViewDto.builder()
+                .productInfoSeq(productInfo.getProductInfoSeq())
+                .productName(productInfo.getProductName())
+                .productDetail(productInfo.getProductDetail())
+                .price(productInfo.getPrice())
+                .useYn("Y")
+                .productOptions(List.of(product.getProductOptionCode()))
+                .productDetailCodes(List.of(productDetail.getProductDetailCode()))
+                .build();
+        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
 
         return product;
     }
