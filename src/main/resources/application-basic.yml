@@ -17,5 +17,5 @@ spring:
       password: commerce
       database: commerce
 
-kafka:
-  bootstrap-server: localhost:9092
+  kafka:
+    bootstrap-server: localhost:9092
