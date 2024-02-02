@@ -64,11 +64,6 @@ public class ProductView {
      */
     private List<String> productOptions;
 
-    /**
-     * 상품 상세 구분
-     */
-    private List<String> productDetailCodes;
-
     public ProductView syncProductView(ProductViewDto dto) {
         this.productName = dto.getProductName();
         this.productDetail = dto.getProductDetail();
@@ -76,7 +71,6 @@ public class ProductView {
         this.discountPrice = dto.getDiscountPrice();
         this.useYn = dto.getUseYn();
         this.productOptions = dto.getProductOptions();
-        this.productDetailCodes = dto.getProductDetailCodes();
 
         return this;
     }

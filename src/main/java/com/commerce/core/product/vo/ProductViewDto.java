@@ -19,7 +19,6 @@ public class ProductViewDto {
     private Long discountPrice;
     private String useYn;
     private List<String> productOptions;
-    private List<String> productDetailCodes;
 
     public ProductView dtoToEntity() {
         return ProductView.builder()
@@ -31,7 +30,6 @@ public class ProductViewDto {
                 .discountPrice(discountPrice)
                 .useYn(useYn)
                 .productOptions(productOptions)
-                .productDetailCodes(productDetailCodes)
                 .build();
     }
 }

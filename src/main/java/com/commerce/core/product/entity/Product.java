@@ -24,10 +24,6 @@ public class Product extends BaseEntity {
     private Long productSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_DETAIL_SEQ")
-    private ProductDetail productDetail;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_INFO_SEQ")
     private ProductInfo productInfo;
 
