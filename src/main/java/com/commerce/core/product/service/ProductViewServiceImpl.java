@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -34,7 +35,12 @@ public class ProductViewServiceImpl implements ProductViewService {
     }
 
     @Override
-    public Optional<ProductView> selectProductView(Long productViewSeq) {
+    public Optional<ProductView> selectProductViewDetail(Long productViewSeq) {
         return Optional.empty();
+    }
+
+    @Override
+    public List<ProductView> selectProductViewList() {
+        return null;
     }
 }

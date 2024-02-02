@@ -13,7 +13,6 @@ import com.commerce.core.product.vo.ProductInfoDto;
 import com.commerce.core.product.vo.ProductViewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductDslRepository productDslRepository;
+//    private final ProductDslRepository productDslRepository;
 
     private final ProductInfoService productInfoService;
 
@@ -59,25 +58,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Select Product List
-     */
-    @Override
-    public List<Product> selectProductList(ProductDto dto) {
-        Page<Product> content = productDslRepository.findByAll(dto);
-        return content.getContent();
-    }
-
-    /**
      * Select Product Detail
      */
     @Override
     public Optional<Product> selectProduct(Long productSeq) {
         return productRepository.findById(productSeq);
-    }
-
-    @Override
-    public List<?> selectSalesProducts() {
-        return null;
     }
 
     /**
