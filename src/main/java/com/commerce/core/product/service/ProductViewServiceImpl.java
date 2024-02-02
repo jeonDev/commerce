@@ -17,13 +17,15 @@ public class ProductViewServiceImpl implements ProductViewService {
     private final ProductViewRepository productViewRepository;
 
     @Override
-    public ProductView register(ProductViewDto dto) {
-        return productViewRepository.save(dto.dtoToEntity());
-    }
-
-    @Override
-    public ProductView update(ProductViewDto dto) {
-        return null;
+    public void merge(ProductViewDto dto) {
+        // 1. 기존 데이터 존재여부 체크
+        Long productInfoSeq = dto.getProductInfoSeq();
+        Optional<ProductView> optionalProductView = this.selectProductViewForProductDetail(productInfoSeq);
+        optionalProductView.ifPresentOrElse(item -> {
+            productViewRepository.save(item.syncProductView(dto));
+        }, () -> {
+            productViewRepository.save(dto.dtoToEntity());
+        });
     }
 
     @Override

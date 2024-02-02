@@ -1,5 +1,6 @@
 package com.commerce.core.product.entity.mongo;
 
+import com.commerce.core.product.vo.ProductViewDto;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -67,4 +68,16 @@ public class ProductView {
      * 상품 상세 구분
      */
     private List<String> productDetailCodes;
+
+    public ProductView syncProductView(ProductViewDto dto) {
+        this.productName = dto.getProductName();
+        this.productDetail = dto.getProductDetail();
+        this.price = dto.getPrice();
+        this.discountPrice = dto.getDiscountPrice();
+        this.useYn = dto.getUseYn();
+        this.productOptions = dto.getProductOptions();
+        this.productDetailCodes = dto.getProductDetailCodes();
+
+        return this;
+    }
 }

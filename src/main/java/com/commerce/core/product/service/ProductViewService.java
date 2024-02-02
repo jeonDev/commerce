@@ -8,18 +8,10 @@ import java.util.Optional;
 public interface ProductViewService {
 
     /**
-     * Product View Register
+     * Product View Merge
      * @param dto
-     * @return
      */
-    ProductView register(ProductViewDto dto);
-
-    /**
-     * Product View Update
-     * @param dto
-     * @return
-     */
-    ProductView update(ProductViewDto dto);
+    void merge(ProductViewDto dto);
 
     /**
      * Select ProductView
