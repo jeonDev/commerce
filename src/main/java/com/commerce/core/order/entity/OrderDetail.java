@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,13 +36,19 @@ public class OrderDetail extends BaseEntity {
      * 실제 금액
      */
     @Column(name = "AMOUNT")
-    private Long amount;
+    private BigDecimal amount;
 
     /**
      * 구매 금액
      */
     @Column(name = "BUY_AMOUNT")
-    private Long buyAmount;
+    private BigDecimal buyAmount;
+
+    /**
+     * 납부 금액
+     */
+    @Column(name = "PAID_AMOUNT")
+    private BigDecimal paidAmount;
 
     /**
      * 주문 상태
