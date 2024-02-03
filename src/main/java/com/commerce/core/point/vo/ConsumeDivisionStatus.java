@@ -1,0 +1,23 @@
+package com.commerce.core.point.vo;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.Arrays;
+
+@Getter
+@AllArgsConstructor
+public enum ConsumeDivisionStatus {
+
+    CHARGE("0"),        // 충전
+    PAYMENT("1");       // 결제
+
+    private final String status;
+
+    public static ConsumeDivisionStatus of(String status) {
+        return Arrays.stream(values())
+                .filter(value -> value.status.equals(status))
+                .findAny()
+                .orElse(null);
+    }
+}
