@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Orders order(OrderDto dto) {
-        Member member = memberService.selectMember(dto.getMemberSeq())
+        Member member = memberService.selectUseMember(dto.getMemberSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
         final List<OrderDetail> orderDetails = new ArrayList<>();
         final List<OrderDetailHistory> orderDetailHistories = new ArrayList<>();

@@ -1,4 +1,7 @@
 package com.commerce.core.point.repository;
 
-public interface PointHistoryRepository {
+import com.commerce.core.point.entity.PointHistory;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PointHistoryRepository extends JpaRepository<PointHistory, Long> {
 }

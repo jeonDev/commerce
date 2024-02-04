@@ -15,6 +15,9 @@ public enum ExceptionStatus {
     // PRODUCT_STOCK
     SOLD_OUT("PS001", "재고가 품절되었습니다."),
 
+    // POINT
+    POINT_LACK("P001", "잔고 부족"),
+
     // COMMON_DATABASE
     ENTITY_IS_EMPTY("CD001", "조회된 데이터가 없습니다.");
 

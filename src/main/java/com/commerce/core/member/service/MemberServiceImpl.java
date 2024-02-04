@@ -28,4 +28,9 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> selectMember(Long memberSeq) {
         return memberRepository.findById(memberSeq);
     }
+
+    @Override
+    public Optional<Member> selectUseMember(Long memberSeq) {
+        return memberRepository.findByMemberSeqAndUseYn(memberSeq, "Y");
+    }
 }
