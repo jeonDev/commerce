@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -25,7 +23,7 @@ public class PointTest {
     void pointCharge_success() {
         PointDto pointDto = new PointDto();
         pointDto.setMemberSeq(1L);
-        pointDto.setPoint(new BigDecimal(10000));
+        pointDto.setPoint(10000L);
         pointService.charge(pointDto);
 
         Point point = pointService.selectPoint(pointDto.getMemberSeq()).get();
@@ -37,7 +35,7 @@ public class PointTest {
     void pointPayment_fail() {
         PointDto pointDto = new PointDto();
         pointDto.setMemberSeq(1L);
-        pointDto.setPoint(new BigDecimal(20000));
+        pointDto.setPoint(20000L);
         assertThrows(CommerceException.class, () -> {
             pointService.withdraw(pointDto);
         });
@@ -49,9 +47,9 @@ public class PointTest {
     void pointPayment_success() {
         PointDto pointDto = new PointDto();
         pointDto.setMemberSeq(1L);
-        pointDto.setPoint(new BigDecimal(10000));
+        pointDto.setPoint(10000L);
         pointService.withdraw(pointDto);
         Point point = pointService.selectPoint(pointDto.getMemberSeq()).get();
-        assertThat(point.getPoint()).isEqualTo(BigDecimal.ZERO);
+        assertThat(point.getPoint()).isEqualTo(0L);
     }
 }

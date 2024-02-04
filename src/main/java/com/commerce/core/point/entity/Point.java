@@ -24,7 +24,7 @@ public class Point extends BaseEntity {
 
     @Id
     @Column(name = "MEMBER_SEQ")
-    private Long memberSeq;
+    private Long id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
@@ -33,16 +33,16 @@ public class Point extends BaseEntity {
 
     @ColumnDefault("0")
     @Column(name = "POINT", nullable = false)
-    private BigDecimal point;
+    private Long point;
 
-    public void pointChange(BigDecimal point, ConsumeDivisionStatus status) {
+    public void pointChange(Long point, ConsumeDivisionStatus status) {
         if(status == ConsumeDivisionStatus.CHARGE) {
-            this.point = this.point.add(point);
+            this.point += point;
         } else if (status == ConsumeDivisionStatus.PAYMENT) {
-            this.point = this.point.subtract(point);
+            this.point -= point;
         }
 
-        if(this.point.compareTo(BigDecimal.ZERO) <= 0) {
+        if(this.point < 0) {
             throw new CommerceException(ExceptionStatus.POINT_LACK);
         }
     }

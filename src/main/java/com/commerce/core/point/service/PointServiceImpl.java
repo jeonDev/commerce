@@ -12,6 +12,7 @@ import com.commerce.core.point.vo.PointDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,11 +26,13 @@ public class PointServiceImpl implements PointService {
 
     private final MemberService memberService;
 
+    @Transactional
     @Override
     public Point charge(PointDto dto) {
         return this.process(dto, ConsumeDivisionStatus.CHARGE);
     }
 
+    @Transactional
     @Override
     public Point withdraw(PointDto dto) {
         return this.process(dto, ConsumeDivisionStatus.PAYMENT);
@@ -44,7 +47,7 @@ public class PointServiceImpl implements PointService {
         Long memberSeq = dto.getMemberSeq();
         Member member = memberService.selectUseMember(memberSeq).orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        Optional<Point> optionalPoint = pointRepository.findById(member.getMemberSeq());
+        Optional<Point> optionalPoint = pointRepository.findByMember(member);
         Point point;
         if(optionalPoint.isPresent()) {
             point = optionalPoint.get();

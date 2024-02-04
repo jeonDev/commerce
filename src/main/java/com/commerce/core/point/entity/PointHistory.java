@@ -29,7 +29,7 @@ public class PointHistory extends BaseEntity {
     private Member member;
 
     @Column(name = "POINT")
-    private BigDecimal point;
+    private Long point;
 
     @Column(name = "CONSUME_DIVISION_STATUS")
     @Enumerated(EnumType.ORDINAL)
