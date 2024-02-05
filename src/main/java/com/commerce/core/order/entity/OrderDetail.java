@@ -9,8 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,19 +34,19 @@ public class OrderDetail extends BaseEntity {
      * 실제 금액
      */
     @Column(name = "AMOUNT")
-    private BigDecimal amount;
+    private Long amount;
 
     /**
      * 구매 금액
      */
     @Column(name = "BUY_AMOUNT")
-    private BigDecimal buyAmount;
+    private Long buyAmount;
 
     /**
      * 납부 금액
      */
     @Column(name = "PAID_AMOUNT")
-    private BigDecimal paidAmount;
+    private Long paidAmount;
 
     /**
      * 주문 상태
@@ -59,7 +57,6 @@ public class OrderDetail extends BaseEntity {
 
     /**
      * History Generator
-     * @return
      */
     public OrderDetailHistory generateHistoryEntity() {
         return OrderDetailHistory.builder()
@@ -72,10 +69,17 @@ public class OrderDetail extends BaseEntity {
 
     /**
      * Order Status Update
-     * @param orderStatus
      */
     public void updateOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    /**
+     * 결제 성공 후, 납부 금액에 구매 금액 세팅
+     */
+    public void paymentSuccessSettingPaidAmount() {
+        this.paidAmount = this.buyAmount;
+        this.updateOrderStatus(OrderStatus.WAITING_FOR_SHIPMENT);
     }
 
 }

@@ -36,7 +36,6 @@ public class OrderServiceImpl implements OrderService {
 
     private final ProductStockService productStockService;
     private final MemberService memberService;
-    private final PaymentService paymentService;
 
 
     @Override
@@ -70,13 +69,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderDetailsRepository.saveAll(orderDetails);
         orderDetailHistoryRepository.saveAll(orderDetailHistories);
-
-        // TODO: 결제 처리 (성공/실패 시, Update 처리 추가)
-//        try {
-//            paymentService.payment();
-//        } catch (CommerceException e) {
-//
-//        }
 
         return order;
     }
