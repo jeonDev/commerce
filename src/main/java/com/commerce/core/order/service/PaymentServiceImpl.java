@@ -39,7 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
                     item.paymentSuccessSettingPaidAmount();
                     OrderDto orderDto = OrderDto.builder()
                             .orderDetailSeq(item.getOrderDetailSeq())
-                            .orderStatus(OrderStatus.WAITING_FOR_SHIPMENT.getStatus())
+                            .orderStatus(OrderStatus.PAYMENT_COMPLETE.getStatus())
                             .build();
                     orderService.updateOrderStatus(orderDto);
                 })

@@ -13,11 +13,4 @@ public enum ConsumeDivisionStatus {
     PAYMENT("1");       // 결제
 
     private final String status;
-
-    public static ConsumeDivisionStatus of(String status) {
-        return Arrays.stream(values())
-                .filter(value -> value.status.equals(status))
-                .findAny()
-                .orElse(null);
-    }
 }
