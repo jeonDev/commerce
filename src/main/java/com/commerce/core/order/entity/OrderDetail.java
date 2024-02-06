@@ -79,7 +79,6 @@ public class OrderDetail extends BaseEntity {
      */
     public void paymentSuccessSettingPaidAmount() {
         this.paidAmount = this.buyAmount;
-        this.updateOrderStatus(OrderStatus.WAITING_FOR_SHIPMENT);
     }
 
 }

@@ -36,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
         // 1-1. 결제 금액 계산
         long payAmount = orderDetails.stream()
                 .peek(item -> {
+                    item.paymentSuccessSettingPaidAmount();
                     OrderDto orderDto = OrderDto.builder()
                             .orderDetailSeq(item.getOrderDetailSeq())
                             .orderStatus(OrderStatus.WAITING_FOR_SHIPMENT.getStatus())
