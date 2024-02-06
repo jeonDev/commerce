@@ -10,6 +10,8 @@ import com.commerce.core.order.repository.OrderDetailsRepository;
 import com.commerce.core.order.repository.OrdersRepository;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
+import com.commerce.core.product.entity.Product;
+import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.order.vo.OrderStatus;
@@ -55,11 +57,15 @@ public class OrderServiceImpl implements OrderService {
                             .productSeq(item)
                             .stock(-1L)
                             .build();
-                    // TODO: 품절 시, 예외 처리 어떻게?
+                    
                     ProductStock productStock = productStockService.consume(stock);
+                    Product product = productStock.getProduct();
+                    ProductInfo productInfo = product.getProductInfo();
 
                     OrderDetail orderDetail = OrderDetail.builder()
-                            .product(productStock.getProduct())
+                            .product(product)
+                            .amount(productInfo.getPrice())
+                            .buyAmount(productInfo.getPrice())
                             .orders(order)
                             .orderStatus(OrderStatus.NEW_ORDER)
                             .build();

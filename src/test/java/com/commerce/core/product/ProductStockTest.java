@@ -20,12 +20,12 @@ public class ProductStockTest {
     void productStockAdjustment() {
         ProductStockDto dto = new ProductStockDto();
         dto.setProductSeq(1L);
-        dto.setStock(1L);
+        dto.setStock(5L);
         Long beforeStock = 0L;
         try {
             ProductStock productStock = productStockService.selectProductStock(dto).get();
             beforeStock = productStock.getStock();
-        } catch (CommerceException e) {
+        } catch (Exception e) {
 
         }
         ProductStock register = productStockService.add(dto);

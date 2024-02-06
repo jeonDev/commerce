@@ -8,6 +8,6 @@ import java.util.List;
 public class PaymentDto {
 
     private Long memberSeq;
-    private List<PaymentInfoDto> paymentInfos;
+    private Long orderSeq;
 
 }

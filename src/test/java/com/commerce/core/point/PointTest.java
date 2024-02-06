@@ -27,24 +27,36 @@ public class PointTest {
     @Test
     @Order(1)
     void pointCharge_success() {
-        PointDto pointDto = new PointDto();
-        pointDto.setMemberSeq(1L);
-        pointDto.setPoint(10000L);
-        Point originPoint = pointService.selectPoint(pointDto.getMemberSeq()).get();
+        PointDto pointDto = PointDto.builder()
+                .memberSeq(1L)
+                .point(10000L)
+                .build();
+        Long originPoint = 0L;
+        try {
+            originPoint = pointService.selectPoint(pointDto.getMemberSeq()).get().getPoint();
+        } catch (Exception e) {
+
+        }
         pointService.charge(pointDto);
 
         Point point = pointService.selectPoint(pointDto.getMemberSeq()).get();
-        assertThat(point.getPoint()).isEqualTo(pointDto.getPoint() + originPoint.getPoint());
+        assertThat(point.getPoint()).isEqualTo(pointDto.getPoint() + originPoint);
     }
 
     @Test
     @Order(2)
     void pointPayment_fail() {
+        Long memberSeq = 1L;
+        Long originPoint = 0L;
+        try {
+            originPoint = pointService.selectPoint(memberSeq).get().getPoint();
+        } catch (Exception e) {
 
-        PointDto pointDto = new PointDto();
-        pointDto.setMemberSeq(1L);
-        Point originPoint = pointService.selectPoint(pointDto.getMemberSeq()).get();
-        pointDto.setPoint(originPoint.getPoint() + 1L);
+        }
+        PointDto pointDto = PointDto.builder()
+                .memberSeq(1L)
+                .point(originPoint + 1L)
+                .build();
         assertThrows(CommerceException.class, () -> {
             pointService.withdraw(pointDto);
         });
@@ -54,14 +66,20 @@ public class PointTest {
     @Test
     @Order(3)
     void pointPayment_success() {
-        PointDto pointDto = new PointDto();
-        pointDto.setMemberSeq(1L);
-        pointDto.setPoint(10000L);
-        Point originPoint = pointService.selectPoint(pointDto.getMemberSeq()).get();
+        PointDto pointDto = PointDto.builder()
+                .memberSeq(1L)
+                .point(10000L)
+                .build();
+        Long originPoint = 0L;
+        try {
+            originPoint = pointService.selectPoint(pointDto.getMemberSeq()).get().getPoint();
+        } catch (Exception e) {
+
+        }
 
         pointService.withdraw(pointDto);
         Point point = pointService.selectPoint(pointDto.getMemberSeq()).get();
-        assertThat(point.getPoint()).isEqualTo(originPoint.getPoint() - pointDto.getPoint());
+        assertThat(point.getPoint()).isEqualTo(originPoint - pointDto.getPoint());
     }
 
     @Test
@@ -70,9 +88,10 @@ public class PointTest {
         CountDownLatch latch = new CountDownLatch(COUPON_THREAD_COUNT);
 
         for(int i = 0; i < COUPON_THREAD_COUNT; i++) {
-            PointDto pointDto = new PointDto();
-            pointDto.setMemberSeq(2L);
-            pointDto.setPoint(1000L);
+            PointDto pointDto = PointDto.builder()
+                    .memberSeq(2L)
+                    .point(1000L)
+                    .build();
             int cnt = i;
             executorService.execute(() -> {
                 try {

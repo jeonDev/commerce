@@ -19,19 +19,21 @@ public class OrderTest {
 
     @Test
     void order() {
-        OrderDto orderDto = new OrderDto();
-        orderDto.setMemberSeq(1L);
         Long[] productSeqs = {1L};
-        orderDto.setProductSeqs(productSeqs);
+        OrderDto orderDto = OrderDto.builder()
+                .memberSeq(1L)
+                .productSeqs(productSeqs)
+                .build();
         Orders order = orderService.order(orderDto);
     }
 
     @Test
     void updateOrderDetailStatus() {
-        OrderDto dto = new OrderDto();
-        OrderStatus orderStatus = OrderStatus.WAITING_FOR_SHIPMENT;
-        dto.setOrderDetailSeq(1L);
-        dto.setOrderStatus(orderStatus.getStatus());
+        String orderStatus = OrderStatus.WAITING_FOR_SHIPMENT.getStatus();
+        OrderDto dto = OrderDto.builder()
+                .orderDetailSeq(1L)
+                .orderStatus(orderStatus)
+                .build();
         OrderDetail result = orderService.updateOrderStatus(dto);
 
         OrderDetail orderDetail = orderService.selectOrderDetail(dto.getOrderDetailSeq()).get();
