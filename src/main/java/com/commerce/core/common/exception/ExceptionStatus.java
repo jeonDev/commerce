@@ -18,6 +18,9 @@ public enum ExceptionStatus {
     // POINT
     POINT_LACK("P001", "잔고 부족"),
 
+    // PAYMENT
+    PAYMENT_AMOUNT_ERROR("PA001", "결제금액 오류"),
+
     // COMMON_DATABASE
     ENTITY_IS_EMPTY("CD001", "조회된 데이터가 없습니다.");
 

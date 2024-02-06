@@ -1,5 +1,7 @@
 package com.commerce.core.order.service;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.order.entity.Orders;
 import com.commerce.core.order.entity.PaymentHistory;
@@ -32,6 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @Override
     public Orders payment(PaymentDto dto) {
+        log.info("payment()");
 
         // 1. 결제 대상 확인
         Long orderSeq = dto.getOrderSeq();
@@ -42,6 +45,11 @@ public class PaymentServiceImpl implements PaymentService {
                 .peek(this::paymentAmountBeforeProcess)
                 .mapToLong(OrderDetail::getPaidAmount)
                 .sum();
+
+        // 조회 내역 없을 경우 Exception 처리
+        if(payAmount <= 0) {
+            throw new CommerceException(ExceptionStatus.PAYMENT_AMOUNT_ERROR);
+        }
 
         // 2. 결제 처리
         PointDto pointDto = PointDto.builder()
@@ -64,6 +72,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
         orderService.updateOrderStatus(orderDto);
         PaymentHistory paymentHistory = item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT);
-        paymentHistoryRepository.save(paymentHistoryRepository);
+        paymentHistoryRepository.save(paymentHistory);
     }
 }

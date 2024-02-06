@@ -45,10 +45,10 @@ public class Point extends BaseEntity {
         }
     }
 
-    public PointHistory generateHistoryEntity(ConsumeDivisionStatus status) {
+    public PointHistory generateHistoryEntity(Long point, ConsumeDivisionStatus status) {
         return PointHistory.builder()
                 .member(this.member)
-                .point(this.point)
+                .point(point)
                 .consumeDivisionStatus(status)
                 .build();
     }
