@@ -19,7 +19,7 @@ public class OrderTest {
 
     @Test
     void order() {
-        Long[] productSeqs = {1L};
+        Long[] productSeqs = {1L, 2L};
         OrderDto orderDto = OrderDto.builder()
                 .memberSeq(1L)
                 .productSeqs(productSeqs)
@@ -29,7 +29,7 @@ public class OrderTest {
 
     @Test
     void updateOrderDetailStatus() {
-        String orderStatus = OrderStatus.WAITING_FOR_SHIPMENT.getStatus();
+        String orderStatus = OrderStatus.PAYMENT_COMPLETE.getStatus();
         OrderDto dto = OrderDto.builder()
                 .orderDetailSeq(1L)
                 .orderStatus(orderStatus)

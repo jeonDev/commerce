@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
         Long orderDetailSeq = dto.getOrderDetailSeq();
         OrderDetail orderDetail = this.selectOrderDetail(orderDetailSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
-        orderDetail.updateOrderStatus(OrderStatus.valueOf(dto.getOrderStatus()));
+        orderDetail.updateOrderStatus(OrderStatus.of(dto.getOrderStatus()));
         orderDetail = orderDetailsRepository.save(orderDetail);
 
         OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();

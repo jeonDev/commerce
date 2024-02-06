@@ -13,4 +13,11 @@ public enum OrderStatus {
     PAYMENT_COMPLETE("1");     // 결제 완료
 
     private final String status;
+
+    public static OrderStatus of(String status) {
+        return Arrays.stream(values())
+                .filter(value -> value.status.equals(status))
+                .findAny()
+                .orElse(null);
+    }
 }
