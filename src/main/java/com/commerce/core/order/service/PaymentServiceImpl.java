@@ -2,7 +2,10 @@ package com.commerce.core.order.service;
 
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.order.entity.Orders;
+import com.commerce.core.order.entity.PaymentHistory;
 import com.commerce.core.order.repository.OrderDetailsRepository;
+import com.commerce.core.order.repository.PaymentHistoryRepository;
+import com.commerce.core.order.vo.InoutDivisionStatus;
 import com.commerce.core.order.vo.OrderDto;
 import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.order.vo.PaymentDto;
@@ -21,6 +24,7 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
 
     private final OrderDetailsRepository orderDetailsRepository;
+    private final PaymentHistoryRepository paymentHistoryRepository;
 
     private final OrderService orderService;
     private final PointService pointService;
@@ -33,17 +37,10 @@ public class PaymentServiceImpl implements PaymentService {
         Long orderSeq = dto.getOrderSeq();
         List<OrderDetail> orderDetails = orderService.selectOrderDetailList(orderSeq);
 
-        // 1-1. 결제 금액 계산
+        // 1-1. 결제 금액 계산 & 값 세팅
         long payAmount = orderDetails.stream()
-                .peek(item -> {
-                    item.paymentSuccessSettingPaidAmount();
-                    OrderDto orderDto = OrderDto.builder()
-                            .orderDetailSeq(item.getOrderDetailSeq())
-                            .orderStatus(OrderStatus.PAYMENT_COMPLETE.getStatus())
-                            .build();
-                    orderService.updateOrderStatus(orderDto);
-                })
-                .mapToLong(OrderDetail::getBuyAmount)
+                .peek(this::paymentAmountBeforeProcess)
+                .mapToLong(OrderDetail::getPaidAmount)
                 .sum();
 
         // 2. 결제 처리
@@ -57,5 +54,16 @@ public class PaymentServiceImpl implements PaymentService {
         orderDetailsRepository.saveAll(orderDetails);
 
         return null;
+    }
+
+    private void paymentAmountBeforeProcess(OrderDetail item) {
+        item.paymentSuccessSettingPaidAmount();
+        OrderDto orderDto = OrderDto.builder()
+                .orderDetailSeq(item.getOrderDetailSeq())
+                .orderStatus(OrderStatus.PAYMENT_COMPLETE.getStatus())
+                .build();
+        orderService.updateOrderStatus(orderDto);
+        PaymentHistory paymentHistory = item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT);
+        paymentHistoryRepository.save(paymentHistoryRepository);
     }
 }

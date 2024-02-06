@@ -1,6 +1,7 @@
 package com.commerce.core.order.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.order.vo.InoutDivisionStatus;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.order.vo.OrderStatus;
 import jakarta.persistence.*;
@@ -79,6 +80,17 @@ public class OrderDetail extends BaseEntity {
      */
     public void paymentSuccessSettingPaidAmount() {
         this.paidAmount = this.buyAmount;
+    }
+
+    /**
+     * History Generator
+     */
+    public PaymentHistory generateHistoryEntity(Long point, InoutDivisionStatus status) {
+        return PaymentHistory.builder()
+                .orderDetail(this)
+                .point(point)
+                .inoutDivisionStatus(status)
+                .build();
     }
 
 }
