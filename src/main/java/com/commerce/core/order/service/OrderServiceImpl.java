@@ -2,6 +2,8 @@ package com.commerce.core.order.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.event.EventTopic;
+import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.order.entity.OrderDetailHistory;
 import com.commerce.core.order.entity.Orders;
@@ -10,6 +12,7 @@ import com.commerce.core.order.repository.OrderDetailsRepository;
 import com.commerce.core.order.repository.OrdersRepository;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
+import com.commerce.core.order.vo.OrderViewDto;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.entity.ProductStock;
@@ -38,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final ProductStockService productStockService;
     private final MemberService memberService;
-
+    private final EventSender eventSender;
 
     @Override
     @Transactional
@@ -66,6 +69,7 @@ public class OrderServiceImpl implements OrderService {
                             .product(product)
                             .amount(productInfo.getPrice())
                             .buyAmount(productInfo.getPrice())
+                            .paidAmount(0L)
                             .orders(order)
                             .orderStatus(OrderStatus.NEW_ORDER)
                             .build();
@@ -75,6 +79,12 @@ public class OrderServiceImpl implements OrderService {
 
         orderDetailsRepository.saveAll(orderDetails);
         orderDetailHistoryRepository.saveAll(orderDetailHistories);
+
+        OrderViewDto orderViewDto = OrderViewDto.builder()
+                .orderSeq(order.getOrderSeq())
+                .build();
+
+        eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
 
         return order;
     }

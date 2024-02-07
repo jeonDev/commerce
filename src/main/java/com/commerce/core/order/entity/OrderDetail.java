@@ -2,6 +2,7 @@ package com.commerce.core.order.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.order.vo.InoutDivisionStatus;
+import com.commerce.core.order.vo.OrderDetailInfo;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.order.vo.OrderStatus;
 import jakarta.persistence.*;
@@ -34,19 +35,19 @@ public class OrderDetail extends BaseEntity {
     /**
      * 실제 금액
      */
-    @Column(name = "AMOUNT")
+    @Column(name = "AMOUNT", nullable = false)
     private Long amount;
 
     /**
      * 구매 금액
      */
-    @Column(name = "BUY_AMOUNT")
+    @Column(name = "BUY_AMOUNT", nullable = false)
     private Long buyAmount;
 
     /**
      * 납부 금액
      */
-    @Column(name = "PAID_AMOUNT")
+    @Column(name = "PAID_AMOUNT", nullable = false)
     private Long paidAmount;
 
     /**
@@ -90,6 +91,18 @@ public class OrderDetail extends BaseEntity {
                 .orderDetail(this)
                 .point(point)
                 .inoutDivisionStatus(status)
+                .build();
+    }
+
+    public OrderDetailInfo entityToInfoDto() {
+        return OrderDetailInfo.builder()
+                .orderDetailSeq(this.orderDetailSeq)
+                .productSeq(this.product.getProductSeq())
+                .productName(this.product.getProductInfo().getProductName())
+                .amount(this.amount)
+                .buyAmount(this.buyAmount)
+                .paidAmount(this.paidAmount)
+                .orderStatus(this.orderStatus)
                 .build();
     }
 

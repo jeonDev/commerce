@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaSyncOrderConsumer extends AbstractEventConsumer<OrderViewDto> {
     private final static String TOPIC_NAME = "sync-order";
-    private final static String GROUP_ID = "group_2";
+    private final static String GROUP_ID = "group_1";
 
     private final OrderViewService orderViewService;
 

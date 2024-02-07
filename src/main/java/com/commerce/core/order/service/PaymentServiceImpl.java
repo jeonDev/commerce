@@ -2,15 +2,14 @@ package com.commerce.core.order.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.event.EventTopic;
+import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.order.entity.Orders;
 import com.commerce.core.order.entity.PaymentHistory;
 import com.commerce.core.order.repository.OrderDetailsRepository;
 import com.commerce.core.order.repository.PaymentHistoryRepository;
-import com.commerce.core.order.vo.InoutDivisionStatus;
-import com.commerce.core.order.vo.OrderDto;
-import com.commerce.core.order.vo.OrderStatus;
-import com.commerce.core.order.vo.PaymentDto;
+import com.commerce.core.order.vo.*;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final OrderService orderService;
     private final PointService pointService;
+    private final EventSender eventSender;
 
     @Transactional
     @Override
@@ -61,6 +61,10 @@ public class PaymentServiceImpl implements PaymentService {
         // 3. DB 후 처리
         orderDetailsRepository.saveAll(orderDetails);
 
+        OrderViewDto orderViewDto = OrderViewDto.builder()
+                .orderSeq(orderSeq)
+                .build();
+        eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
         return null;
     }
 

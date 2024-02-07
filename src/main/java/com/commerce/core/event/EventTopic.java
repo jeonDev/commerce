@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum EventTopic {
-    TOPIC_TEST("topic-test"), SYNC_PRODUCT("sync-product");
+    TOPIC_TEST("topic-test"), SYNC_PRODUCT("sync-product"), SYNC_ORDER("sync-order");
 
     private final String topic;
 }

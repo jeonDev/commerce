@@ -8,4 +8,6 @@ import lombok.*;
 @Getter
 @ToString
 public class OrderViewDto {
+
+    private Long orderSeq;
 }

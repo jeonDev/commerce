@@ -1,5 +1,6 @@
 package com.commerce.core.order.entity.mongo;
 
+import com.commerce.core.order.vo.OrderDetailInfo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -8,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -22,4 +25,15 @@ public class OrderView {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderViewSeq;
+
+    private Long orderSeq;
+
+    private List<OrderDetailInfo> orderDetailInfos;
+
+    private Long amount;
+    private Long buyAmount;
+    private Long paidAmount;
+
+
+
 }
