@@ -34,6 +34,10 @@ public class OrderView {
     private Long buyAmount;
     private Long paidAmount;
 
-
-
+    public void settingData(Long amount, Long buyAmount, Long paidAmount, List<OrderDetailInfo> orderDetailInfos) {
+        this.amount = amount;
+        this.buyAmount = buyAmount;
+        this.paidAmount = paidAmount;
+        this.orderDetailInfos = orderDetailInfos;
+    }
 }

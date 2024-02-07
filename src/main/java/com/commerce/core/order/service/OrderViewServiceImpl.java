@@ -44,7 +44,8 @@ public class OrderViewServiceImpl implements OrderViewService {
         OrderView orderView;
         Optional<OrderView> optionalOrderView = orderViewRepository.findByOrderSeq(orderSeq);
         if(optionalOrderView.isPresent()) {
-             orderView = optionalOrderView.get();
+            orderView = optionalOrderView.get();
+            orderView.settingData(amount, buyAmount, paidAmount, orderDetailInfos);
         } else {
             orderView = OrderView.builder()
                     .orderSeq(orderSeq)
