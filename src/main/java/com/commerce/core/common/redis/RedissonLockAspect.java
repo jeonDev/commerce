@@ -1,11 +1,12 @@
 package com.commerce.core.common.redis;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Profile;
@@ -26,22 +27,22 @@ public class RedissonLockAspect {
 
     private final RedissonClient redissonClient;
 
-    @Around("@annotation(com.commerce.core.common.redis.RedissonLockTarget)")
-    public Object redisLockAspect(ProceedingJoinPoint joinPoint) throws Throwable {
+    // com.commerce.core.common.redis.RedissonLockTarget
+    @Around("@annotation(redisTarget)")
+    public Object redisLockAspect(ProceedingJoinPoint joinPoint, RedissonLockTarget redisTarget) throws Throwable {
         log.info("Redisson Proxy 호출!!");
 
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        RedissonLockTarget redisTarget = signature.getMethod().getAnnotation(RedissonLockTarget.class);
+        final String LOCK_TARGET = redisTarget.value().getKey();
         final int LEASE_TIME = redisTarget.leaseTime();
 
         Object result = null;
 
-        RLock lock = redissonClient.getLock(redisTarget.value().getKey());
+        RLock lock = redissonClient.getLock(LOCK_TARGET);
         try {
-            boolean available = lock.tryLock(WAIT_TIME_SECOND, LEASE_TIME, TimeUnit.SECONDS);
-            if(!available) {
+
+            if(!lock.tryLock(WAIT_TIME_SECOND, LEASE_TIME, TimeUnit.SECONDS)) {
                 log.error("Redisson Lock 획득 실패");
-                return result;
+                throw new CommerceException(ExceptionStatus.LOCK_OCCUPIED_ERROR);
             }
 
             result = joinPoint.proceed();

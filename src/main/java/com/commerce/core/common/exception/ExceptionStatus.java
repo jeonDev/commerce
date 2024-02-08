@@ -22,7 +22,11 @@ public enum ExceptionStatus {
     PAYMENT_AMOUNT_ERROR("PA001", "결제금액 오류"),
 
     // COMMON_DATABASE
-    ENTITY_IS_EMPTY("CD001", "조회된 데이터가 없습니다.");
+    ENTITY_IS_EMPTY("CD001", "조회된 데이터가 없습니다."),
+
+    // COMMON lock occupied
+    LOCK_OCCUPIED_ERROR("C001", "Lock 점유 실패"),
+    SYSTEM_ERROR("C999", "System Error");
 
     private final String code;
     private final String message;
