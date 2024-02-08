@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @ToString
 public class ProductViewDto {
-    private Long productViewSeq;
     private Long productInfoSeq;
     private String productName;
     private String productDetail;
@@ -22,7 +21,6 @@ public class ProductViewDto {
 
     public ProductView dtoToEntity() {
         return ProductView.builder()
-                .productViewSeq(productViewSeq)
                 .productInfoSeq(productInfoSeq)
                 .productName(productName)
                 .productDetail(productDetail)

@@ -1,8 +1,6 @@
 package com.commerce.core.order.entity.mongo;
 
 import com.commerce.core.order.vo.OrderDetailInfo;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +17,8 @@ import java.util.List;
 @Document(collection = "ORDER_VIEW")
 public class OrderView {
 
-    /**
-     * 주문 정보 View Seq
-     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderViewSeq;
+    private String id;
 
     private Long orderSeq;
 

@@ -1,8 +1,6 @@
 package com.commerce.core.product.entity.mongo;
 
 import com.commerce.core.product.vo.ProductViewDto;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +20,8 @@ import java.util.List;
 @Document(collection = "PRODUCT_VIEW")
 public class ProductView {
 
-    /**
-     * 상품 정보 View Seq
-     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productViewSeq;
+    private String id;
 
     /**
      * 상품 정보 Seq
