@@ -28,7 +28,7 @@ public class ProductStockServiceImpl implements ProductStockService {
     private final ProductService productService;
 
     @Override
-    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
+    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK)
     @Transactional
     public ProductStock add(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크
@@ -56,7 +56,7 @@ public class ProductStockServiceImpl implements ProductStockService {
     }
 
     @Override
-    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK, delay = 100)
+    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK)
     @Transactional
     public ProductStock consume(ProductStockDto dto) {
         // 1. 상품 존재 여부 체크

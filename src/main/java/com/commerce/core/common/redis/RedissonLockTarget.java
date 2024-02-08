@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RedissonLockTarget {
     RedisKeyType value();
-    int delay();
+    int leaseTime() default 1;
 }
