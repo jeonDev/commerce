@@ -3,6 +3,8 @@ package com.commerce.core.api;
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "사용자 포인트 API")
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/v1/point")
@@ -18,9 +21,18 @@ public class PointController {
 
     private final PointService pointService;
 
-    @PostMapping("/charege")
+    @PostMapping("/charge")
+    @Operation(summary = "포인트 충전", description = "고객의 포인트를 충전한다")
     public ResponseVO<Object> pointCharge(@RequestBody PointDto pointDto) {
         pointService.charge(pointDto);
+        return ResponseVO.builder()
+                .build();
+    }
+
+    @PostMapping("/withdraw")
+    @Operation(summary = "포인트 차감", description = "고객의 포인트를 차감한다.")
+    public ResponseVO<Object> pointWithdraw(@RequestBody PointDto pointDto) {
+        pointService.withdraw(pointDto);
         return ResponseVO.builder()
                 .build();
     }
