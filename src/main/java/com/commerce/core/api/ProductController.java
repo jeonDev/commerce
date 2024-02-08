@@ -1,11 +1,15 @@
 package com.commerce.core.api;
 
+import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.product.service.ProductService;
 import com.commerce.core.product.service.ProductViewService;
 import com.commerce.core.product.vo.ProductDto;
+import com.commerce.core.product.vo.ProductViewResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,12 +21,16 @@ public class ProductController {
     private final ProductViewService productViewService;
 
     @GetMapping("/view")
-    public void pointCharge() {
-        productViewService.selectProductViewList();
+    public ResponseVO<List<ProductViewResDto>> pointCharge() {
+        return ResponseVO.<List<ProductViewResDto>>builder()
+                .data(productViewService.selectProductViewList())
+                .build();
     }
 
     @PostMapping("/regist")
-    public void pointCharge(@RequestBody ProductDto dto) {
+    public ResponseVO<Object> pointCharge(@RequestBody ProductDto dto) {
         productService.add(dto);
+        return ResponseVO.builder()
+                .build();
     }
 }

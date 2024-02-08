@@ -1,5 +1,6 @@
 package com.commerce.core.api;
 
+import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.order.service.OrderService;
 import com.commerce.core.order.service.PaymentService;
 import com.commerce.core.order.vo.OrderDto;
@@ -21,13 +22,17 @@ public class OrderController {
     private final PaymentService paymentService;
 
     @PostMapping("/order")
-    public void order(@RequestBody OrderDto dto) {
+    public ResponseVO<Object> order(@RequestBody OrderDto dto) {
         orderService.order(dto);
+        return ResponseVO.builder()
+                .build();
     }
 
     @PostMapping("/payment")
-    public void pointCharge(@RequestBody PaymentDto dto) {
+    public ResponseVO<Object> pointCharge(@RequestBody PaymentDto dto) {
         paymentService.payment(dto);
+        return ResponseVO.builder()
+                .build();
     }
 
 }

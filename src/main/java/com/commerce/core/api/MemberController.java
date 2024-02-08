@@ -1,5 +1,6 @@
 package com.commerce.core.api;
 
+import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.member.vo.LoginDto;
@@ -21,12 +22,16 @@ public class MemberController {
     private final LoginService loginService;
 
     @PostMapping("/signup")
-    public void signup(@RequestBody MemberDto dto) {
+    public ResponseVO<Object> signup(@RequestBody MemberDto dto) {
         memberService.createMember(dto);
+        return ResponseVO.builder()
+                .build();
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody LoginDto dto) {
+    public ResponseVO<Object> login(@RequestBody LoginDto dto) {
         loginService.login(dto);
+        return ResponseVO.builder()
+                .build();
     }
 }

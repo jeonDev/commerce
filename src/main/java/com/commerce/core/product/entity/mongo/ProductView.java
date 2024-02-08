@@ -1,6 +1,7 @@
 package com.commerce.core.product.entity.mongo;
 
 import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.vo.ProductViewResDto;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,5 +68,18 @@ public class ProductView {
         this.productOptions = dto.getProductOptions();
 
         return this;
+    }
+
+
+    public ProductViewResDto documentToResDto() {
+        return ProductViewResDto.builder()
+                .productInfoSeq(productInfoSeq)
+                .productName(productName)
+                .productDetail(productDetail)
+                .price(price)
+                .discountPrice(discountPrice)
+                .useYn(useYn)
+                .productOptions(productOptions)
+                .build();
     }
 }

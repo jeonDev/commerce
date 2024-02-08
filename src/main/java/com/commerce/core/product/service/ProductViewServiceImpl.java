@@ -3,6 +3,7 @@ package com.commerce.core.product.service;
 import com.commerce.core.product.entity.mongo.ProductView;
 import com.commerce.core.product.repository.mongo.ProductViewRepository;
 import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.vo.ProductViewResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,9 @@ public class ProductViewServiceImpl implements ProductViewService {
     }
 
     @Override
-    public List<ProductView> selectProductViewList() {
-        return null;
+    public List<ProductViewResDto> selectProductViewList() {
+        return productViewRepository.findAll().stream()
+                .map(ProductView::documentToResDto)
+                .toList();
     }
 }

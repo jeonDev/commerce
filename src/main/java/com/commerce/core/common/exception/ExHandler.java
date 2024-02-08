@@ -18,4 +18,14 @@ public class ExHandler {
 
         return new ResponseEntity<>(errorDto, HttpStatus.OK);
     }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponseDto> handlerException(Exception e) {
+        ErrorResponseDto errorDto = ErrorResponseDto.builder()
+                .code("9999")
+                .message("System Error")
+                .build();
+
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

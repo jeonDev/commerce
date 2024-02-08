@@ -1,5 +1,6 @@
 package com.commerce.core.api;
 
+import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,9 @@ public class PointController {
     private final PointService pointService;
 
     @PostMapping("/charege")
-    public void pointCharge(@RequestBody PointDto pointDto) {
+    public ResponseVO<Object> pointCharge(@RequestBody PointDto pointDto) {
         pointService.charge(pointDto);
+        return ResponseVO.builder()
+                .build();
     }
 }
