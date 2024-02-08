@@ -1,13 +1,12 @@
 package com.commerce.core.product.vo;
 
 import com.commerce.core.product.entity.ProductInfo;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
-@Getter
+@NoArgsConstructor
+@Data
 public class ProductInfoDto {
     private Long productInfoSeq;
     private String productName;

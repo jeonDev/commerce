@@ -21,14 +21,14 @@ public class ProductController {
     private final ProductViewService productViewService;
 
     @GetMapping("/view")
-    public ResponseVO<List<ProductViewResDto>> pointCharge() {
+    public ResponseVO<List<ProductViewResDto>> productViewList() {
         return ResponseVO.<List<ProductViewResDto>>builder()
                 .data(productViewService.selectProductViewList())
                 .build();
     }
 
-    @PostMapping("/regist")
-    public ResponseVO<Object> pointCharge(@RequestBody ProductDto dto) {
+    @PostMapping("/register")
+    public ResponseVO<Object> productRegister(@RequestBody ProductDto dto) {
         productService.add(dto);
         return ResponseVO.builder()
                 .build();

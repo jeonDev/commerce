@@ -19,17 +19,17 @@ public class ProductDslRepository {
 
     private final JPAQueryFactory dsl;
 
-    public Page<Product> findByAll(ProductDto dto) {
-        List<Product> content = dsl
-                .selectFrom(product)
-                .offset(dto.getPage().getOffset())
-                .limit(dto.getPage().getPageSize())
-                .fetch();
-
-        JPAQuery<Long> countQuery = dsl
-                .select(product.count())
-                .from(product);
-
-        return PageableExecutionUtils.getPage(content, dto.getPage(), countQuery::fetchCount);
-    }
+//    public Page<Product> findByAll(ProductDto dto) {
+//        List<Product> content = dsl
+//                .selectFrom(product)
+//                .offset(dto.getPage().getOffset())
+//                .limit(dto.getPage().getPageSize())
+//                .fetch();
+//
+//        JPAQuery<Long> countQuery = dsl
+//                .select(product.count())
+//                .from(product);
+//
+//        return PageableExecutionUtils.getPage(content, dto.getPage(), countQuery::fetchCount);
+//    }
 }

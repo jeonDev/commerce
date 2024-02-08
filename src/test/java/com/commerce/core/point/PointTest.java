@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Slf4j
 @SpringBootTest
 public class PointTest {
-    final int COUPON_THREAD_COUNT = 10;
+    final int TEST_THREAD_COUNT = 10;
     @Autowired
     private PointService pointService;
 
@@ -84,10 +84,10 @@ public class PointTest {
 
     @Test
     void point_lock_test() throws InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(COUPON_THREAD_COUNT);
-        CountDownLatch latch = new CountDownLatch(COUPON_THREAD_COUNT);
+        ExecutorService executorService = Executors.newFixedThreadPool(TEST_THREAD_COUNT);
+        CountDownLatch latch = new CountDownLatch(TEST_THREAD_COUNT);
 
-        for(int i = 0; i < COUPON_THREAD_COUNT; i++) {
+        for(int i = 0; i < TEST_THREAD_COUNT; i++) {
             PointDto pointDto = PointDto.builder()
                     .memberSeq(2L)
                     .point(1000L)

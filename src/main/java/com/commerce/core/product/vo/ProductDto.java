@@ -1,12 +1,11 @@
 package com.commerce.core.product.vo;
 
 import com.commerce.core.product.entity.Product;
-import com.commerce.core.common.vo.PageDto;
 import com.commerce.core.product.entity.ProductInfo;
 import lombok.Data;
 
 @Data
-public class ProductDto extends PageDto {
+public class ProductDto {
     private Long productSeq;
     private String productName;
     private String productOptionCode;
