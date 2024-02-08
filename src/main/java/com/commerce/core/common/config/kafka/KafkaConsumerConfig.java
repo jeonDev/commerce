@@ -1,4 +1,4 @@
-package com.commerce.core.common.kafka;
+package com.commerce.core.common.config.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
