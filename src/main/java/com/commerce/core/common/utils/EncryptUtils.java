@@ -11,8 +11,6 @@ public class EncryptUtils {
 
     /**
      * SHA-256 Encrypt
-     * @param value
-     * @return
      */
     public static String encryptSHA256(String value) {
         return encrypt(value, "SHA256");
@@ -20,8 +18,6 @@ public class EncryptUtils {
 
     /**
      * Encrypt
-     * @param value
-     * @return
      */
     private static String encrypt(String value, String algorithms) {
         MessageDigest md = null;
@@ -37,8 +33,6 @@ public class EncryptUtils {
 
     /**
      * Decrypt
-     * @param value
-     * @return
      */
     private static String decrypt(String value) {
         return value;

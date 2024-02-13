@@ -15,7 +15,6 @@ import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.vo.OrderViewDto;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
-import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.order.vo.OrderDto;
@@ -46,25 +45,25 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Orders order(OrderDto dto) {
+        // 1. Member Use Check
         Member member = memberService.selectUseMember(dto.getMemberSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+
+        // 2. Data Setting
         final List<OrderDetail> orderDetails = new ArrayList<>();
         final List<OrderDetailHistory> orderDetailHistories = new ArrayList<>();
         final Orders order = ordersRepository.save(Orders.builder()
                         .member(member)
                         .build());
 
+        // 3. Product Stock Consume & Order Detail Setting
         Arrays.stream(dto.getProductSeqs())
                 .forEach(item -> {
-                    ProductStockDto stock = ProductStockDto.builder()
-                            .productSeq(item)
-                            .stock(-1L)
-                            .build();
-                    
-                    ProductStock productStock = productStockService.consume(stock);
-                    Product product = productStock.getProduct();
+                    // 3-1. Product Stock Consume
+                    Product product = productStockConsume(item);
                     ProductInfo productInfo = product.getProductInfo();
 
+                    // 3-2. Order Detail Setting
                     OrderDetail orderDetail = OrderDetail.builder()
                             .product(product)
                             .amount(productInfo.getPrice())
@@ -73,6 +72,7 @@ public class OrderServiceImpl implements OrderService {
                             .orders(order)
                             .orderStatus(OrderStatus.NEW_ORDER)
                             .build();
+
                     orderDetails.add(orderDetail);
                     orderDetailHistories.add(orderDetail.generateHistoryEntity());
                 });
@@ -80,13 +80,22 @@ public class OrderServiceImpl implements OrderService {
         orderDetailsRepository.saveAll(orderDetails);
         orderDetailHistoryRepository.saveAll(orderDetailHistories);
 
+        // 4. Event Send (Order View Mongo DB)
         OrderViewDto orderViewDto = OrderViewDto.builder()
                 .orderSeq(order.getOrderSeq())
                 .build();
-
         eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
 
         return order;
+    }
+
+    public Product productStockConsume(Long item) {
+        ProductStockDto stock = ProductStockDto.builder()
+                .productSeq(item)
+                .stock(-1L)
+                .build();
+
+        return productStockService.consume(stock).getProduct();
     }
 
     @Override
@@ -99,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
         Long orderDetailSeq = dto.getOrderDetailSeq();
         OrderDetail orderDetail = this.selectOrderDetail(orderDetailSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+
         orderDetail.updateOrderStatus(OrderStatus.of(dto.getOrderStatus()));
         orderDetail = orderDetailsRepository.save(orderDetail);
 

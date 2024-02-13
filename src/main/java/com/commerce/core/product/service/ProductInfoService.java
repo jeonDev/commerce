@@ -9,15 +9,11 @@ public interface ProductInfoService {
 
     /**
      * Product Info Add
-     * @param dto
-     * @return
      */
     ProductInfo add(ProductInfoDto dto);
 
     /**
      * Select Product Info
-     * @param productInfoSeq
-     * @return
      */
     Optional<ProductInfo> selectProductInfo(Long productInfoSeq);
 }

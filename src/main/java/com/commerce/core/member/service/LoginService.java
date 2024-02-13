@@ -7,8 +7,6 @@ public interface LoginService {
 
     /**
      * Login
-     * @param dto
-     * @return
      */
     LoginSuccessDto login(LoginDto dto);
 }

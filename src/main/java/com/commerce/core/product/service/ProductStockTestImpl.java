@@ -81,8 +81,6 @@ public class ProductStockTestImpl implements ProductStockService {
 
     /**
      * 상품 존재 여부 체크
-     * @param dto
-     * @return
      */
     private Optional<Product> getProductDetail(Long productSeq) {
         return productService.selectProduct(productSeq);
@@ -90,7 +88,6 @@ public class ProductStockTestImpl implements ProductStockService {
 
     /**
      * 재고 처리 내역 저장
-     * @param entity
      */
     private void saveHistoryEntity(ProductStock entity) {
         productStockHistoryRepository.save(entity.generateHistoryEntity());

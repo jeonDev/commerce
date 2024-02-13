@@ -34,33 +34,32 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @Override
     public Orders payment(PaymentDto dto) {
-        log.info("payment()");
-
-        // 1. 결제 대상 확인
+        // 1. Order Detail Find
         Long orderSeq = dto.getOrderSeq();
         List<OrderDetail> orderDetails = orderService.selectOrderDetailList(orderSeq);
 
-        // 1-1. 결제 금액 계산 & 값 세팅
+        // 2. Payment Amount Calculator
         long payAmount = orderDetails.stream()
                 .peek(this::paymentAmountBeforeProcess)
                 .mapToLong(OrderDetail::getPaidAmount)
                 .sum();
 
-        // 조회 내역 없을 경우 Exception 처리
+        // 2-1. Payment Amount Empty => Exception
         if(payAmount <= 0) {
             throw new CommerceException(ExceptionStatus.PAYMENT_AMOUNT_ERROR);
         }
 
-        // 2. 결제 처리
+        // 3. Payment (Point Withdraw)
         PointDto pointDto = PointDto.builder()
                 .memberSeq(dto.getMemberSeq())
                 .point(payAmount)
                 .build();
         pointService.withdraw(pointDto);
 
-        // 3. DB 후 처리
+        // 4. Save
         orderDetailsRepository.saveAll(orderDetails);
 
+        // 5. Event Send(Order View Mongo DB)
         OrderViewDto orderViewDto = OrderViewDto.builder()
                 .orderSeq(orderSeq)
                 .build();

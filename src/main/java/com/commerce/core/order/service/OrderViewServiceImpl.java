@@ -26,14 +26,17 @@ public class OrderViewServiceImpl implements OrderViewService {
     @Transactional
     @Override
     public void merge(OrderViewDto dto) {
+        // 1. Data Setting
         Long buyAmount = 0L;
         Long amount = 0L;
         Long paidAmount = 0L;
         List<OrderDetailInfo> orderDetailInfos = new ArrayList<>();
 
+        // 2. Order Detail Find
         Long orderSeq = dto.getOrderSeq();
         List<OrderDetail> orderDetails = orderService.selectOrderDetailList(orderSeq);
 
+        // 3. Amount Data Setting
         for (OrderDetail orderDetail : orderDetails) {
             buyAmount += orderDetail.getBuyAmount();
             amount += orderDetail.getAmount();
@@ -41,6 +44,7 @@ public class OrderViewServiceImpl implements OrderViewService {
             orderDetailInfos.add(orderDetail.entityToInfoDto());
         }
 
+        // 4. Order View Data Save
         OrderView orderView;
         Optional<OrderView> optionalOrderView = orderViewRepository.findByOrderSeq(orderSeq);
         if(optionalOrderView.isPresent()) {

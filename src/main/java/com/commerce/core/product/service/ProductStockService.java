@@ -17,22 +17,16 @@ public interface ProductStockService {
     
     /**
      * Product Stock Add
-     * @param dto
-     * @return
      */
     ProductStock add(ProductStockDto dto);
 
     /**
      * Product Stock Consume
-     * @param dto
-     * @return
      */
     ProductStock consume(ProductStockDto dto);
 
     /**
      * Select Product Stock
-     * @param dto
-     * @return
      */
     Optional<ProductStock> selectProductStock(ProductStockDto dto);
 }

@@ -44,28 +44,27 @@ public class PointServiceImpl implements PointService {
     }
 
     private Point process(PointDto dto, ConsumeDivisionStatus status) {
-        Long memberSeq = dto.getMemberSeq();
-        Member member = memberService.selectUseMember(memberSeq).orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+        // 1. Member Use Find
+        Member member = memberService.selectUseMember(dto.getMemberSeq()).orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
+        // 2. Existing Point Find & Point Setting
         Optional<Point> optionalPoint = pointRepository.findByMember(member);
-
+        Point point;
         if(optionalPoint.isPresent()) {
-            Point point = optionalPoint.get();
+            point = optionalPoint.get();
             point.pointChange(dto.getPoint(), status);
-
-            return this.entitySaveAndHistoryGenerate(point
-                    , dto.getPoint()
-                    , status);
         } else {
             if(status == ConsumeDivisionStatus.PAYMENT) throw new CommerceException(ExceptionStatus.POINT_LACK);
 
-            return this.entitySaveAndHistoryGenerate(Point.builder()
-                            .member(member)
-                            .point(dto.getPoint())
-                            .build()
-                    , dto.getPoint()
-                    , status);
+            point = Point.builder()
+                    .member(member)
+                    .point(dto.getPoint())
+                    .build();
         }
+
+        return this.entitySaveAndHistoryGenerate(point
+                , dto.getPoint()
+                , status);
     }
 
     private Point entitySaveAndHistoryGenerate(Point point, Long paymentAmount, ConsumeDivisionStatus status) {

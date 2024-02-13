@@ -27,13 +27,13 @@ public class ProductStock extends BaseEntity {
     @Column(name = "STOCK")
     private Long stock;
 
-    public void inventoryAdjustment(Long stock) {
+    public ProductStock inventoryAdjustment(Long stock) {
         this.stock += stock;
+        return this;
     }
 
     /**
      * History Entity Generate
-     * @return
      */
     public ProductStockHistory generateHistoryEntity() {
         return ProductStockHistory.builder()

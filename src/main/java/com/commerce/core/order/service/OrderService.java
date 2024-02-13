@@ -10,15 +10,11 @@ import java.util.Optional;
 public interface OrderService {
     /**
      * Product Order
-     * @param dto
-     * @return
      */
     Orders order(OrderDto dto);
 
     /**
      * Select Orders
-     * @param orderSeq
-     * @return
      */
     Optional<Orders> selectOrder(Long orderSeq);
 
@@ -34,8 +30,6 @@ public interface OrderService {
 
     /**
      * Select Order Detail List
-     * @param orderSeq
-     * @return
      */
     List<OrderDetail> selectOrderDetailList(Long orderSeq);
 }
