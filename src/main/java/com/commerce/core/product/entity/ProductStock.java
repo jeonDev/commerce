@@ -35,7 +35,7 @@ public class ProductStock extends BaseEntity {
     /**
      * History Entity Generate
      */
-    public ProductStockHistory generateHistoryEntity() {
+    public ProductStockHistory generateHistoryEntity(Long stock) {
         return ProductStockHistory.builder()
                 .product(product)
                 .stock(stock)

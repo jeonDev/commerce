@@ -38,9 +38,10 @@ public class ProductStockServiceImpl implements ProductStockService {
         // 2. 재고 조정 (기존 데이터 존재 여부 체크)
         ProductStock entity = null;
         Optional<ProductStock> optionalProductStock = productStockRepository.findById(product.getProductSeq());
+        final Long stock = Math.abs(dto.getStock());
         if(optionalProductStock.isPresent()) {
             entity = optionalProductStock.get();
-            entity.inventoryAdjustment(dto.getStock());
+            entity.inventoryAdjustment(stock);
         } else {
             entity = dto.dtoToEntity(product);
         }
@@ -51,7 +52,7 @@ public class ProductStockServiceImpl implements ProductStockService {
         entity = productStockRepository.save(entity);
 
         // 3. 재고 처리 내역 저장
-        this.saveHistoryEntity(entity);
+        this.saveHistoryEntity(entity, stock);
         return entity;
     }
 
@@ -66,7 +67,8 @@ public class ProductStockServiceImpl implements ProductStockService {
         // 2. 재고 조정 (기존 데이터 존재 여부 체크)
         ProductStock entity = productStockRepository.findById(product.getProductSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.SOLD_OUT));
-        entity.inventoryAdjustment(dto.getStock());
+        final Long stock = Math.abs(dto.getStock()) * -1;
+        entity.inventoryAdjustment(stock);
 
         if(STOCK_SOLD_OUT_COUNT > entity.getStock())
             throw new CommerceException(ExceptionStatus.SOLD_OUT);
@@ -74,7 +76,7 @@ public class ProductStockServiceImpl implements ProductStockService {
         entity = productStockRepository.save(entity);
 
         // 3. 재고 처리 내역 저장
-        this.saveHistoryEntity(entity);
+        this.saveHistoryEntity(entity, stock);
         return entity;
     }
 
@@ -93,7 +95,7 @@ public class ProductStockServiceImpl implements ProductStockService {
     /**
      * 재고 처리 내역 저장
      */
-    private void saveHistoryEntity(ProductStock entity) {
-        productStockHistoryRepository.save(entity.generateHistoryEntity());
+    private void saveHistoryEntity(ProductStock entity, Long stock) {
+        productStockHistoryRepository.save(entity.generateHistoryEntity(stock));
     }
 }

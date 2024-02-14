@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
     public Product productStockConsume(Long item) {
         ProductStockDto stock = ProductStockDto.builder()
                 .productSeq(item)
-                .stock(-1L)
+                .stock(1L)
                 .build();
 
         return productStockService.consume(stock).getProduct();
