@@ -28,13 +28,13 @@ public class PointServiceImpl implements PointService {
 
     @Transactional
     @Override
-    public Point charge(PointDto dto) {
+    public PointDto charge(PointDto dto) {
         return this.process(dto, ConsumeDivisionStatus.CHARGE);
     }
 
     @Transactional
     @Override
-    public Point withdraw(PointDto dto) {
+    public PointDto withdraw(PointDto dto) {
         return this.process(dto, ConsumeDivisionStatus.PAYMENT);
     }
 
@@ -43,9 +43,10 @@ public class PointServiceImpl implements PointService {
         return pointRepository.findByMember_MemberSeq(memberSeq);
     }
 
-    private Point process(PointDto dto, ConsumeDivisionStatus status) {
+    private PointDto process(PointDto dto, ConsumeDivisionStatus status) {
         // 1. Member Use Find
-        Member member = memberService.selectUseMember(dto.getMemberSeq()).orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+        Member member = memberService.selectUseMember(dto.getMemberSeq())
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Existing Point Find & Point Setting
         Optional<Point> optionalPoint = pointRepository.findByMember(member);
@@ -62,14 +63,18 @@ public class PointServiceImpl implements PointService {
                     .build();
         }
 
-        return this.entitySaveAndHistoryGenerate(point
-                , dto.getPoint()
-                , status);
+        // 3. Entity And History Save
+        this.entitySaveAndHistoryGenerate(point, dto.getPoint(), status);
+
+        return PointDto.builder()
+                .memberSeq(member.getMemberSeq())
+                .point(dto.getPoint())
+                .balancePoint(point.getPoint())
+                .build();
     }
 
-    private Point entitySaveAndHistoryGenerate(Point point, Long paymentAmount, ConsumeDivisionStatus status) {
-        Point result = pointRepository.save(point);
+    private void entitySaveAndHistoryGenerate(Point point, Long paymentAmount, ConsumeDivisionStatus status) {
+        pointRepository.save(point);
         pointHistoryRepository.save(point.generateHistoryEntity(paymentAmount, status));
-        return result;
     }
 }

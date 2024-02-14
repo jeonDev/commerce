@@ -9,4 +9,5 @@ import lombok.Getter;
 public class PointDto {
     private Long memberSeq;
     private Long point;
+    private Long balancePoint;
 }

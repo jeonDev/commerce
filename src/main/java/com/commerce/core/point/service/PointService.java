@@ -10,12 +10,12 @@ public interface PointService {
     /**
      * Point Charge
      */
-    Point charge(PointDto dto);
+    PointDto charge(PointDto dto);
 
     /**
      * Point Withdraw
      */
-    Point withdraw(PointDto dto);
+    PointDto withdraw(PointDto dto);
 
     /**
      * Point Select
