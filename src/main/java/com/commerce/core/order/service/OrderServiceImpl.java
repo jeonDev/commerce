@@ -97,6 +97,7 @@ public class OrderServiceImpl implements OrderService {
         ProductStockDto stock = ProductStockDto.builder()
                 .productSeq(item)
                 .stock(1L)
+                .productStockProcessStatus(ProductStockProcessStatus.CONSUME)
                 .build();
 
         return productStockService.productStockAdjustment(stock).getProduct();

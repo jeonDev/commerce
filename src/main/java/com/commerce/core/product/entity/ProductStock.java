@@ -1,6 +1,7 @@
 package com.commerce.core.product.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.product.vo.ProductStockProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,10 +36,11 @@ public class ProductStock extends BaseEntity {
     /**
      * History Entity Generate
      */
-    public ProductStockHistory generateHistoryEntity(Long stock) {
+    public ProductStockHistory generateHistoryEntity(Long stock, ProductStockProcessStatus productStockProcessStatus) {
         return ProductStockHistory.builder()
                 .product(product)
                 .stock(stock)
+                .productStockProcessStatus(productStockProcessStatus)
                 .build();
     }
 

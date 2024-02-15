@@ -1,6 +1,7 @@
 package com.commerce.core.product.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.product.vo.ProductStockProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,8 @@ public class ProductStockHistory extends BaseEntity {
 
     @Column(name = "STOCK")
     private Long stock;
+
+    @Column(name = "PRODUCT_STOCK_PROCESS_STATUS")
+    @Enumerated(EnumType.ORDINAL)
+    private ProductStockProcessStatus productStockProcessStatus;
 }

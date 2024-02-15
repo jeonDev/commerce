@@ -2,82 +2,89 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.common.redis.RedissonLockTarget;
-import com.commerce.core.common.redis.RedisKeyType;
+import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.repository.ProductStockHistoryRepository;
 import com.commerce.core.product.repository.ProductStockRepository;
 import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.vo.ProductStockProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@Profile("basic")
 public class ProductStockServiceImpl implements ProductStockService {
 
     private final ProductStockRepository productStockRepository;
     private final ProductStockHistoryRepository productStockHistoryRepository;
     private final ProductService productService;
+    private final EventSender eventSender;
 
     @Override
-    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK)
-    @Transactional
-    public ProductStock add(ProductStockDto dto) {
-        // 1. 상품 존재 여부 체크
-        Product product = this.getProductDetail(dto.getProductSeq())
+    public ProductStock productStockAdjustment(ProductStockDto dto) {
+        // 1. Product Exists Check
+        Product product = productService.selectProduct(dto.getProductSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        // 2. 재고 조정 (기존 데이터 존재 여부 체크)
-        ProductStock entity = null;
-        Optional<ProductStock> optionalProductStock = productStockRepository.findById(product.getProductSeq());
-        final Long stock = Math.abs(dto.getStock());
-        if(optionalProductStock.isPresent()) {
-            entity = optionalProductStock.get();
-            entity.inventoryAdjustment(stock);
-        } else {
-            entity = dto.dtoToEntity(product);
-        }
+        // 2. Product Stock Adjustment
+        final boolean isConsume = dto.getProductStockProcessStatus() == ProductStockProcessStatus.CONSUME;
+        final Long stock = Math.abs(dto.getStock()) * (isConsume ? -1 : 1);
 
-        if(STOCK_SOLD_OUT_COUNT >= entity.getStock())
+        ProductStock productStock = this.stockAdjustmentProcess(product, isConsume, stock);
+
+        if(STOCK_SOLD_OUT_COUNT >= productStock.getStock())
             throw new CommerceException(ExceptionStatus.SOLD_OUT);
 
-        entity = productStockRepository.save(entity);
+        productStock = productStockRepository.save(productStock);
 
-        // 3. 재고 처리 내역 저장
-        this.saveHistoryEntity(entity, stock);
-        return entity;
+        // 3. History Save
+        this.saveHistoryEntity(productStock, stock, dto.getProductStockProcessStatus());
+
+        // 4. Event Send(Product View Mongo DB)
+        this.productStockEventSend();
+
+        return productStock;
     }
 
-    @Override
-    @RedissonLockTarget(value = RedisKeyType.PRODUCT_STOCK)
-    @Transactional
-    public ProductStock consume(ProductStockDto dto) {
-        // 1. 상품 존재 여부 체크
-        Product product = this.getProductDetail(dto.getProductSeq())
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    private ProductStock stockAdjustmentProcess(Product product, boolean isConsume, Long stock) {
+        Optional<ProductStock> productStockOptional = productStockRepository.findById(product.getProductSeq());
 
-        // 2. 재고 조정 (기존 데이터 존재 여부 체크)
-        ProductStock entity = productStockRepository.findById(product.getProductSeq())
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.SOLD_OUT));
-        final Long stock = Math.abs(dto.getStock()) * -1;
-        entity.inventoryAdjustment(stock);
+        if(productStockOptional.isPresent()) {
+            ProductStock productStock = productStockOptional.get();
+            productStock.inventoryAdjustment(stock);
+            return productStock;
+        }
 
-        if(STOCK_SOLD_OUT_COUNT > entity.getStock())
-            throw new CommerceException(ExceptionStatus.SOLD_OUT);
+        if(isConsume) throw new CommerceException(ExceptionStatus.SOLD_OUT);
 
-        entity = productStockRepository.save(entity);
+        return ProductStock.builder()
+                .product(product)
+                .stock(stock)
+                .build();
+    }
 
-        // 3. 재고 처리 내역 저장
-        this.saveHistoryEntity(entity, stock);
-        return entity;
+    private void saveHistoryEntity(ProductStock entity, Long stock, ProductStockProcessStatus productStockProcessStatus) {
+        productStockHistoryRepository.save(entity.generateHistoryEntity(stock, productStockProcessStatus));
+    }
+
+    /**
+     * Product View Event Send
+     */
+    private void productStockEventSend() {
+        // TODO: Event Send 기준
+        // stock 0~5 : 5개미만
+        // 기존 재고 5 이하 & 변경 재고 5 이상 : 재고있음
+        // └ 기존 데이터 없을 경우도 포함.
+        // 이벤트를 stock 포함해서 보낼지, 이벤트를 보내고 event에서 처리할 지 결정 필요.
+
+//        ProductViewDto productViewDto = ProductViewDto.builder()
+//                .build();
+//        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
     }
 
     @Override
@@ -85,17 +92,4 @@ public class ProductStockServiceImpl implements ProductStockService {
         return productStockRepository.findById(dto.getProductSeq());
     }
 
-    /**
-     * 상품 존재 여부 체크
-     */
-    private Optional<Product> getProductDetail(Long productSeq) {
-        return productService.selectProduct(productSeq);
-    }
-
-    /**
-     * 재고 처리 내역 저장
-     */
-    private void saveHistoryEntity(ProductStock entity, Long stock) {
-        productStockHistoryRepository.save(entity.generateHistoryEntity(stock));
-    }
 }
