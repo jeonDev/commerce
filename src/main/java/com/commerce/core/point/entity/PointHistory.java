@@ -2,7 +2,7 @@ package com.commerce.core.point.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.member.entity.Member;
-import com.commerce.core.point.vo.ConsumeDivisionStatus;
+import com.commerce.core.point.vo.PointProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +29,9 @@ public class PointHistory extends BaseEntity {
     @Column(name = "POINT")
     private Long point;
 
-    @Column(name = "CONSUME_DIVISION_STATUS")
+    @Column(name = "POINT_PROCESS_STATUS")
     @Enumerated(EnumType.ORDINAL)
-    private ConsumeDivisionStatus consumeDivisionStatus;
+    private PointProcessStatus pointProcessStatus;
 
 
 }

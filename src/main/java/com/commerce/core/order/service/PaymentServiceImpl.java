@@ -12,6 +12,7 @@ import com.commerce.core.order.repository.PaymentHistoryRepository;
 import com.commerce.core.order.vo.*;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
+import com.commerce.core.point.vo.PointProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,8 +54,9 @@ public class PaymentServiceImpl implements PaymentService {
         PointDto pointDto = PointDto.builder()
                 .memberSeq(dto.getMemberSeq())
                 .point(payAmount)
+                .pointProcessStatus(PointProcessStatus.PAYMENT)
                 .build();
-        pointService.withdraw(pointDto);
+        pointService.pointAdjustment(pointDto);
 
         // 4. Save
         orderDetailsRepository.saveAll(orderDetails);

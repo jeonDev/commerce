@@ -8,14 +8,9 @@ import java.util.Optional;
 public interface PointService {
 
     /**
-     * Point Charge
+     * Point Adjustment
      */
-    PointDto charge(PointDto dto);
-
-    /**
-     * Point Withdraw
-     */
-    PointDto withdraw(PointDto dto);
+    PointDto pointAdjustment(PointDto dto);
 
     /**
      * Point Select

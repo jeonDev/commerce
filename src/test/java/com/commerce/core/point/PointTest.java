@@ -4,6 +4,7 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.point.entity.Point;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
+import com.commerce.core.point.vo.PointProcessStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ public class PointTest {
         PointDto pointDto = PointDto.builder()
                 .memberSeq(1L)
                 .point(10000L)
+                .pointProcessStatus(PointProcessStatus.CHARGE)
                 .build();
         Long originPoint = 0L;
         try {
@@ -37,7 +39,7 @@ public class PointTest {
         } catch (Exception e) {
 
         }
-        pointService.charge(pointDto);
+        pointService.pointAdjustment(pointDto);
 
         Point point = pointService.selectPoint(pointDto.getMemberSeq()).get();
         assertThat(point.getPoint()).isEqualTo(pointDto.getPoint() + originPoint);
@@ -56,9 +58,10 @@ public class PointTest {
         PointDto pointDto = PointDto.builder()
                 .memberSeq(1L)
                 .point(originPoint + 1L)
+                .pointProcessStatus(PointProcessStatus.PAYMENT)
                 .build();
         assertThrows(CommerceException.class, () -> {
-            pointService.withdraw(pointDto);
+            pointService.pointAdjustment(pointDto);
         });
 
     }
@@ -69,6 +72,7 @@ public class PointTest {
         PointDto pointDto = PointDto.builder()
                 .memberSeq(1L)
                 .point(10000L)
+                .pointProcessStatus(PointProcessStatus.PAYMENT)
                 .build();
         Long originPoint = 0L;
         try {
@@ -77,7 +81,7 @@ public class PointTest {
 
         }
 
-        pointService.withdraw(pointDto);
+        pointService.pointAdjustment(pointDto);
         Point point = pointService.selectPoint(pointDto.getMemberSeq()).get();
         assertThat(point.getPoint()).isEqualTo(originPoint - pointDto.getPoint());
     }
@@ -88,15 +92,15 @@ public class PointTest {
         CountDownLatch latch = new CountDownLatch(TEST_THREAD_COUNT);
 
         for(int i = 0; i < TEST_THREAD_COUNT; i++) {
+            int cnt = i;
             PointDto pointDto = PointDto.builder()
                     .memberSeq(2L)
                     .point(1000L)
+                    .pointProcessStatus(cnt % 2 == 0 ? PointProcessStatus.CHARGE : PointProcessStatus.PAYMENT)
                     .build();
-            int cnt = i;
             executorService.execute(() -> {
                 try {
-                    if(cnt % 2 == 0) pointService.charge(pointDto);
-                    else pointService.withdraw(pointDto);
+                    pointService.pointAdjustment(pointDto);
                 } catch (Exception e) {
                     log.error("error : {}", e);
                 }

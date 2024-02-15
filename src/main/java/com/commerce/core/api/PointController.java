@@ -21,19 +21,10 @@ public class PointController {
 
     private final PointService pointService;
 
-    @PostMapping("/charge")
-    @Operation(summary = "포인트 충전", description = "고객의 포인트를 충전한다")
+    @PostMapping("/adjustment")
+    @Operation(summary = "포인트 충전/차감", description = "고객의 포인트를 충전 및 차감한다")
     public ResponseVO<PointDto> pointCharge(@RequestBody PointDto pointDto) {
-        PointDto data = pointService.charge(pointDto);
-        return ResponseVO.<PointDto>builder()
-                .data(data)
-                .build();
-    }
-
-    @PostMapping("/withdraw")
-    @Operation(summary = "포인트 차감", description = "고객의 포인트를 차감한다.")
-    public ResponseVO<PointDto> pointWithdraw(@RequestBody PointDto pointDto) {
-        PointDto data = pointService.withdraw(pointDto);
+        PointDto data = pointService.pointAdjustment(pointDto);
         return ResponseVO.<PointDto>builder()
                 .data(data)
                 .build();

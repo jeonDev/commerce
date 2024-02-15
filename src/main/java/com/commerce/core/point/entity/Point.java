@@ -4,7 +4,7 @@ import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.member.entity.Member;
-import com.commerce.core.point.vo.ConsumeDivisionStatus;
+import com.commerce.core.point.vo.PointProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,10 +33,12 @@ public class Point extends BaseEntity {
     @Column(name = "POINT", nullable = false)
     private Long point;
 
-    public void pointChange(Long point, ConsumeDivisionStatus status) {
-        if(status == ConsumeDivisionStatus.CHARGE) {
+    public void pointChange(Long point, PointProcessStatus status) {
+        if(status == null) throw new CommerceException(ExceptionStatus.SYSTEM_ERROR);
+
+        if(status == PointProcessStatus.CHARGE) {
             this.point += point;
-        } else if (status == ConsumeDivisionStatus.PAYMENT) {
+        } else if (status == PointProcessStatus.PAYMENT) {
             this.point -= point;
         }
 
@@ -45,11 +47,11 @@ public class Point extends BaseEntity {
         }
     }
 
-    public PointHistory generateHistoryEntity(Long point, ConsumeDivisionStatus status) {
+    public PointHistory generateHistoryEntity(Long point, PointProcessStatus status) {
         return PointHistory.builder()
                 .member(this.member)
                 .point(point)
-                .consumeDivisionStatus(status)
+                .pointProcessStatus(status)
                 .build();
     }
 
