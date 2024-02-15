@@ -19,6 +19,7 @@ import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.order.vo.OrderDto;
 import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.vo.ProductStockProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,20 +60,7 @@ public class OrderServiceImpl implements OrderService {
         // 3. Product Stock Consume & Order Detail Setting
         Arrays.stream(dto.getProductSeqs())
                 .forEach(item -> {
-                    // 3-1. Product Stock Consume
-                    Product product = productStockConsume(item);
-                    ProductInfo productInfo = product.getProductInfo();
-
-                    // 3-2. Order Detail Setting
-                    OrderDetail orderDetail = OrderDetail.builder()
-                            .product(product)
-                            .amount(productInfo.getPrice())
-                            .buyAmount(productInfo.getPrice())
-                            .paidAmount(0L)
-                            .orders(order)
-                            .orderStatus(OrderStatus.NEW_ORDER)
-                            .build();
-
+                    OrderDetail orderDetail = this.productStockConsumeAndOrderDetailSetting(order, item);
                     orderDetails.add(orderDetail);
                     orderDetailHistories.add(orderDetail.generateHistoryEntity());
                 });
@@ -89,13 +77,29 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    public Product productStockConsume(Long item) {
+    private OrderDetail productStockConsumeAndOrderDetailSetting(Orders order, Long item) {
+        // 3-1. Product Stock Consume
+        Product product = this.productStockConsume(item);
+        ProductInfo productInfo = product.getProductInfo();
+
+        // 3-2. Order Detail Setting
+        return OrderDetail.builder()
+                .product(product)
+                .amount(productInfo.getPrice())
+                .buyAmount(productInfo.getPrice())
+                .paidAmount(0L)
+                .orders(order)
+                .orderStatus(OrderStatus.NEW_ORDER)
+                .build();
+    }
+
+    private Product productStockConsume(Long item) {
         ProductStockDto stock = ProductStockDto.builder()
                 .productSeq(item)
                 .stock(1L)
                 .build();
 
-        return productStockService.consume(stock).getProduct();
+        return productStockService.productStockAdjustment(stock).getProduct();
     }
 
     @Override
@@ -105,11 +109,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetail updateOrderStatus(OrderDto dto) {
-        Long orderDetailSeq = dto.getOrderDetailSeq();
-        OrderDetail orderDetail = this.selectOrderDetail(orderDetailSeq)
+        OrderDetail orderDetail = this.selectOrderDetail(dto.getOrderDetailSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        orderDetail.updateOrderStatus(OrderStatus.of(dto.getOrderStatus()));
+        orderDetail.updateOrderStatus(dto.getOrderStatus());
         orderDetail = orderDetailsRepository.save(orderDetail);
 
         OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();

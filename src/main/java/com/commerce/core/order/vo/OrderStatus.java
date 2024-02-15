@@ -1,5 +1,6 @@
 package com.commerce.core.order.vo;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,10 +15,11 @@ public enum OrderStatus {
 
     private final String status;
 
-    public static OrderStatus of(String status) {
+    @JsonCreator
+    public static OrderStatus from(String value) {
         return Arrays.stream(values())
-                .filter(value -> value.status.equals(status))
+                .filter(v -> v.status.equals(value))
                 .findAny()
-                .orElse(null);
+                .orElseThrow();
     }
 }

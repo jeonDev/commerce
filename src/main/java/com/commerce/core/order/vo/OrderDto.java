@@ -9,7 +9,6 @@ public class OrderDto {
     private Long orderSeq;
     private Long orderDetailSeq;
     private Long memberSeq;
-    private String orderStatus;
+    private OrderStatus orderStatus;
     private Long[] productSeqs;
-
 }

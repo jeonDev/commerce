@@ -41,7 +41,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 2. Payment Amount Calculator
         long payAmount = orderDetails.stream()
-                .peek(this::paymentAmountBeforeProcess)
                 .mapToLong(OrderDetail::getPaidAmount)
                 .sum();
 
@@ -58,7 +57,9 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
         pointService.pointAdjustment(pointDto);
 
-        // 4. Save
+        // 4. Payment Success Save
+        orderDetails.stream()
+                .forEach(this::paymentAmountBeforeProcess);
         orderDetailsRepository.saveAll(orderDetails);
 
         // 5. Event Send(Order View Mongo DB)
@@ -66,17 +67,18 @@ public class PaymentServiceImpl implements PaymentService {
                 .orderSeq(orderSeq)
                 .build();
         eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
+
         return null;
     }
 
     private void paymentAmountBeforeProcess(OrderDetail item) {
-        item.paymentSuccessSettingPaidAmount();
+        item.paymentSuccessSettingPaidAmount(item.getBuyAmount());
         OrderDto orderDto = OrderDto.builder()
                 .orderDetailSeq(item.getOrderDetailSeq())
-                .orderStatus(OrderStatus.PAYMENT_COMPLETE.getStatus())
+                .orderStatus(OrderStatus.PAYMENT_COMPLETE)
                 .build();
         orderService.updateOrderStatus(orderDto);
-        PaymentHistory paymentHistory = item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT);
-        paymentHistoryRepository.save(paymentHistory);
+
+        paymentHistoryRepository.save(item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT));
     }
 }

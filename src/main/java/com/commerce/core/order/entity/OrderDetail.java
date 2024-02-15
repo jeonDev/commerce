@@ -79,8 +79,8 @@ public class OrderDetail extends BaseEntity {
     /**
      * 결제 성공 후, 납부 금액에 구매 금액 세팅
      */
-    public void paymentSuccessSettingPaidAmount() {
-        this.paidAmount = this.buyAmount;
+    public void paymentSuccessSettingPaidAmount(Long paidAmount) {
+        this.paidAmount = paidAmount;
     }
 
     /**

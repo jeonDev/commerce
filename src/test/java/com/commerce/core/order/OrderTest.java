@@ -29,15 +29,13 @@ public class OrderTest {
 
     @Test
     void updateOrderDetailStatus() {
-        String orderStatus = OrderStatus.PAYMENT_COMPLETE.getStatus();
         OrderDto dto = OrderDto.builder()
                 .orderDetailSeq(1L)
-                .orderStatus(orderStatus)
+                .orderStatus(OrderStatus.PAYMENT_COMPLETE)
                 .build();
-        OrderDetail result = orderService.updateOrderStatus(dto);
-
+        orderService.updateOrderStatus(dto);
         OrderDetail orderDetail = orderService.selectOrderDetail(dto.getOrderDetailSeq()).get();
 
-        assertThat(orderStatus).isEqualTo(orderDetail.getOrderStatus());
+        assertThat(OrderStatus.PAYMENT_COMPLETE).isEqualTo(orderDetail.getOrderStatus());
     }
 }
