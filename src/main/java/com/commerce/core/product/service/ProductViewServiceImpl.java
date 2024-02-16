@@ -1,7 +1,11 @@
 package com.commerce.core.product.service;
 
+import com.commerce.core.product.entity.Product;
+import com.commerce.core.product.entity.ProductInfo;
+import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.entity.mongo.ProductView;
 import com.commerce.core.product.repository.mongo.ProductViewRepository;
+import com.commerce.core.product.vo.ProductStockSummary;
 import com.commerce.core.product.vo.ProductViewDto;
 import com.commerce.core.product.vo.ProductViewResDto;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +22,55 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     private final ProductViewRepository productViewRepository;
 
+    private final ProductService productService;
+    private final ProductStockService productStockService;
+
     @Override
     public void merge(ProductViewDto dto) {
+        log.info("Event Request : {} ", dto.getProductViewStatus());
+
         // 1. 기존 데이터 존재여부 체크
-        Long productInfoSeq = dto.getProductInfoSeq();
-        Optional<ProductView> optionalProductView = this.selectProductViewForProductDetail(productInfoSeq);
-        optionalProductView.ifPresentOrElse(item -> {
-            productViewRepository.save(item.syncProductView(dto));
+        Product product = productService.selectProduct(dto.getProductSeq()).orElseThrow();
+        ProductInfo productInfo = product.getProductInfo();
+        ProductStockSummary productStockSummary = this.makingProductStockSummary(product.getProductSeq());
+//        List<Product> products = productService.selectProductToProductInfo(productInfo.getProductInfoSeq());
+
+        this.selectProductViewForProductDetail(productInfo.getProductInfoSeq())
+                .ifPresentOrElse(item -> {
+
+                    item.productViewSyncUpdate(productInfo.getProductInfoSeq(),
+                            productInfo.getProductName(),
+                            productInfo.getProductDetail(),
+                            productInfo.getPrice(),
+                            "Y",
+                            product.getProductOptionCode(),
+                            productStockSummary);
+                    productViewRepository.save(item);
         }, () -> {
-            productViewRepository.save(dto.dtoToEntity());
+
+                    ProductView productView = ProductView.builder()
+                            .productInfoSeq(productInfo.getProductInfoSeq())
+                            .productName(productInfo.getProductName())
+                            .productDetail(productInfo.getProductDetail())
+                            .price(productInfo.getPrice())
+                            .useYn("Y")
+                            .productOption(product.getProductOptionCode())
+                            .productStockSummary(productStockSummary)
+                            .build();
+                    productViewRepository.save(productView);
         });
+    }
+
+    private ProductStockSummary makingProductStockSummary(Long productSeq) {
+        Long stock = 0L;
+
+        Optional<ProductStock> productStockOptional = productStockService.selectProductStock(productSeq);
+        if(productStockOptional.isPresent()) {
+            ProductStock productStock = productStockOptional.get();
+            stock = productStock.getStock();
+        }
+
+        return productStockService.productStockSummary(stock);
     }
 
     @Override

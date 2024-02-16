@@ -45,12 +45,8 @@ public class ProductServiceImpl implements ProductService {
 
         // 3. Event Producer Push
         ProductViewDto productViewDto = ProductViewDto.builder()
-                .productInfoSeq(productInfo.getProductInfoSeq())
-                .productName(productInfo.getProductName())
-                .productDetail(productInfo.getProductDetail())
-                .price(productInfo.getPrice())
-                .useYn("Y")
-                .productOptions(List.of(product.getProductOptionCode()))
+                .productSeq(product.getProductSeq())
+                .productViewStatus(ProductViewDto.ProductViewStatus.REGISTER)
                 .build();
         eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
 
@@ -77,5 +73,10 @@ public class ProductServiceImpl implements ProductService {
         // 1-2. 상품 정보 없을 시, 등록 및 세팅
         return productInfoService.selectProductInfo(productInfoSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+    }
+
+    @Override
+    public List<Product> selectProductToProductInfo(Long productInfoSeq) {
+        return productRepository.findByProductInfo_ProductInfoSeq(productInfoSeq);
     }
 }

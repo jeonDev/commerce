@@ -2,13 +2,16 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductStock;
+import com.commerce.core.product.entity.ProductStockHistory;
 import com.commerce.core.product.repository.ProductStockHistoryRepository;
 import com.commerce.core.product.repository.ProductStockRepository;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
+import com.commerce.core.product.vo.ProductViewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,16 +40,12 @@ public class ProductStockServiceImpl implements ProductStockService {
 
         ProductStock productStock = this.stockAdjustmentProcess(product, isConsume, stock);
 
-        if(STOCK_SOLD_OUT_COUNT >= productStock.getStock())
-            throw new CommerceException(ExceptionStatus.SOLD_OUT);
-
         productStock = productStockRepository.save(productStock);
+        ProductStockHistory productStockHistory = productStock.generateHistoryEntity(stock, dto.getProductStockProcessStatus());
+        productStockHistoryRepository.save(productStockHistory);
 
-        // 3. History Save
-        this.saveHistoryEntity(productStock, stock, dto.getProductStockProcessStatus());
-
-        // 4. Event Send(Product View Mongo DB)
-        this.productStockEventSend();
+        // 3. Event Send(Product View Mongo DB)
+        this.productStockEventSend(product.getProductSeq(), productStock.getStock(), isConsume);
 
         return productStock;
     }
@@ -57,6 +56,10 @@ public class ProductStockServiceImpl implements ProductStockService {
         if(productStockOptional.isPresent()) {
             ProductStock productStock = productStockOptional.get();
             productStock.inventoryAdjustment(stock);
+
+            if(STOCK_SOLD_OUT_COUNT > productStock.getStock())
+                throw new CommerceException(ExceptionStatus.SOLD_OUT);
+
             return productStock;
         }
 
@@ -68,28 +71,30 @@ public class ProductStockServiceImpl implements ProductStockService {
                 .build();
     }
 
-    private void saveHistoryEntity(ProductStock entity, Long stock, ProductStockProcessStatus productStockProcessStatus) {
-        productStockHistoryRepository.save(entity.generateHistoryEntity(stock, productStockProcessStatus));
-    }
-
     /**
      * Product View Event Send
+     *  add -> event Send
+     *  consume -> 5 under Event Sends
      */
-    private void productStockEventSend() {
-        // TODO: Event Send 기준
-        // stock 0~5 : 5개미만
-        // 기존 재고 5 이하 & 변경 재고 5 이상 : 재고있음
-        // └ 기존 데이터 없을 경우도 포함.
-        // 이벤트를 stock 포함해서 보낼지, 이벤트를 보내고 event에서 처리할 지 결정 필요.
+    private void productStockEventSend(Long productSeq, Long stock, boolean isConsume) {
+        boolean isEventSend = true;
 
-//        ProductViewDto productViewDto = ProductViewDto.builder()
-//                .build();
-//        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
+        if (isConsume) {
+            isEventSend = isEventSendTarget(stock);
+        }
+
+        if (!isEventSend) return;
+
+        ProductViewDto productViewDto = ProductViewDto.builder()
+                .productSeq(productSeq)
+                .productViewStatus(ProductViewDto.ProductViewStatus.STOCK_ADJUSTMENT)
+                .build();
+        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
     }
 
     @Override
-    public Optional<ProductStock> selectProductStock(ProductStockDto dto) {
-        return productStockRepository.findById(dto.getProductSeq());
+    public Optional<ProductStock> selectProductStock(Long productSeq) {
+        return productStockRepository.findById(productSeq);
     }
 
 }

@@ -1,9 +1,6 @@
 package com.commerce.core.product.vo;
 
-import com.commerce.core.product.entity.mongo.ProductView;
 import lombok.*;
-
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -11,23 +8,12 @@ import java.util.List;
 @Getter
 @ToString
 public class ProductViewDto {
-    private Long productInfoSeq;
-    private String productName;
-    private String productDetail;
-    private Long price;
-    private Long discountPrice;
-    private String useYn;
-    private List<String> productOptions;
+    private Long productSeq;
+    private ProductViewStatus productViewStatus;
 
-    public ProductView dtoToEntity() {
-        return ProductView.builder()
-                .productInfoSeq(productInfoSeq)
-                .productName(productName)
-                .productDetail(productDetail)
-                .price(price)
-                .discountPrice(discountPrice)
-                .useYn(useYn)
-                .productOptions(productOptions)
-                .build();
+
+    @Getter
+    public enum ProductViewStatus {
+        REGISTER, STOCK_ADJUSTMENT
     }
 }

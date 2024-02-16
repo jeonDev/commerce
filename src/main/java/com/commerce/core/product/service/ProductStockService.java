@@ -2,6 +2,7 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.vo.ProductStockSummary;
 
 import java.util.Optional;
 
@@ -11,5 +12,19 @@ public interface ProductStockService {
 
     ProductStock productStockAdjustment(ProductStockDto dto);
 
-    Optional<ProductStock> selectProductStock(ProductStockDto dto);
+    Optional<ProductStock> selectProductStock(Long productSeq);
+
+    default boolean isEventSendTarget(Long stock) {
+        if (stock.compareTo(5L) < 0) return false;
+        return true;
+    }
+
+    default ProductStockSummary productStockSummary(Long stock) {
+        if(stock.equals(0L)) return
+                ProductStockSummary.NOT_IN_STOCK;
+        if(stock.compareTo(0L) > 0 && stock.compareTo(5L) < 0)
+            return ProductStockSummary.SMALL_STOCK;
+
+        return ProductStockSummary.MANY_STOCK;
+    }
 }

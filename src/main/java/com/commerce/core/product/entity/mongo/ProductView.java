@@ -1,6 +1,6 @@
 package com.commerce.core.product.entity.mongo;
 
-import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.vo.ProductStockSummary;
 import com.commerce.core.product.vo.ProductViewResDto;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 /**
  * 상품 정보 View
@@ -57,19 +55,24 @@ public class ProductView {
     /**
      * 상품 옵션
      */
-    private List<String> productOptions;
+    private String productOption;
 
-    public ProductView syncProductView(ProductViewDto dto) {
-        this.productName = dto.getProductName();
-        this.productDetail = dto.getProductDetail();
-        this.price = dto.getPrice();
-        this.discountPrice = dto.getDiscountPrice();
-        this.useYn = dto.getUseYn();
-        this.productOptions = dto.getProductOptions();
+    /**
+     * 재고 현황
+     */
+    private ProductStockSummary productStockSummary;
+
+    public ProductView productViewSyncUpdate(Long productInfoSeq, String productName, String productDetail, Long price, String useYn, String productOption, ProductStockSummary productStockSummary) {
+        this.productInfoSeq = productInfoSeq;
+        this.productName = productName;
+        this.productDetail = productDetail;
+        this.price = price;
+        this.useYn = useYn;
+        this.productOption = productOption;
+        this.productStockSummary = productStockSummary;
 
         return this;
     }
-
 
     public ProductViewResDto documentToResDto() {
         return ProductViewResDto.builder()
@@ -79,7 +82,7 @@ public class ProductView {
                 .price(price)
                 .discountPrice(discountPrice)
                 .useYn(useYn)
-                .productOptions(productOptions)
+                .productOption(productOption)
                 .build();
     }
 }

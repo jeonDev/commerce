@@ -32,7 +32,7 @@ public class ProductStockTest {
                 .build();
         Long beforeStock = 0L;
         try {
-            beforeStock = productStockService.selectProductStock(dto).get().getStock();
+            beforeStock = productStockService.selectProductStock(dto.getProductSeq()).get().getStock();
         } catch (Exception e) {
 
         }

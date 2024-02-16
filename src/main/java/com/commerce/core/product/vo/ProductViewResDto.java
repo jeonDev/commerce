@@ -16,5 +16,5 @@ public class ProductViewResDto {
     private Long price;
     private Long discountPrice;
     private String useYn;
-    private List<String> productOptions;
+    private String productOption;
 }
