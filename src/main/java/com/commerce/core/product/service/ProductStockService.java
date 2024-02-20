@@ -15,13 +15,13 @@ public interface ProductStockService {
     Optional<ProductStock> selectProductStock(Long productSeq);
 
     default boolean isEventSendTarget(Long stock) {
-        if (stock.compareTo(5L) < 0) return false;
+        if (stock.compareTo(5L) > 0) return false;
         return true;
     }
 
     default ProductStockSummary productStockSummary(Long stock) {
-        if(stock.equals(0L)) return
-                ProductStockSummary.NOT_IN_STOCK;
+        if(stock.equals(0L)) 
+            return ProductStockSummary.NOT_IN_STOCK;
         if(stock.compareTo(0L) > 0 && stock.compareTo(5L) < 0)
             return ProductStockSummary.SMALL_STOCK;
 
