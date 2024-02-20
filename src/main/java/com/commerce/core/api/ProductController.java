@@ -2,8 +2,10 @@ package com.commerce.core.api;
 
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.product.service.ProductService;
+import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.ProductViewService;
 import com.commerce.core.product.vo.ProductDto;
+import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductViewResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +23,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductStockService productStockService;
     private final ProductViewService productViewService;
 
     @GetMapping("/view")
@@ -31,10 +34,18 @@ public class ProductController {
                 .build();
     }
 
-    @PostMapping("/register")
+    @PostMapping("/admin/register")
     @Operation(summary = "상품 등록", description = "관리자가 상품을 등록한다.")
     public ResponseVO<Object> productRegister(@RequestBody ProductDto dto) {
         productService.add(dto);
+        return ResponseVO.builder()
+                .build();
+    }
+
+    @PostMapping("/admin/add/stock")
+    @Operation(summary = "상품 재고 조정", description = "관리자가 상품의 재고를 조정한다.")
+    public ResponseVO<Object> productRegister(@RequestBody ProductStockDto dto) {
+        productStockService.productStockAdjustment(dto);
         return ResponseVO.builder()
                 .build();
     }
