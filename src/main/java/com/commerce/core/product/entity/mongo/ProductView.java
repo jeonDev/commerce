@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 /**
  * 상품 정보 View
  */
@@ -55,20 +57,20 @@ public class ProductView {
     /**
      * 상품 옵션
      */
-    private String productOption;
+    private List<String> productOptions;
 
     /**
      * 재고 현황
      */
     private ProductStockSummary productStockSummary;
 
-    public ProductView productViewSyncUpdate(Long productInfoSeq, String productName, String productDetail, Long price, String useYn, String productOption, ProductStockSummary productStockSummary) {
+    public ProductView productViewSyncUpdate(Long productInfoSeq, String productName, String productDetail, Long price, String useYn, List<String> productOptions, ProductStockSummary productStockSummary) {
         this.productInfoSeq = productInfoSeq;
         this.productName = productName;
         this.productDetail = productDetail;
         this.price = price;
         this.useYn = useYn;
-        this.productOption = productOption;
+        this.productOptions = productOptions;
         this.productStockSummary = productStockSummary;
 
         return this;
@@ -82,7 +84,7 @@ public class ProductView {
                 .price(price)
                 .discountPrice(discountPrice)
                 .useYn(useYn)
-                .productOption(productOption)
+                .productOptions(productOptions)
                 .build();
     }
 }

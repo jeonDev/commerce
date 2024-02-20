@@ -35,7 +35,10 @@ public class ProductViewServiceImpl implements ProductViewService {
         Product product = productService.selectProduct(dto.getProductSeq()).orElseThrow();
         ProductInfo productInfo = product.getProductInfo();
         ProductStockSummary productStockSummary = this.makingProductStockSummary(product.getProductSeq());
-//        List<Product> products = productService.selectProductToProductInfo(productInfo.getProductInfoSeq());
+        List<String> productOptions = productService.selectProductToProductInfo(productInfo.getProductInfoSeq())
+                .stream()
+                .map(Product::getProductOptionCode)
+                .toList();
 
         this.selectProductViewForProductDetail(productInfo.getProductInfoSeq())
                 .ifPresentOrElse(item -> {
@@ -45,7 +48,7 @@ public class ProductViewServiceImpl implements ProductViewService {
                             productInfo.getProductDetail(),
                             productInfo.getPrice(),
                             "Y",
-                            product.getProductOptionCode(),
+                            productOptions,
                             productStockSummary);
                     productViewRepository.save(item);
         }, () -> {
@@ -56,7 +59,7 @@ public class ProductViewServiceImpl implements ProductViewService {
                             .productDetail(productInfo.getProductDetail())
                             .price(productInfo.getPrice())
                             .useYn("Y")
-                            .productOption(product.getProductOptionCode())
+                            .productOptions(productOptions)
                             .productStockSummary(productStockSummary)
                             .build();
                     productViewRepository.save(productView);
