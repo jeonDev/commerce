@@ -1,4 +1,4 @@
-package com.commerce.core.common.redis;
+package com.commerce.core.common.config.redis;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;

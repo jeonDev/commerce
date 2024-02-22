@@ -1,4 +1,4 @@
-package com.commerce.core.common.redis;
+package com.commerce.core.common.config.redis;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
