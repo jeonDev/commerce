@@ -1,5 +1,7 @@
 package com.commerce.core.product.service;
 
+import com.commerce.core.common.config.redis.RedisKeyType;
+import com.commerce.core.common.config.redis.RedissonLockTarget;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
@@ -15,6 +17,7 @@ import com.commerce.core.product.vo.ProductViewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -28,6 +31,8 @@ public class ProductStockServiceImpl implements ProductStockService {
     private final ProductService productService;
     private final EventSender eventSender;
 
+    @RedissonLockTarget(RedisKeyType.PRODUCT_STOCK)
+    @Transactional
     @Override
     public ProductStock productStockAdjustment(ProductStockDto dto) {
         // 1. Product Exists Check
