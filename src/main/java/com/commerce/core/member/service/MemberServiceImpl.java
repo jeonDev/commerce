@@ -7,6 +7,7 @@ import com.commerce.core.member.vo.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,5 +33,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Optional<Member> selectUseMember(Long memberSeq) {
         return memberRepository.findByMemberSeqAndUseYn(memberSeq, "Y");
+    }
+
+    @Override
+    public Optional<Member> selectUseMember(String id) {
+        return memberRepository.findByIdAndUseYn(id, "Y");
+    }
+
+    @Transactional
+    @Override
+    public Member save(Member member) {
+        return memberRepository.save(member);
     }
 }

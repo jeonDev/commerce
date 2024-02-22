@@ -14,4 +14,7 @@ public class LoginSuccessDto {
     private String addr;
     private String addrDetail;
     private String zipCode;
+
+    private String accessToken;
+    private String refreshToken;
 }

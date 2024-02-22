@@ -10,5 +10,7 @@ public interface MemberService {
     Member createMember(MemberDto dto);
     Optional<Member> selectMember(Long memberSeq);
     Optional<Member> selectUseMember(Long memberSeq);
+    Optional<Member> selectUseMember(String id);
+    Member save(Member member);
 
 }

@@ -4,6 +4,7 @@ import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.member.vo.LoginDto;
+import com.commerce.core.member.vo.LoginSuccessDto;
 import com.commerce.core.member.vo.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,9 +35,10 @@ public class MemberController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 처리한다.")
-    public ResponseVO<Object> login(@RequestBody LoginDto dto) {
-        loginService.login(dto);
-        return ResponseVO.builder()
+    public ResponseVO<LoginSuccessDto> login(@RequestBody LoginDto dto) {
+        LoginSuccessDto response = loginService.login(dto);
+        return ResponseVO.<LoginSuccessDto>builder()
+                .data(response)
                 .build();
     }
 }

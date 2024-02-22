@@ -16,8 +16,15 @@ spring:
       username: commerce
       password: commerce
       database: commerce
+    redis:
+      host: localhost
+      port: 6379
 
   kafka:
     bootstrap-server: localhost:9092
     consumer:
       group-id: group_1
+logging:
+  level:
+    '[org.apache.kafka.clients.consumer.internals.ConsumerCoordinator]': warn
+    '[org.apache.kafka.clients.consumer.ConsumerConfig]': warn
