@@ -1,13 +1,12 @@
-select * from product;
-select * from product_info;
-select * from product_stock;
-select * from member;
-select * from point;
-select * from point_history;
+select * from product order by create_date desc ;
+select * from product_info order by create_date desc;
+select * from product_stock order by create_date desc;
+select * from product_stock_history order by create_date desc;
+select * from member order by create_date desc;
+select * from point order by create_date desc;
+select * from point_history order by create_date desc ;
 
-select *
-  from order_detail;
+select * from order_detail order by create_date desc;
 
-select * from orders;
-select * from order_detail_history;
-select * from payment_history;
+select * from orders order by create_date desc;
+select * from order_detail_history order by create_date desc;
