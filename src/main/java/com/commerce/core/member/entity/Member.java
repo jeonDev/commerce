@@ -1,6 +1,7 @@
 package com.commerce.core.member.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.common.security.vo.Authority;
 import com.commerce.core.common.utils.DateUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,10 @@ public class Member extends BaseEntity {
 
     @Column(name = "USE_YN")
     private String useYn;
+
+    @Column(name = "AUTHORITY")
+    @Enumerated
+    private Authority authority;
 
     public void passwordEncrypt(String encPassword) {
         this.password = encPassword;

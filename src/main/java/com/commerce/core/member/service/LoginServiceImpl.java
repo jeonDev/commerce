@@ -40,12 +40,14 @@ public class LoginServiceImpl implements LoginService {
             log.info("Login Success");
             JwtIdentificationVO accessTokenVO = JwtIdentificationVO.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
+                    .authority(member.getAuthority())
                     .name(member.getId())
                     .build();
             String accessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
             JwtIdentificationVO refreshTokenVO = JwtIdentificationVO.builder()
                     .jwtToken(JwtToken.REFRESH_TOKEN)
+                    .authority(member.getAuthority())
                     .name(member.getId())
                     .build();
             String refreshToken = (String) jwtTokenProvider.generateIdentificationInfo(refreshTokenVO);

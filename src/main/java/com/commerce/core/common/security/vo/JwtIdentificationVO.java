@@ -10,5 +10,6 @@ import lombok.Getter;
 public class JwtIdentificationVO implements IdentificationVO {
 
     private String name;
+    private Authority authority;
     private JwtToken jwtToken;
 }
