@@ -19,7 +19,7 @@ public class ExHandler {
                 .message(e.getMessage())
                 .build();
 
-        return new ResponseEntity<>(errorDto, HttpStatus.OK);
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
