@@ -41,6 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
             AuthenticationInfo authenticationInfo = jwtTokenProvider.getAuthenticationInfo(accessToken);
             AuthenticationHolderFactory.getContext().set(authenticationInfo);
         } else {
+            log.error("401");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }

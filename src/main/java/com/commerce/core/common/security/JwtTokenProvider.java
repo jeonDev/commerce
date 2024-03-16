@@ -2,10 +2,8 @@ package com.commerce.core.common.security;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.common.security.vo.AuthenticationInfo;
-import com.commerce.core.common.security.vo.IdentificationVO;
-import com.commerce.core.common.security.vo.JwtIdentificationVO;
-import com.commerce.core.common.security.vo.JwtToken;
+import com.commerce.core.common.security.vo.*;
+import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +55,13 @@ public class JwtTokenProvider implements IdentifierProvider {
     @Override
     public AuthenticationInfo getAuthenticationInfo(Object identificationInfo) {
         Claims body = this.getTokenForSubject((String) identificationInfo);
-        return (AuthenticationInfo) memberService.selectUseMember(body.getSubject())
+        Member member = memberService.selectUseMember(body.getSubject())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.AUTH_UNAUTHORIZED));
+        return JwtAuthentication.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .authority(member.getAuthority())
+                .build();
     }
 
     @Override
