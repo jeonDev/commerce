@@ -1,9 +1,12 @@
 package com.commerce.core.common.security;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.security.vo.AuthenticationInfo;
 import com.commerce.core.common.security.vo.IdentificationVO;
 import com.commerce.core.common.security.vo.JwtIdentificationVO;
 import com.commerce.core.common.security.vo.JwtToken;
+import com.commerce.core.member.service.MemberService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,8 @@ public class JwtTokenProvider implements IdentifierProvider {
 
     @Qualifier("redisTemplate")
     private RedisTemplate<String, String> redisTemplate;
+
+    private final MemberService memberService;
 
     // TODO: 값 세팅 예정
     private String secretKey = "1111";
@@ -51,7 +56,9 @@ public class JwtTokenProvider implements IdentifierProvider {
 
     @Override
     public AuthenticationInfo getAuthenticationInfo(Object identificationInfo) {
-        return null;
+        Claims body = this.getTokenForSubject((String) identificationInfo);
+        return (AuthenticationInfo) memberService.selectUseMember(body.getSubject())
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.AUTH_UNAUTHORIZED));
     }
 
     @Override
@@ -65,5 +72,12 @@ public class JwtTokenProvider implements IdentifierProvider {
             log.error("", e);
         }
         return false;
+    }
+
+    private Claims getTokenForSubject(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

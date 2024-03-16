@@ -1,6 +1,8 @@
 package com.commerce.core.common.config;
 
+import com.commerce.core.common.filter.JwtFilter;
 import com.commerce.core.common.filter.LoggingFilter;
+import com.commerce.core.common.security.IdentifierProvider;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,5 +21,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public FilterRegistrationBean<LoggingFilter> loggingFilter() {
         return new FilterRegistrationBean<>(new LoggingFilter());
+    }
+
+    @Bean
+    public FilterRegistrationBean<JwtFilter> jwtFilter(IdentifierProvider identifierProvider) {
+        return new FilterRegistrationBean<>(new JwtFilter(identifierProvider));
     }
 }

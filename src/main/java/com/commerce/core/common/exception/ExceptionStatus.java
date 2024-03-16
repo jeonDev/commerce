@@ -7,6 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ExceptionStatus {
 
+    // Auth
+    AUTH_UNAUTHORIZED("A401", "로그인 정보가 없습니다."),
+    AUTH_FORBIDDEN("A403", "권한이 없습니다."),
+
     // MEMBER LOGIN
     LOGIN_FAIL("ML01", "로그인에 실패하였습니다."),
     LOGIN_PASSWORD_FAIL("ML02", "패스워드가 틀렸습니다."),

@@ -18,7 +18,10 @@ public class ExHandler {
                 .code(e.getCode())
                 .message(e.getMessage())
                 .build();
-
+        if (ExceptionStatus.AUTH_UNAUTHORIZED.getCode().equals(e.getCode()) )
+            return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
+        if (ExceptionStatus.AUTH_FORBIDDEN.getCode().equals(e.getCode()) )
+            return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 

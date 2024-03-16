@@ -3,6 +3,7 @@ package com.commerce.core.member.entity;
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.common.security.vo.Authority;
 import com.commerce.core.common.utils.DateUtils;
+import com.commerce.core.common.utils.EncryptUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,8 +61,8 @@ public class Member extends BaseEntity {
     @Enumerated
     private Authority authority;
 
-    public void passwordEncrypt(String encPassword) {
-        this.password = encPassword;
+    public void passwordEncrypt() {
+        this.password = EncryptUtils.encryptSHA256(this.password);
     }
 
     public void loginFailed() {

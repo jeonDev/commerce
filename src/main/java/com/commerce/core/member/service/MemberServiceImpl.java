@@ -21,7 +21,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member createMember(MemberDto dto) {
         Member member = dto.dtoToEntity();
-        member.passwordEncrypt(EncryptUtils.encryptSHA256(dto.getPassword()));
+        member.passwordEncrypt();
         return memberRepository.save(member);
     }
 
