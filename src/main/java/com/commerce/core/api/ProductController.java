@@ -4,6 +4,7 @@ import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.product.service.ProductService;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.ProductViewService;
+import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductDto;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductViewResDto;
@@ -31,6 +32,14 @@ public class ProductController {
     public ResponseVO<List<ProductViewResDto>> productViewList() {
         return ResponseVO.<List<ProductViewResDto>>builder()
                 .data(productViewService.selectProductViewList())
+                .build();
+    }
+
+    @GetMapping("/product/{productInfoSeq}")
+    @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
+    public ResponseVO<ProductDetailDto> productDetailList(@PathVariable String productInfoSeq) {
+        return ResponseVO.<ProductDetailDto>builder()
+                .data(productViewService.selectProductViewDetail(Long.valueOf(productInfoSeq)))
                 .build();
     }
 

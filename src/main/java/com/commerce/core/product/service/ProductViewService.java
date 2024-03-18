@@ -1,6 +1,7 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.product.entity.mongo.ProductView;
+import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductViewDto;
 import com.commerce.core.product.vo.ProductViewResDto;
 
@@ -22,7 +23,7 @@ public interface ProductViewService {
     /**
      * Select ProductView
      */
-    Optional<ProductView> selectProductViewDetail(Long productViewSeq);
+    ProductDetailDto selectProductViewDetail(Long productViewSeq);
 
     List<ProductViewResDto> selectProductViewList();
 }

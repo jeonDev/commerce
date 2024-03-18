@@ -1,6 +1,7 @@
 package com.commerce.core.product.repository.dsl;
 
 import com.commerce.core.product.entity.Product;
+import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductDto;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,6 +19,10 @@ import static com.commerce.core.product.entity.QProduct.product;
 public class ProductDslRepository {
 
     private final JPAQueryFactory dsl;
+
+    public ProductDetailDto selectProductDetail(Long productViewSeq) {
+        return null;
+    }
 
 //    public Page<Product> findByAll(ProductDto dto) {
 //        List<Product> content = dsl

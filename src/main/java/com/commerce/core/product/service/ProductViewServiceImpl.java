@@ -4,7 +4,9 @@ import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.entity.mongo.ProductView;
+import com.commerce.core.product.repository.dsl.ProductDslRepository;
 import com.commerce.core.product.repository.mongo.ProductViewRepository;
+import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductStockSummary;
 import com.commerce.core.product.vo.ProductViewDto;
 import com.commerce.core.product.vo.ProductViewResDto;
@@ -25,6 +27,7 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     private final ProductService productService;
     private final ProductStockService productStockService;
+    private final ProductDslRepository productDslRepository;
 
     @Transactional
     @Override
@@ -84,8 +87,8 @@ public class ProductViewServiceImpl implements ProductViewService {
     }
 
     @Override
-    public Optional<ProductView> selectProductViewDetail(Long productViewSeq) {
-        return Optional.empty();
+    public ProductDetailDto selectProductViewDetail(Long productViewSeq) {
+        return productDslRepository.selectProductDetail(productViewSeq);
     }
 
     @Override
