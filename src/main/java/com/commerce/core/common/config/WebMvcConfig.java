@@ -23,7 +23,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new FilterRegistrationBean<>(new LoggingFilter());
     }
 
-    @Bean
+//    @Bean
     public FilterRegistrationBean<JwtFilter> jwtFilter(IdentifierProvider identifierProvider) {
         return new FilterRegistrationBean<>(new JwtFilter(identifierProvider));
     }

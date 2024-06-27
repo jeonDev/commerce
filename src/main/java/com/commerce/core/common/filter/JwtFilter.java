@@ -1,7 +1,6 @@
 package com.commerce.core.common.filter;
 
 import com.commerce.core.common.security.IdentifierProvider;
-import com.commerce.core.common.security.holder.AuthenticationHolderFactory;
 import com.commerce.core.common.security.vo.AuthenticationInfo;
 import com.commerce.core.common.utils.StringUtils;
 import jakarta.servlet.FilterChain;
@@ -39,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = this.resolveAccessToken(request);
         if(!StringUtils.isNullOrEmpty(accessToken) && jwtTokenProvider.validCheck(accessToken)) {
             AuthenticationInfo authenticationInfo = jwtTokenProvider.getAuthenticationInfo(accessToken);
-            AuthenticationHolderFactory.getContext().set(authenticationInfo);
+//            AuthenticationHolderFactory.getContext().set(authenticationInfo);
         } else {
             log.error("401");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
