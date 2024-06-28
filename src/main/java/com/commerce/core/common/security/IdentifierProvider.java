@@ -1,19 +1,19 @@
 package com.commerce.core.common.security;
 
-import com.commerce.core.common.security.vo.AuthenticationInfo;
-import com.commerce.core.common.security.vo.IdentificationVO;
+import com.commerce.core.common.security.vo.IdentificationGenerateVO;
+import org.springframework.security.core.Authentication;
 
 public interface IdentifierProvider {
 
     /**
      * Object For Authentication Generate
      */
-    Object generateIdentificationInfo(IdentificationVO vo);
+    Object generateIdentificationInfo(IdentificationGenerateVO vo);
 
     /**
      * Authentication Info Get
      */
-    AuthenticationInfo getAuthenticationInfo(Object identificationInfo);
+    Authentication getAuthenticationInfo(Object identificationInfo);
 
     /**
      * IdentificationInfo Valid Check

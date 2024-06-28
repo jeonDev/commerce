@@ -1,11 +1,11 @@
 package com.commerce.core.member.service;
 
-import com.commerce.core.common.utils.EncryptUtils;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.repository.MemberRepository;
 import com.commerce.core.member.vo.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +17,13 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member createMember(MemberDto dto) {
         Member member = dto.dtoToEntity();
-        member.passwordEncrypt();
+        String encPassword = passwordEncoder.encode(dto.getPassword());
+        member.setEncryptPassword(encPassword);
         return memberRepository.save(member);
     }
 

@@ -1,15 +1,15 @@
 package com.commerce.core.common.security;
 
-import com.commerce.core.common.exception.CommerceException;
-import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.security.vo.*;
-import com.commerce.core.member.entity.Member;
-import com.commerce.core.member.service.MemberService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -22,27 +22,26 @@ public class JwtTokenProvider implements IdentifierProvider {
     @Qualifier("redisTemplate")
     private RedisTemplate<String, String> redisTemplate;
 
-    private final MemberService memberService;
+    private final UserDetailsService userDetailsService;
 
     // TODO: 값 세팅 예정
     private String secretKey = "1111";
 
     @Override
-    public String generateIdentificationInfo(IdentificationVO vo) {
-        JwtIdentificationVO jwtIdentificationVO = (JwtIdentificationVO) vo;
-        String token = jwtTokenGenerate(jwtIdentificationVO);
+    public String generateIdentificationInfo(IdentificationGenerateVO vo) {
+        String token = this.jwtTokenGenerate(vo);
 
-        if (jwtIdentificationVO.getJwtToken() == JwtToken.REFRESH_TOKEN) {
+        if (vo.getJwtToken() == JwtToken.REFRESH_TOKEN) {
 //            redisTemplate.opsForValue().set();
         }
 
         return token;
     }
 
-    private String jwtTokenGenerate(JwtIdentificationVO jwtIdentificationVO) {
-        Claims claims = Jwts.claims().setSubject(jwtIdentificationVO.getName());
+    private String jwtTokenGenerate(IdentificationGenerateVO jwtIdentificationGenerateVO) {
+        Claims claims = Jwts.claims().setSubject(jwtIdentificationGenerateVO.getName());
         Date now = new Date();
-        Date expireDate = new Date(now.getTime() + jwtIdentificationVO.getJwtToken().getExpiredTime());
+        Date expireDate = new Date(now.getTime() + jwtIdentificationGenerateVO.getJwtToken().getExpiredTime());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -53,15 +52,11 @@ public class JwtTokenProvider implements IdentifierProvider {
     }
 
     @Override
-    public AuthenticationInfo getAuthenticationInfo(Object identificationInfo) {
+    public Authentication getAuthenticationInfo(Object identificationInfo) {
         Claims body = this.getTokenForSubject((String) identificationInfo);
-        Member member = memberService.selectUseMember(body.getSubject())
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.AUTH_UNAUTHORIZED));
-        return JwtAuthentication.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .authority(member.getAuthority())
-                .build();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(body.getSubject());
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     @Override

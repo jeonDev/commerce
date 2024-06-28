@@ -61,8 +61,8 @@ public class Member extends BaseEntity {
     @Enumerated
     private Authority authority;
 
-    public void passwordEncrypt() {
-        this.password = EncryptUtils.encryptSHA256(this.password);
+    public void setEncryptPassword(String encPassword) {
+        this.password = encPassword;
     }
 
     public void loginFailed() {
