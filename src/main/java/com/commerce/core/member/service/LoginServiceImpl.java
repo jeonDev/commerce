@@ -3,7 +3,8 @@ package com.commerce.core.member.service;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.security.IdentifierProvider;
-import com.commerce.core.common.security.vo.JwtIdentificationVO;
+import com.commerce.core.common.security.vo.IdentificationGenerateVO;
+import com.commerce.core.common.security.vo.JwtIdentificationGenerateVO;
 import com.commerce.core.common.security.vo.JwtToken;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.vo.LoginDto;
@@ -38,14 +39,14 @@ public class LoginServiceImpl implements LoginService {
         // Login Success
         if(passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
             log.info("Login Success");
-            JwtIdentificationVO accessTokenVO = JwtIdentificationVO.builder()
+            IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
                     .authority(member.getAuthority())
                     .name(member.getId())
                     .build();
             String accessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
-            JwtIdentificationVO refreshTokenVO = JwtIdentificationVO.builder()
+            IdentificationGenerateVO refreshTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.REFRESH_TOKEN)
                     .authority(member.getAuthority())
                     .name(member.getId())
