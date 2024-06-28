@@ -5,12 +5,12 @@ import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.security.IdentifierProvider;
 import com.commerce.core.common.security.vo.JwtIdentificationVO;
 import com.commerce.core.common.security.vo.JwtToken;
-import com.commerce.core.common.utils.EncryptUtils;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.vo.LoginDto;
 import com.commerce.core.member.vo.LoginSuccessDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,11 +21,11 @@ public class LoginServiceImpl implements LoginService {
     private final Long MAX_PASSWORD_WRONG_COUNT = 5L;
     private final MemberService memberService;
     private final IdentifierProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public LoginSuccessDto login(LoginDto dto) {
         String id = dto.getId();
-        String encPassword = EncryptUtils.encryptSHA256(dto.getPassword());
 
         Member member = memberService.selectUseMember(id)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
@@ -36,7 +36,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // Login Success
-        if(member.getPassword().equals(encPassword)) {
+        if(passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
             log.info("Login Success");
             JwtIdentificationVO accessTokenVO = JwtIdentificationVO.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)

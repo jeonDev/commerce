@@ -1,7 +1,6 @@
 package com.commerce.core.member;
 
 import com.commerce.core.common.exception.CommerceException;
-import com.commerce.core.common.utils.EncryptUtils;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
@@ -11,7 +10,10 @@ import com.commerce.core.member.vo.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
+import static com.mongodb.assertions.Assertions.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -24,7 +26,11 @@ public class MemberTest {
     @Autowired
     LoginService loginService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Test
+    @Transactional
     void createMember() {
         MemberDto dto = new MemberDto();
         dto.setId("test");
@@ -38,10 +44,11 @@ public class MemberTest {
 
         Member result = memberService.selectMember(member.getMemberSeq()).get();
         assertThat(result.getId()).isEqualTo(dto.getId());
-        assertThat(result.getPassword()).isEqualTo(EncryptUtils.encryptSHA256(dto.getPassword()));
+        assertTrue(passwordEncoder.matches(dto.getPassword(), result.getPassword()));
     }
 
     @Test
+    @Transactional
     void loginSuccess() {
         LoginDto dto = new LoginDto();
         dto.setId("test");
@@ -51,6 +58,7 @@ public class MemberTest {
     }
 
     @Test
+    @Transactional
     void loginFailed() {
         LoginDto dto = new LoginDto();
         dto.setId("test");
