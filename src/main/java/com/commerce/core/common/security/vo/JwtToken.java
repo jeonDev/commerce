@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum JwtToken {
-    ACCESS_TOKEN(60 * 60 * 10L), REFRESH_TOKEN(60*60*1L);
+    ACCESS_TOKEN(60 * 60 * 60 * 10L), REFRESH_TOKEN(60*60*1L);
 
     private final Long expiredTime;
 }

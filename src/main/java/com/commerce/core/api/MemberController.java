@@ -12,20 +12,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "사용자 API")
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/v1/member")
 @RestController
 public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
 
-    @PostMapping("/signup")
+    @PostMapping("/v1/member/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행한다.")
     public ResponseVO<Object> signup(@RequestBody MemberDto dto) {
         memberService.createMember(dto);

@@ -58,7 +58,7 @@ public class Member extends BaseEntity {
     private String useYn;
 
     @Column(name = "AUTHORITY")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Authority authority;
 
     public void setEncryptPassword(String encPassword) {
