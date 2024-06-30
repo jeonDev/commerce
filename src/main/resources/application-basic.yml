@@ -28,3 +28,7 @@ logging:
   level:
     '[org.apache.kafka.clients.consumer.internals.ConsumerCoordinator]': warn
     '[org.apache.kafka.clients.consumer.ConsumerConfig]': warn
+
+
+cors:
+  domain: http://localhost:5173

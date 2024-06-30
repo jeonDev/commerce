@@ -8,6 +8,8 @@ import com.commerce.core.member.vo.LoginSuccessDto;
 import com.commerce.core.member.vo.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,10 +35,20 @@ public class MemberController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 처리한다.")
-    public ResponseVO<LoginSuccessDto> login(@RequestBody LoginDto dto) {
+    public ResponseVO<LoginSuccessDto> login(HttpServletResponse res,
+                                             @RequestBody LoginDto dto) {
         LoginSuccessDto response = loginService.login(dto);
+        res.addCookie(this.createCookie(response.getRefreshToken()));
         return ResponseVO.<LoginSuccessDto>builder()
                 .data(response)
                 .build();
+    }
+
+    private Cookie createCookie(String token) {
+        Cookie cookie = new Cookie("refreshToken", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        return cookie;
     }
 }

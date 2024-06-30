@@ -17,3 +17,6 @@ spring:
     bootstrap-server: localhost:9092
     consumer:
       group-id: group_1
+
+cors:
+  domain: http://localhost:5173
