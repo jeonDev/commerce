@@ -29,7 +29,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v1/**")
                         .hasRole("USER")
-                        .requestMatchers("/login")
+                        .requestMatchers("/login"
+                                , "/swagger-ui/**"
+                                , "/v3/api-docs/**")
                         .permitAll()
                 )
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
