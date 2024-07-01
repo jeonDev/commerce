@@ -28,7 +28,7 @@ public class JwtTokenProvider implements IdentifierProvider {
     }
 
     private String jwtTokenGenerate(IdentificationGenerateVO jwtIdentificationGenerateVO) {
-        Claims claims = Jwts.claims().setSubject(jwtIdentificationGenerateVO.getName());
+        Claims claims = Jwts.claims().setSubject(jwtIdentificationGenerateVO.getId());
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + jwtIdentificationGenerateVO.getJwtToken().getExpiredTime());
 
@@ -42,7 +42,7 @@ public class JwtTokenProvider implements IdentifierProvider {
 
     @Override
     public Authentication getAuthenticationInfo(Object identificationInfo) {
-        Claims body = this.getTokenForSubject((String) identificationInfo);
+        Claims body = getTokenForSubject((String) identificationInfo);
         UserDetails userDetails = userDetailsService.loadUserByUsername(body.getSubject());
 
         // TODO: ""
@@ -55,12 +55,13 @@ public class JwtTokenProvider implements IdentifierProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws((String) identificationInfo);
             return true;
         } catch(JwtException e) {
-            log.error("Jwt Exception", e);
+            log.debug("Jwt Exception : {}", e.getMessage());
         }
         return false;
     }
 
-    private Claims getTokenForSubject(String token) {
+    @Override
+    public Claims getTokenForSubject(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)

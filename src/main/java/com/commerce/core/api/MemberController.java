@@ -52,7 +52,7 @@ public class MemberController {
 
     @PostMapping("/tokenReIssue")
     @Operation(summary = "토큰 재발급", description = "만료된 토큰을 재 발급한다.")
-    public ResponseVO<String> login(@RequestHeader("token") String accessToken,
+    public ResponseVO<String> login(@RequestHeader("Authorization") String accessToken,
                                              @CookieValue("refreshToken") String refreshToken) {
         String token = loginService.tokenReIssue(accessToken, refreshToken);
         return ResponseVO.<String>builder()
