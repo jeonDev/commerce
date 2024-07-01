@@ -9,4 +9,9 @@ public interface LoginService {
      * Login
      */
     LoginSuccessDto login(LoginDto dto);
+
+    /**
+     * Token ReIssue
+     */
+    String tokenReIssue(String accessToken, String refreshToken);
 }

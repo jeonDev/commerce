@@ -1,4 +1,4 @@
-package com.commerce.core.common.security.vo;
+package com.commerce.core.common.config.security.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();
-        roles.add("ROLE_" + authenticationInfo.getAuthority().name());
+        roles.add(authenticationInfo.getAuthority().name());
 
         return roles.stream()
                 .map(SimpleGrantedAuthority::new)
