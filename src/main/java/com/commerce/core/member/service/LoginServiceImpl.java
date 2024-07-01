@@ -44,14 +44,12 @@ public class LoginServiceImpl implements LoginService {
             log.info("Login Success");
             IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
-                    .authority(member.getAuthority())
                     .id(member.getId())
                     .build();
             String accessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
             IdentificationGenerateVO refreshTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.REFRESH_TOKEN)
-                    .authority(member.getAuthority())
                     .id(member.getId())
                     .build();
             String refreshToken = (String) jwtTokenProvider.generateIdentificationInfo(refreshTokenVO);
@@ -92,12 +90,13 @@ public class LoginServiceImpl implements LoginService {
 
         IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
                 .jwtToken(JwtToken.ACCESS_TOKEN)
-//                .authority(member.getAuthority())
                 .id(subject)
                 .build();
         String reIssueAccessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
+
         redisService.deleteCache(accessToken);
         redisService.setCache(reIssueAccessToken, refreshToken);
+
         return reIssueAccessToken;
     }
 

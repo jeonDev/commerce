@@ -17,12 +17,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final AuthenticationInfo authenticationInfo;
+    private final String id;
+    private final Authority authority;
+    private final String name;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();
-        roles.add(authenticationInfo.getAuthority().name());
+        roles.add(authority.name());
 
         return roles.stream()
                 .map(SimpleGrantedAuthority::new)
