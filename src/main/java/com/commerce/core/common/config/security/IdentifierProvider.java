@@ -1,6 +1,7 @@
 package com.commerce.core.common.config.security;
 
 import com.commerce.core.common.config.security.vo.IdentificationGenerateVO;
+import io.jsonwebtoken.Claims;
 import org.springframework.security.core.Authentication;
 
 public interface IdentifierProvider {
@@ -19,4 +20,10 @@ public interface IdentifierProvider {
      * IdentificationInfo Valid Check
      */
     boolean validCheck(Object identificationInfo);
+
+    /**
+     * Token get Claims Body
+     */
+    Claims getTokenForSubject(String token);
+
 }

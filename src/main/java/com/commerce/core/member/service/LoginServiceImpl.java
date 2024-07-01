@@ -10,6 +10,7 @@ import com.commerce.core.common.config.security.vo.JwtToken;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.vo.LoginDto;
 import com.commerce.core.member.vo.LoginSuccessDto;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,15 +44,13 @@ public class LoginServiceImpl implements LoginService {
             log.info("Login Success");
             IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
-                    .authority(member.getAuthority())
-                    .name(member.getId())
+                    .id(member.getId())
                     .build();
             String accessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
             IdentificationGenerateVO refreshTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.REFRESH_TOKEN)
-                    .authority(member.getAuthority())
-                    .name(member.getId())
+                    .id(member.getId())
                     .build();
             String refreshToken = (String) jwtTokenProvider.generateIdentificationInfo(refreshTokenVO);
 
@@ -81,18 +80,27 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String tokenReIssue(String accessToken, String refreshToken) {
-        String redisRefreshToken = redisService.getCache(accessToken);
+        String redisRefreshToken = redisService.getCache(this.resolveAccessToken(accessToken));
+
         if (redisRefreshToken == null || !redisRefreshToken.equals(redisRefreshToken))
             throw new CommerceException(ExceptionStatus.AUTH_TOKEN_UN_MATCH);
 
+        Claims tokenForSubject = jwtTokenProvider.getTokenForSubject(refreshToken);
+        String subject = tokenForSubject.getSubject();
+
         IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
                 .jwtToken(JwtToken.ACCESS_TOKEN)
-//                    .authority(member.getAuthority())
-//                    .name(member.getId())
+                .id(subject)
                 .build();
         String reIssueAccessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
+
         redisService.deleteCache(accessToken);
         redisService.setCache(reIssueAccessToken, refreshToken);
+
         return reIssueAccessToken;
+    }
+
+    private String resolveAccessToken(String authorization) {
+        return authorization.substring("Bearer".length() + 1);
     }
 }

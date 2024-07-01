@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class JwtIdentificationGenerateVO implements IdentificationGenerateVO {
 
-    private String name;
+    private String id;
     private Authority authority;
     private JwtToken jwtToken;
 }

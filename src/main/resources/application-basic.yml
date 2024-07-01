@@ -29,6 +29,8 @@ logging:
     '[org.apache.kafka.clients.consumer.internals.ConsumerCoordinator]': warn
     '[org.apache.kafka.clients.consumer.ConsumerConfig]': warn
 
+security:
+  secret-key: ABSDFSDREWRQW2d@#
 
 cors:
   domain: http://localhost:5173

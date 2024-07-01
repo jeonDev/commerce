@@ -4,6 +4,7 @@ import com.commerce.core.common.config.security.vo.IdentificationGenerateVO;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,8 +20,8 @@ public class JwtTokenProvider implements IdentifierProvider {
 
     private final UserDetailsService userDetailsService;
 
-    // TODO: 값 세팅 예정
-    private String secretKey = "1111";
+    @Value("${security.secret-key}")
+    private String secretKey;
 
     @Override
     public String generateIdentificationInfo(IdentificationGenerateVO vo) {
@@ -28,7 +29,7 @@ public class JwtTokenProvider implements IdentifierProvider {
     }
 
     private String jwtTokenGenerate(IdentificationGenerateVO jwtIdentificationGenerateVO) {
-        Claims claims = Jwts.claims().setSubject(jwtIdentificationGenerateVO.getName());
+        Claims claims = Jwts.claims().setSubject(jwtIdentificationGenerateVO.getId());
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + jwtIdentificationGenerateVO.getJwtToken().getExpiredTime());
 
@@ -42,10 +43,9 @@ public class JwtTokenProvider implements IdentifierProvider {
 
     @Override
     public Authentication getAuthenticationInfo(Object identificationInfo) {
-        Claims body = this.getTokenForSubject((String) identificationInfo);
+        Claims body = getTokenForSubject((String) identificationInfo);
         UserDetails userDetails = userDetailsService.loadUserByUsername(body.getSubject());
 
-        // TODO: ""
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -55,12 +55,13 @@ public class JwtTokenProvider implements IdentifierProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws((String) identificationInfo);
             return true;
         } catch(JwtException e) {
-            log.error("Jwt Exception", e);
+            log.debug("Jwt Exception : {}", e.getMessage());
         }
         return false;
     }
 
-    private Claims getTokenForSubject(String token) {
+    @Override
+    public Claims getTokenForSubject(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
