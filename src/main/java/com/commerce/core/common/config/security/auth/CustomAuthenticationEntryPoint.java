@@ -1,4 +1,4 @@
-package com.commerce.core.common.security.auth;
+package com.commerce.core.common.config.security.auth;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

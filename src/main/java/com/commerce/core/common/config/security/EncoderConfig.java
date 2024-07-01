@@ -1,4 +1,4 @@
-package com.commerce.core.common.security;
+package com.commerce.core.common.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

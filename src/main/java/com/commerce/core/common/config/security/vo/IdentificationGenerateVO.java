@@ -1,4 +1,4 @@
-package com.commerce.core.common.security.vo;
+package com.commerce.core.common.config.security.vo;
 
 public interface IdentificationGenerateVO {
     String getName();

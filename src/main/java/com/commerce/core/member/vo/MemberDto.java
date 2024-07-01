@@ -1,6 +1,6 @@
 package com.commerce.core.member.vo;
 
-import com.commerce.core.common.security.vo.Authority;
+import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.member.entity.Member;
 import lombok.Data;
 

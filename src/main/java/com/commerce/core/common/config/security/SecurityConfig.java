@@ -1,6 +1,6 @@
-package com.commerce.core.common.security;
+package com.commerce.core.common.config.security;
 
-import com.commerce.core.common.filter.JwtFilter;
+import com.commerce.core.common.config.security.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

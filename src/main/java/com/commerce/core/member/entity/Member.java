@@ -1,9 +1,8 @@
 package com.commerce.core.member.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.common.security.vo.Authority;
+import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.common.utils.DateUtils;
-import com.commerce.core.common.utils.EncryptUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
