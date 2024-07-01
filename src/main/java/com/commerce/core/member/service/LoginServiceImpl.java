@@ -1,5 +1,6 @@
 package com.commerce.core.member.service;
 
+import com.commerce.core.common.config.redis.RedisService;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.config.security.IdentifierProvider;
@@ -23,6 +24,7 @@ public class LoginServiceImpl implements LoginService {
     private final MemberService memberService;
     private final IdentifierProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final RedisService redisService;
 
     @Override
     public LoginSuccessDto login(LoginDto dto) {
@@ -53,6 +55,8 @@ public class LoginServiceImpl implements LoginService {
                     .build();
             String refreshToken = (String) jwtTokenProvider.generateIdentificationInfo(refreshTokenVO);
 
+            redisService.setCache(accessToken, refreshToken);
+
             LoginSuccessDto login = LoginSuccessDto.builder()
                     .id(member.getId())
                     .name(member.getName())
@@ -73,5 +77,22 @@ public class LoginServiceImpl implements LoginService {
             memberService.save(member);
             throw new CommerceException(ExceptionStatus.LOGIN_PASSWORD_FAIL);
         }
+    }
+
+    @Override
+    public String tokenReIssue(String accessToken, String refreshToken) {
+        String redisRefreshToken = redisService.getCache(accessToken);
+        if (redisRefreshToken == null || !redisRefreshToken.equals(redisRefreshToken))
+            throw new CommerceException(ExceptionStatus.AUTH_TOKEN_UN_MATCH);
+
+        IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
+                .jwtToken(JwtToken.ACCESS_TOKEN)
+//                    .authority(member.getAuthority())
+//                    .name(member.getId())
+                .build();
+        String reIssueAccessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
+        redisService.deleteCache(accessToken);
+        redisService.setCache(reIssueAccessToken, refreshToken);
+        return reIssueAccessToken;
     }
 }

@@ -1,12 +1,9 @@
 package com.commerce.core.common.config.security;
 
 import com.commerce.core.common.config.security.vo.IdentificationGenerateVO;
-import com.commerce.core.common.config.security.vo.JwtToken;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,9 +17,6 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider implements IdentifierProvider {
 
-    @Qualifier("redisTemplate")
-    private RedisTemplate<String, String> redisTemplate;
-
     private final UserDetailsService userDetailsService;
 
     // TODO: 값 세팅 예정
@@ -30,13 +24,7 @@ public class JwtTokenProvider implements IdentifierProvider {
 
     @Override
     public String generateIdentificationInfo(IdentificationGenerateVO vo) {
-        String token = this.jwtTokenGenerate(vo);
-
-        if (vo.getJwtToken() == JwtToken.REFRESH_TOKEN) {
-//            redisTemplate.opsForValue().set();
-        }
-
-        return token;
+        return this.jwtTokenGenerate(vo);
     }
 
     private String jwtTokenGenerate(IdentificationGenerateVO jwtIdentificationGenerateVO) {
@@ -57,6 +45,7 @@ public class JwtTokenProvider implements IdentifierProvider {
         Claims body = this.getTokenForSubject((String) identificationInfo);
         UserDetails userDetails = userDetailsService.loadUserByUsername(body.getSubject());
 
+        // TODO: ""
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -65,10 +54,8 @@ public class JwtTokenProvider implements IdentifierProvider {
         try{
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws((String) identificationInfo);
             return true;
-        } catch(ExpiredJwtException e) {
-            log.error("", e);
         } catch(JwtException e) {
-            log.error("", e);
+            log.error("Jwt Exception", e);
         }
         return false;
     }

@@ -12,9 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자 API")
 @Slf4j
@@ -51,4 +49,15 @@ public class MemberController {
         cookie.setPath("/");
         return cookie;
     }
+
+    @PostMapping("/tokenReIssue")
+    @Operation(summary = "토큰 재발급", description = "만료된 토큰을 재 발급한다.")
+    public ResponseVO<String> login(@RequestHeader("token") String accessToken,
+                                             @CookieValue("refreshToken") String refreshToken) {
+        String token = loginService.tokenReIssue(accessToken, refreshToken);
+        return ResponseVO.<String>builder()
+                .data(token)
+                .build();
+    }
+
 }
