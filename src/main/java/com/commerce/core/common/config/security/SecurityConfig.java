@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/v1/**")
                         .hasRole("USER")
                         .requestMatchers("/login"
+                                , "/signup"
                                 , "/tokenReIssue"
                                 , "/swagger-ui/**"
                                 , "/v3/api-docs/**")

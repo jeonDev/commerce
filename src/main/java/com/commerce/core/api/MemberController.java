@@ -23,7 +23,7 @@ public class MemberController {
     private final MemberService memberService;
     private final LoginService loginService;
 
-    @PostMapping("/v1/member/signup")
+    @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행한다.")
     public ResponseVO<Object> signup(@RequestBody MemberDto dto) {
         memberService.createMember(dto);
