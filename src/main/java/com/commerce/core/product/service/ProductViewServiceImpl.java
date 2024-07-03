@@ -81,16 +81,19 @@ public class ProductViewServiceImpl implements ProductViewService {
         return productStockService.productStockSummary(stock);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<ProductView> selectProductViewForProductDetail(Long productDetailSeq) {
         return productViewRepository.findByProductInfoSeq(productDetailSeq);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ProductDetailDto selectProductViewDetail(Long productViewSeq) {
         return productDslRepository.selectProductDetail(productViewSeq);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProductViewResDto> selectProductViewList() {
         return productViewRepository.findAll().stream()

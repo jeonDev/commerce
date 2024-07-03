@@ -7,6 +7,7 @@ import com.commerce.core.product.vo.ProductInfoDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,6 +20,7 @@ public class ProductTest {
     private ProductService productService;
 
     @Test
+    @Transactional
     void productAddTest() {
         String productName = "AA";
         String productDetail = "테스트 상품A";

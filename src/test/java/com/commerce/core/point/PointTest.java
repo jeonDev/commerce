@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +28,7 @@ public class PointTest {
 
     @Test
     @Order(1)
+    @Transactional
     void pointCharge_success() {
         PointDto pointDto = PointDto.builder()
                 .memberSeq(1L)
@@ -47,6 +49,7 @@ public class PointTest {
 
     @Test
     @Order(2)
+    @Transactional
     void pointPayment_fail() {
         Long memberSeq = 1L;
         Long originPoint = 0L;
@@ -68,6 +71,7 @@ public class PointTest {
 
     @Test
     @Order(3)
+    @Transactional
     void pointPayment_success() {
         PointDto pointDto = PointDto.builder()
                 .memberSeq(1L)
@@ -87,6 +91,7 @@ public class PointTest {
     }
 
     @Test
+    @Transactional
     void point_lock_test() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(TEST_THREAD_COUNT);
         CountDownLatch latch = new CountDownLatch(TEST_THREAD_COUNT);

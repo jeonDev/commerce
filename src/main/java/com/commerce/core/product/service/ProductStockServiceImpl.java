@@ -97,6 +97,7 @@ public class ProductStockServiceImpl implements ProductStockService {
         eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<ProductStock> selectProductStock(Long productSeq) {
         return productStockRepository.findById(productSeq);

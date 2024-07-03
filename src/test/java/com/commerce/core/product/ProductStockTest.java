@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +25,7 @@ public class ProductStockTest {
     private ProductStockService productStockService;
 
     @Test
+    @Transactional
     void productStockAdjustment() {
         ProductStockDto dto = ProductStockDto.builder()
                 .productSeq(1L)
@@ -42,6 +44,7 @@ public class ProductStockTest {
     }
 
     @Test
+    @Transactional
     void productStockRedissonLockTest() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(TEST_THREAD_COUNT);
         CountDownLatch latch = new CountDownLatch(TEST_THREAD_COUNT);

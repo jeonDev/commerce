@@ -63,6 +63,7 @@ public class PointServiceImpl implements PointService {
         pointHistoryRepository.save(point.generateHistoryEntity(dto.getPoint(), dto.getPointProcessStatus()));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Point> selectPoint(Long memberSeq) {
         return pointRepository.findByMember_MemberSeq(memberSeq);

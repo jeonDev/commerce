@@ -8,6 +8,7 @@ import com.commerce.core.order.vo.OrderDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,6 +19,7 @@ public class OrderTest {
     OrderService orderService;
 
     @Test
+    @Transactional
     void order() {
         Long[] productSeqs = {1L, 2L};
         OrderDto orderDto = OrderDto.builder()
@@ -28,6 +30,7 @@ public class OrderTest {
     }
 
     @Test
+    @Transactional
     void updateOrderDetailStatus() {
         OrderDto dto = OrderDto.builder()
                 .orderDetailSeq(1L)

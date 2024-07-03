@@ -43,8 +43,8 @@ public class OrderServiceImpl implements OrderService {
     private final MemberService memberService;
     private final EventSender eventSender;
 
-    @Override
     @Transactional
+    @Override
     public Orders order(OrderDto dto) {
         // 1. Member Use Check
         Member member = memberService.selectUseMember(dto.getMemberSeq())
@@ -103,11 +103,13 @@ public class OrderServiceImpl implements OrderService {
         return productStockService.productStockAdjustment(stock).getProduct();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Orders> selectOrder(Long orderSeq) {
         return ordersRepository.findById(orderSeq);
     }
 
+    @Transactional
     @Override
     public OrderDetail updateOrderStatus(OrderDto dto) {
         OrderDetail orderDetail = this.selectOrderDetail(dto.getOrderDetailSeq())
@@ -122,11 +124,13 @@ public class OrderServiceImpl implements OrderService {
         return orderDetail;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<OrderDetail> selectOrderDetail(Long orderDetailSeq) {
         return orderDetailsRepository.findById(orderDetailSeq);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<OrderDetail> selectOrderDetailList(Long orderSeq) {
         return orderDetailsRepository.findByOrders_OrderSeq(orderSeq);

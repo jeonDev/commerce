@@ -19,6 +19,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     @Override
     public Member createMember(MemberDto dto) {
         Member member = dto.dtoToEntity();
@@ -27,16 +28,19 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Member> selectMember(Long memberSeq) {
         return memberRepository.findById(memberSeq);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Member> selectUseMember(Long memberSeq) {
         return memberRepository.findByMemberSeqAndUseYn(memberSeq, "Y");
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Member> selectUseMember(String id) {
         return memberRepository.findByIdAndUseYn(id, "Y");

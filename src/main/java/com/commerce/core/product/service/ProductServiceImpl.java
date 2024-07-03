@@ -31,9 +31,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final EventSender eventSender;
 
-    /**
-     * Product Add
-     */
     @Transactional
     @Override
     public Product add(ProductDto dto) {
@@ -53,17 +50,12 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
-    /**
-     * Select Product Detail
-     */
+    @Transactional(readOnly = true)
     @Override
     public Optional<Product> selectProduct(Long productSeq) {
         return productRepository.findById(productSeq);
     }
 
-    /**
-     * Product Info Setting
-     */
     private ProductInfo mergeProductInfo(ProductInfoDto dto) {
         // 1-1. 상품 정보 존재 시, 세팅
         Long productInfoSeq = dto.getProductInfoSeq();
@@ -75,6 +67,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Product> selectProductToProductInfo(Long productInfoSeq) {
         return productRepository.findByProductInfo_ProductInfoSeq(productInfoSeq);
