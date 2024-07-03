@@ -1,4 +1,4 @@
-package com.commerce.core.common.config.service;
+package com.commerce.core.common.service;
 
 import com.commerce.core.common.config.security.vo.JwtToken;
 import lombok.RequiredArgsConstructor;

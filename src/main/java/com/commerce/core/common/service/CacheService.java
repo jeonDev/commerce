@@ -1,4 +1,4 @@
-package com.commerce.core.common.config.service;
+package com.commerce.core.common.service;
 
 public interface CacheService<K, V> {
 

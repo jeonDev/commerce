@@ -1,6 +1,6 @@
 package com.commerce.core.member.service;
 
-import com.commerce.core.common.config.service.CacheService;
+import com.commerce.core.common.service.CacheService;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.config.security.IdentifierProvider;
