@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v1/**")
                         .hasRole("USER")
+                        .requestMatchers("/admin/**")
+                        .hasRole("ADMIN")
                         .requestMatchers("/login"
                                 , "/signup"
                                 , "/tokenReIssue"

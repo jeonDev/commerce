@@ -19,7 +19,6 @@ import java.util.List;
 @Tag(name = "상품 API")
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/v1")
 @RestController
 public class ProductController {
 
@@ -27,7 +26,7 @@ public class ProductController {
     private final ProductStockService productStockService;
     private final ProductViewService productViewService;
 
-    @GetMapping("/product/view")
+    @GetMapping("/admin/product/view")
     @Operation(summary = "상품 목록", description = "고객에게 보여줄 상품 목록을 출력한다. (MongoDB)")
     public ResponseVO<List<ProductViewResDto>> productViewList() {
         return ResponseVO.<List<ProductViewResDto>>builder()
@@ -35,7 +34,7 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping("/product/{productInfoSeq}")
+    @GetMapping("/v1/product/{productInfoSeq}")
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
     public ResponseVO<ProductDetailDto> productDetailList(@PathVariable String productInfoSeq) {
         return ResponseVO.<ProductDetailDto>builder()
