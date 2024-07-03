@@ -26,7 +26,7 @@ public class ProductController {
     private final ProductStockService productStockService;
     private final ProductViewService productViewService;
 
-    @GetMapping("/admin/product/view")
+    @GetMapping("/v1/product/view")
     @Operation(summary = "상품 목록", description = "고객에게 보여줄 상품 목록을 출력한다. (MongoDB)")
     public ResponseVO<List<ProductViewResDto>> productViewList() {
         return ResponseVO.<List<ProductViewResDto>>builder()
