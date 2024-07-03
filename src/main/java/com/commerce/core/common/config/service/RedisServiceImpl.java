@@ -1,4 +1,4 @@
-package com.commerce.core.common.config.redis;
+package com.commerce.core.common.config.service;
 
 import com.commerce.core.common.config.security.vo.JwtToken;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 
 @RequiredArgsConstructor
-@Service
-public class RedisServiceImpl implements RedisService {
+@Service("redisService")
+public class RedisServiceImpl implements CacheService<String, String> {
 
     private final RedisTemplate<String, String> redisTemplate;
 

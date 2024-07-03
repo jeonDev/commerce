@@ -1,6 +1,6 @@
 package com.commerce.core.member.service;
 
-import com.commerce.core.common.config.redis.RedisService;
+import com.commerce.core.common.config.service.CacheService;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.config.security.IdentifierProvider;
@@ -25,7 +25,7 @@ public class LoginServiceImpl implements LoginService {
     private final MemberService memberService;
     private final IdentifierProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final RedisService redisService;
+    private final CacheService<String, String> redisService;
 
     @Override
     public LoginSuccessDto login(LoginDto dto) {
