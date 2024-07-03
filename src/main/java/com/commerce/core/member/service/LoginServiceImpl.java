@@ -65,6 +65,7 @@ public class LoginServiceImpl implements LoginService {
                     .addr(member.getAddr())
                     .addrDetail(member.getAddrDetail())
                     .zipCode(member.getZipCode())
+                    .authority(member.getAuthority())
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();
