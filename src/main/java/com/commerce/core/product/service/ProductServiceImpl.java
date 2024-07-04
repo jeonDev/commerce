@@ -6,6 +6,7 @@ import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
+import com.commerce.core.product.repository.ProductInfoRepository;
 import com.commerce.core.product.repository.dsl.ProductDslRepository;
 import com.commerce.core.product.repository.ProductRepository;
 import com.commerce.core.product.vo.ProductDto;
@@ -25,9 +26,9 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductInfoRepository productInfoRepository;
 //    private final ProductDslRepository productDslRepository;
 
-    private final ProductInfoService productInfoService;
 
     private final EventSender eventSender;
 
@@ -60,10 +61,10 @@ public class ProductServiceImpl implements ProductService {
         // 1-1. 상품 정보 존재 시, 세팅
         Long productInfoSeq = dto.getProductInfoSeq();
         if(productInfoSeq == null) {
-            return productInfoService.add(dto);
+            return this.productInfoAdd(dto);
         }
         // 1-2. 상품 정보 없을 시, 등록 및 세팅
-        return productInfoService.selectProductInfo(productInfoSeq)
+        return this.selectProductInfo(productInfoSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
     }
 
@@ -71,5 +72,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> selectProductToProductInfo(Long productInfoSeq) {
         return productRepository.findByProductInfo_ProductInfoSeq(productInfoSeq);
+    }
+
+
+    @Transactional
+    @Override
+    public ProductInfo productInfoAdd(ProductInfoDto dto) {
+        return productInfoRepository.save(dto.dtoToEntity());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<ProductInfo> selectProductInfo(Long productInfoSeq) {
+        return productInfoRepository.findById(productInfoSeq);
     }
 }
