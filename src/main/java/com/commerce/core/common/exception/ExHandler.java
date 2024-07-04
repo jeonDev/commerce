@@ -13,7 +13,7 @@ public class ExHandler {
 
     @ExceptionHandler(CommerceException.class)
     protected ResponseEntity<ErrorResponseDto> handlerCommerceException(CommerceException e) {
-        log.error("handlerCommerceException : {}", e);
+        log.error("handlerCommerceException : [{}] {}", e.getCode(), e.getMessage());
         ErrorResponseDto errorDto = ErrorResponseDto.builder()
                 .code(e.getCode())
                 .message(e.getMessage())

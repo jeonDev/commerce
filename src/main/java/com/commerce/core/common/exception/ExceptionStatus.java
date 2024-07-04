@@ -16,6 +16,7 @@ public enum ExceptionStatus {
     LOGIN_FAIL("ML01", "로그인에 실패하였습니다."),
     LOGIN_PASSWORD_FAIL("ML02", "패스워드가 틀렸습니다."),
     LOGIN_PASSWORD_FAIL_MAX_COUNT("ML03", "패스워드가 실패 횟수가 초과되었습니다."),
+    LOGIN_NOT_EXISTS_ID("ML04", "아이디가 존재하지 않습니다."),
 
     // PRODUCT_STOCK
     SOLD_OUT("PS001", "재고가 품절되었습니다."),

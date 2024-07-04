@@ -38,7 +38,7 @@ public class LoginServiceImpl implements LoginService {
 
         // passwordFailCount >= 5
         if(member.getPasswordFailCount() >= MAX_PASSWORD_WRONG_COUNT) {
-            throw new CommerceException(ExceptionStatus.LOGIN_PASSWORD_FAIL_MAX_COUNT);
+            throw new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID);
         }
 
         // Login Success
