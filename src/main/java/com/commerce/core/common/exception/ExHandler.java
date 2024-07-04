@@ -29,8 +29,8 @@ public class ExHandler {
     protected ResponseEntity<ErrorResponseDto> handlerException(Exception e) {
         log.error("handlerException : {}", e);
         ErrorResponseDto errorDto = ErrorResponseDto.builder()
-                .code("9999")
-                .message("System Error")
+                .code(ExceptionStatus.SYSTEM_ERROR.getCode())
+                .message(ExceptionStatus.SYSTEM_ERROR.getMessage())
                 .build();
 
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);

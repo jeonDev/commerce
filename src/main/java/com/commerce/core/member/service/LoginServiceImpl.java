@@ -34,7 +34,7 @@ public class LoginServiceImpl implements LoginService {
         String id = dto.getId();
 
         Member member = memberService.selectUseMember(id)
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID));
 
         // passwordFailCount >= 5
         if(member.getPasswordFailCount() >= MAX_PASSWORD_WRONG_COUNT) {
