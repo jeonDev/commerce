@@ -86,7 +86,7 @@ public class LoginServiceImpl implements LoginService {
     public String tokenReIssue(String accessToken, String refreshToken) {
         String redisRefreshToken = redisService.getCache(this.resolveAccessToken(accessToken));
 
-        if (redisRefreshToken == null || !redisRefreshToken.equals(redisRefreshToken))
+        if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken))
             throw new CommerceException(ExceptionStatus.AUTH_TOKEN_UN_MATCH);
 
         Claims tokenForSubject = jwtTokenProvider.getTokenForSubject(refreshToken);
