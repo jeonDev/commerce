@@ -1,5 +1,7 @@
 package com.commerce.core.api;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
@@ -9,6 +11,7 @@ import com.commerce.core.member.vo.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +53,41 @@ public class MemberController {
         return cookie;
     }
 
+    private Cookie resetCookieMake(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookieName.equals(cookie.getName())) {
+                    cookie.setValue("");
+                    cookie.setPath("/");
+                    cookie.setMaxAge(0);
+                    return cookie;
+                }
+            }
+        }
+        throw new AssertionError();
+    }
+
     @PostMapping("/tokenReIssue")
     @Operation(summary = "토큰 재발급", description = "만료된 토큰을 재 발급한다.")
-    public ResponseVO<String> login(@RequestHeader("Authorization") String accessToken,
-                                             @CookieValue("refreshToken") String refreshToken) {
-        String token = loginService.tokenReIssue(accessToken, refreshToken);
+    public ResponseVO<String> login(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    @RequestHeader("Authorization") String accessToken,
+                                    @CookieValue("refreshToken") String refreshToken) {
+        try {
+            String token = loginService.tokenReIssue(accessToken, refreshToken);
+            return ResponseVO.<String>builder()
+                    .data(token)
+                    .build();
+        } catch (CommerceException e)  {
+            if (ExceptionStatus.AUTH_REFRESH_TOKEN_FAIL.getCode().equals(e.getCode())) {
+                Cookie cookie = this.resetCookieMake(request, "refreshToken");
+                response.addCookie(cookie);
+            }
+        }
         return ResponseVO.<String>builder()
-                .data(token)
+                .code(ExceptionStatus.AUTH_REFRESH_TOKEN_FAIL.getCode())
+                .message(ExceptionStatus.AUTH_REFRESH_TOKEN_FAIL.getMessage())
                 .build();
     }
 

@@ -84,24 +84,30 @@ public class LoginServiceImpl implements LoginService {
     @Transactional(readOnly = true)
     @Override
     public String tokenReIssue(String accessToken, String refreshToken) {
-        String redisRefreshToken = redisService.getCache(this.resolveAccessToken(accessToken));
+        try {
+            String redisRefreshToken = redisService.getCache(this.resolveAccessToken(accessToken));
 
-        if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken))
-            throw new CommerceException(ExceptionStatus.AUTH_TOKEN_UN_MATCH);
+            if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken))
+                throw new CommerceException(ExceptionStatus.AUTH_TOKEN_UN_MATCH);
 
-        Claims tokenForSubject = jwtTokenProvider.getTokenForSubject(refreshToken);
-        String subject = tokenForSubject.getSubject();
+            Claims tokenForSubject = jwtTokenProvider.getTokenForSubject(refreshToken);
+            String subject = tokenForSubject.getSubject();
 
-        IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
-                .jwtToken(JwtToken.ACCESS_TOKEN)
-                .id(subject)
-                .build();
-        String reIssueAccessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
+            IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
+                    .jwtToken(JwtToken.ACCESS_TOKEN)
+                    .id(subject)
+                    .build();
+            String reIssueAccessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
-        redisService.deleteCache(accessToken);
-        redisService.setCache(reIssueAccessToken, refreshToken);
+            redisService.deleteCache(accessToken);
+            redisService.setCache(reIssueAccessToken, refreshToken);
+            return reIssueAccessToken;
 
-        return reIssueAccessToken;
+        } catch (Exception e) {
+            log.error("Refresh Token 발급 실패 : {}", e.getMessage());
+            redisService.deleteCache(accessToken);
+            throw new CommerceException(ExceptionStatus.AUTH_REFRESH_TOKEN_FAIL);
+        }
     }
 
     private String resolveAccessToken(String authorization) {
