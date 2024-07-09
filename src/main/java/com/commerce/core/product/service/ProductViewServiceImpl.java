@@ -91,11 +91,15 @@ public class ProductViewServiceImpl implements ProductViewService {
     @Override
     public ProductDetailDto selectProductViewDetail(Long productInfoSeq) {
         ProductInfo productInfo = productDslRepository.selectProductDetail(productInfoSeq);
+        List<String> productOptions = productService.selectProductToProductInfo(productInfoSeq).stream()
+                .map(Product::getProductOptionCode)
+                .toList();
         return ProductDetailDto.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())
                 .productName(productInfo.getProductName())
                 .productDetail(productInfo.getProductDetail())
                 .price(productInfo.getPrice())
+                .productOptions(productOptions)
                 .build();
     }
 
