@@ -36,7 +36,7 @@ public class ProductController {
 
     @GetMapping("/v1/product/{productInfoSeq}")
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
-    public ResponseVO<ProductDetailDto> productDetailList(@PathVariable String productInfoSeq) {
+    public ResponseVO<ProductDetailDto> productDetailList(@PathVariable("productInfoSeq") String productInfoSeq) {
         return ResponseVO.<ProductDetailDto>builder()
                 .data(productViewService.selectProductViewDetail(Long.valueOf(productInfoSeq)))
                 .build();
