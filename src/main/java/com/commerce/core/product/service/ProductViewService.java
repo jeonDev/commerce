@@ -23,7 +23,7 @@ public interface ProductViewService {
     /**
      * Select ProductView
      */
-    ProductDetailDto selectProductViewDetail(Long productViewSeq);
+    ProductDetailDto selectProductViewDetail(Long productInfoSeq);
 
     List<ProductViewResDto> selectProductViewList();
 }

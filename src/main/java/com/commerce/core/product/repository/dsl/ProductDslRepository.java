@@ -1,6 +1,7 @@
 package com.commerce.core.product.repository.dsl;
 
 import com.commerce.core.product.entity.Product;
+import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductDto;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.commerce.core.product.entity.QProduct.product;
+import static com.commerce.core.product.entity.QProductInfo.productInfo;
 
 @RequiredArgsConstructor
 @Repository
@@ -20,8 +22,10 @@ public class ProductDslRepository {
 
     private final JPAQueryFactory dsl;
 
-    public ProductDetailDto selectProductDetail(Long productViewSeq) {
-        return null;
+    public ProductInfo selectProductDetail(Long productInfoSeq) {
+        return dsl.selectFrom(productInfo)
+                .where(productInfo.productInfoSeq.eq(productInfoSeq))
+                .fetchOne();
     }
 
 //    public Page<Product> findByAll(ProductDto dto) {

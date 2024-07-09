@@ -89,8 +89,14 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Transactional(readOnly = true)
     @Override
-    public ProductDetailDto selectProductViewDetail(Long productViewSeq) {
-        return productDslRepository.selectProductDetail(productViewSeq);
+    public ProductDetailDto selectProductViewDetail(Long productInfoSeq) {
+        ProductInfo productInfo = productDslRepository.selectProductDetail(productInfoSeq);
+        return ProductDetailDto.builder()
+                .productInfoSeq(productInfo.getProductInfoSeq())
+                .productName(productInfo.getProductName())
+                .productDetail(productInfo.getProductDetail())
+                .price(productInfo.getPrice())
+                .build();
     }
 
     @Transactional(readOnly = true)
