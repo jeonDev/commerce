@@ -4,10 +4,13 @@ import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.service.ProductService;
 import com.commerce.core.product.vo.ProductDto;
 import com.commerce.core.product.vo.ProductInfoDto;
+import com.commerce.core.product.vo.ProductResDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,19 +27,17 @@ public class ProductTest {
     void productAddTest() {
         String productName = "AA";
         String productDetail = "테스트 상품A";
-        String productOptionCode = "LARGE";
+        Long price = 10000L;
         ProductDto dto = new ProductDto();
         dto.setProductName(productName);
-        ProductInfoDto infoDto = ProductInfoDto.builder()
-                .productName(productName)
-                .productDetail(productDetail)
-                .price(10000L)
-                .build();
-        dto.setProductInfoDto(infoDto);
-        dto.setProductOptionCode(productOptionCode);
+        dto.setProductDetail(productDetail);
+        dto.setPrice(price);
+        List<String> productOptionCode = List.of("SMALL", "LARGE");
+        dto.setProductOptions(productOptionCode);
 
-        Product result = productService.add(dto);
+        ProductResDto result = productService.add(dto);
 
-        assertThat(productOptionCode).isEqualTo(productService.selectProduct(result.getProductSeq()).get().getProductOptionCode());
+
+        assertThat(productName).isEqualTo(productService.selectProductInfo(result.getProductInfoSeq()).get().getProductName());
     }
 }

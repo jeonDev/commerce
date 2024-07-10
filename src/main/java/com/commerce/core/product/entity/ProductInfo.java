@@ -42,4 +42,10 @@ public class ProductInfo extends BaseEntity {
     private Long price;
 
 
+    public void update(String productName, String productDetail, Long price) {
+        this.productName = productName;
+        this.productDetail = productDetail;
+        this.price = price;
+    }
+
 }

@@ -7,10 +7,9 @@ import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.repository.ProductInfoRepository;
-import com.commerce.core.product.repository.dsl.ProductDslRepository;
 import com.commerce.core.product.repository.ProductRepository;
 import com.commerce.core.product.vo.ProductDto;
-import com.commerce.core.product.vo.ProductInfoDto;
+import com.commerce.core.product.vo.ProductResDto;
 import com.commerce.core.product.vo.ProductViewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,28 +26,41 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductInfoRepository productInfoRepository;
-//    private final ProductDslRepository productDslRepository;
 
 
     private final EventSender eventSender;
 
     @Transactional
     @Override
-    public Product add(ProductDto dto) {
+    public ProductResDto add(ProductDto dto) {
         // 1. 상품 정보 조회
-        ProductInfo productInfo = this.mergeProductInfo(dto.getProductInfoDto());
+        ProductInfo productInfo = this.mergeProductInfo(dto);
 
         // 2. 상품 save
-        Product product = productRepository.save(dto.dtoToEntity(productInfo));
+        List<Product> list = dto.getProductOptions()
+                .stream()
+                .map(s -> Product.builder()
+                        .productInfo(productInfo)
+                        .productOptionCode(s)
+                        .build())
+                .toList();
+        List<Product> products = productRepository.saveAll(list);
 
         // 3. Event Producer Push
-        ProductViewDto productViewDto = ProductViewDto.builder()
-                .productSeq(product.getProductSeq())
-                .productViewStatus(ProductViewDto.ProductViewStatus.REGISTER)
-                .build();
-        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
+        List<ProductViewDto> productViewDtoList = products.stream()
+                .map(product -> ProductViewDto.builder()
+                        .productSeq(product.getProductSeq())
+                        .productViewStatus(ProductViewDto.ProductViewStatus.REGISTER)
+                        .build())
+                .toList();
+        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDtoList);
 
-        return product;
+        return ProductResDto.builder()
+                .productInfoSeq(productInfo.getProductInfoSeq())
+                .productName(productInfo.getProductName())
+                .productDetail(productInfo.getProductDetail())
+                .price(productInfo.getPrice())
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -57,15 +69,17 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(productSeq);
     }
 
-    private ProductInfo mergeProductInfo(ProductInfoDto dto) {
+    private ProductInfo mergeProductInfo(ProductDto dto) {
         // 1-1. 상품 정보 존재 시, 세팅
         Long productInfoSeq = dto.getProductInfoSeq();
         if(productInfoSeq == null) {
             return this.productInfoAdd(dto);
         }
         // 1-2. 상품 정보 없을 시, 등록 및 세팅
-        return this.selectProductInfo(productInfoSeq)
+        ProductInfo productInfo = this.selectProductInfo(productInfoSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+        productInfo.update(dto.getProductName(), dto.getProductDetail(), dto.getPrice());
+        return productInfo;
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductInfo productInfoAdd(ProductInfoDto dto) {
+    public ProductInfo productInfoAdd(ProductDto dto) {
         return productInfoRepository.save(dto.dtoToEntity());
     }
 
