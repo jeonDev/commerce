@@ -44,8 +44,8 @@ public class ProductInfo extends BaseEntity {
     @Column(name = "PRICE")
     private Long price;
 
-    @OneToMany
-    List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "productInfo")
+    private List<Product> products = new ArrayList<>();
 
 
     public void update(String productName, String productDetail, Long price) {
