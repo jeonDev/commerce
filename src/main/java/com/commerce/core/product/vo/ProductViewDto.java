@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @ToString
 public class ProductViewDto {
-    private Long productSeq;
+    private Long productInfoSeq;
     private ProductViewStatus productViewStatus;
 
 

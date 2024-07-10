@@ -47,13 +47,11 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.saveAll(list);
 
         // 3. Event Producer Push
-        List<ProductViewDto> productViewDtoList = products.stream()
-                .map(product -> ProductViewDto.builder()
-                        .productSeq(product.getProductSeq())
-                        .productViewStatus(ProductViewDto.ProductViewStatus.REGISTER)
-                        .build())
-                .toList();
-        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDtoList);
+        ProductViewDto productViewDto = ProductViewDto.builder()
+                .productInfoSeq(productInfo.getProductInfoSeq())
+                .productViewStatus(ProductViewDto.ProductViewStatus.REGISTER)
+                .build();
+        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
 
         return ProductResDto.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())

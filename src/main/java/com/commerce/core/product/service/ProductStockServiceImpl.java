@@ -50,7 +50,7 @@ public class ProductStockServiceImpl implements ProductStockService {
         productStockHistoryRepository.save(productStockHistory);
 
         // 3. Event Send(Product View Mongo DB)
-        this.productStockEventSend(product.getProductSeq(), productStock.getStock(), isConsume);
+        this.productStockEventSend(product.getProductInfo().getProductInfoSeq(), productStock.getStock(), isConsume);
 
         return productStock;
     }
@@ -81,7 +81,7 @@ public class ProductStockServiceImpl implements ProductStockService {
      *  add -> event Send
      *  consume -> 5 under Event Sends
      */
-    private void productStockEventSend(Long productSeq, Long stock, boolean isConsume) {
+    private void productStockEventSend(Long productInfoSeq, Long stock, boolean isConsume) {
         boolean isEventSend = true;
 
         if (isConsume) {
@@ -91,7 +91,7 @@ public class ProductStockServiceImpl implements ProductStockService {
         if (!isEventSend) return;
 
         ProductViewDto productViewDto = ProductViewDto.builder()
-                .productSeq(productSeq)
+                .productInfoSeq(productInfoSeq)
                 .productViewStatus(ProductViewDto.ProductViewStatus.STOCK_ADJUSTMENT)
                 .build();
         eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);

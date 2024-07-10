@@ -35,9 +35,8 @@ public class ProductViewServiceImpl implements ProductViewService {
         log.info("Event Request : {} ", dto.getProductViewStatus());
 
         // 1. 기존 데이터 존재여부 체크
-        Product product = productService.selectProduct(dto.getProductSeq()).orElseThrow();
-        ProductInfo productInfo = product.getProductInfo();
-        ProductStockSummary productStockSummary = this.makingProductStockSummary(product.getProductSeq());
+        ProductInfo productInfo = productService.selectProductInfo(dto.getProductInfoSeq()).orElseThrow();
+        ProductStockSummary productStockSummary = this.makingProductStockSummary(productInfo.getProducts());
         List<String> productOptions = productService.selectProductToProductInfo(productInfo.getProductInfoSeq())
                 .stream()
                 .map(Product::getProductOptionCode)
@@ -69,14 +68,16 @@ public class ProductViewServiceImpl implements ProductViewService {
         });
     }
 
-    private ProductStockSummary makingProductStockSummary(Long productSeq) {
-        Long stock = 0L;
-
-        Optional<ProductStock> productStockOptional = productStockService.selectProductStock(productSeq);
-        if(productStockOptional.isPresent()) {
-            ProductStock productStock = productStockOptional.get();
-            stock = productStock.getStock();
-        }
+    private ProductStockSummary makingProductStockSummary(List<Product> productList) {
+        Long stock = productList.stream()
+                .mapToLong(product -> {
+                    Optional<ProductStock> optionalProductStock = productStockService.selectProductStock(product.getProductSeq());
+                    if (optionalProductStock.isPresent()) {
+                        return optionalProductStock.get().getStock();
+                    }
+                    return 0L;
+                })
+                .sum();
 
         return productStockService.productStockSummary(stock);
     }

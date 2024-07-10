@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 상품 정보
  */
@@ -40,6 +43,9 @@ public class ProductInfo extends BaseEntity {
      */
     @Column(name = "PRICE")
     private Long price;
+
+    @OneToMany
+    List<Product> products = new ArrayList<>();
 
 
     public void update(String productName, String productDetail, Long price) {
