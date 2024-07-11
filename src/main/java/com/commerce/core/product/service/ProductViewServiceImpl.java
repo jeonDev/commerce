@@ -6,10 +6,7 @@ import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.entity.mongo.ProductView;
 import com.commerce.core.product.repository.dsl.ProductDslRepository;
 import com.commerce.core.product.repository.mongo.ProductViewRepository;
-import com.commerce.core.product.vo.ProductDetailDto;
-import com.commerce.core.product.vo.ProductStockSummary;
-import com.commerce.core.product.vo.ProductViewDto;
-import com.commerce.core.product.vo.ProductViewResDto;
+import com.commerce.core.product.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,19 +29,46 @@ public class ProductViewServiceImpl implements ProductViewService {
     @Transactional
     @Override
     public void merge(ProductViewDto dto) {
-        log.info("Event Request : {} ", dto.getProductViewStatus());
+        log.info("Event Request : {} {} ", dto.getProductInfoSeq(), dto.getProductViewStatus());
 
-        // 1. 기존 데이터 존재여부 체크
-        ProductInfo productInfo = productService.selectProductInfo(dto.getProductInfoSeq()).orElseThrow();
+        switch (dto.getProductViewStatus()) {
+            case REGISTER:
+                this.productViewUpdate(dto.getProductInfoSeq());
+                break;
+            case STOCK_ADJUSTMENT:
+                this.productViewStockUpdate(dto.getProductInfoSeq());
+                break;
+            default:
+                log.error("ProductViewStatus 매칭 실패");
+                break;
+        }
+    }
+
+    private void productViewUpdate(Long productInfoSeq) {
+        // 1. 기존 데이터 존재 여부 체크
+        ProductInfo productInfo = productService.selectProductInfo(productInfoSeq).orElseThrow();
         ProductStockSummary productStockSummary = this.makingProductStockSummary(productInfo.getProducts());
         List<String> productOptions = productService.selectProductToProductInfo(productInfo.getProductInfoSeq())
                 .stream()
                 .map(Product::getProductOptionCode)
                 .toList();
 
-        this.selectProductViewForProductDetail(productInfo.getProductInfoSeq())
-                .ifPresentOrElse(item -> {
+        // 2. View Merge
+        this.productViewMerge(productInfo, productStockSummary, productOptions);
+    }
 
+    private void productViewStockUpdate(Long productInfoSeq) {
+        // 1. 기존 데이터 존재 여부 체크
+        ProductInfo productInfo = productService.selectProductInfo(productInfoSeq).orElseThrow();
+        ProductStockSummary productStockSummary = this.makingProductStockSummary(productInfo.getProducts());
+
+        // 2. View Merge
+        this.productViewMerge(productInfo, productStockSummary, null);
+    }
+
+    private void productViewMerge(ProductInfo productInfo, ProductStockSummary productStockSummary, List<String> productOptions) {
+        selectProductViewForProductDetail(productInfo.getProductInfoSeq())
+                .ifPresentOrElse(item -> {
                     item.productViewSyncUpdate(productInfo.getProductInfoSeq(),
                             productInfo.getProductName(),
                             productInfo.getProductDetail(),
@@ -53,8 +77,7 @@ public class ProductViewServiceImpl implements ProductViewService {
                             productOptions,
                             productStockSummary);
                     productViewRepository.save(item);
-        }, () -> {
-
+                }, () -> {
                     ProductView productView = ProductView.builder()
                             .productInfoSeq(productInfo.getProductInfoSeq())
                             .productName(productInfo.getProductName())
@@ -65,7 +88,7 @@ public class ProductViewServiceImpl implements ProductViewService {
                             .productStockSummary(productStockSummary)
                             .build();
                     productViewRepository.save(productView);
-        });
+                });
     }
 
     private ProductStockSummary makingProductStockSummary(List<Product> productList) {

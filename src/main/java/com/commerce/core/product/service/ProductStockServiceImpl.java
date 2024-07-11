@@ -14,6 +14,7 @@ import com.commerce.core.product.repository.ProductStockRepository;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
 import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.vo.ProductViewStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -92,7 +93,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 
         ProductViewDto productViewDto = ProductViewDto.builder()
                 .productInfoSeq(productInfoSeq)
-                .productViewStatus(ProductViewDto.ProductViewStatus.STOCK_ADJUSTMENT)
+                .productViewStatus(ProductViewStatus.STOCK_ADJUSTMENT)
                 .build();
         eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
     }

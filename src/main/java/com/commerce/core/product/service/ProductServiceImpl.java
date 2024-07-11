@@ -11,6 +11,7 @@ import com.commerce.core.product.repository.ProductRepository;
 import com.commerce.core.product.vo.ProductDto;
 import com.commerce.core.product.vo.ProductResDto;
 import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.vo.ProductViewStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
         // 3. Event Producer Push
         ProductViewDto productViewDto = ProductViewDto.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())
-                .productViewStatus(ProductViewDto.ProductViewStatus.REGISTER)
+                .productViewStatus(ProductViewStatus.REGISTER)
                 .build();
         eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
 

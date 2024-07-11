@@ -10,10 +10,4 @@ import lombok.*;
 public class ProductViewDto {
     private Long productInfoSeq;
     private ProductViewStatus productViewStatus;
-
-
-    @Getter
-    public enum ProductViewStatus {
-        REGISTER, STOCK_ADJUSTMENT
-    }
 }

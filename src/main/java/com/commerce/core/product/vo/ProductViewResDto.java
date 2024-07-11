@@ -17,4 +17,6 @@ public class ProductViewResDto {
     private Long discountPrice;
     private String useYn;
     private List<String> productOptions;
+    private ProductStockSummary productStockSummary;
+    private String productStockSummaryName;
 }

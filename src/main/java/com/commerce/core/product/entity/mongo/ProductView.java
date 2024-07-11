@@ -70,7 +70,7 @@ public class ProductView {
         this.productDetail = productDetail;
         this.price = price;
         this.useYn = useYn;
-        this.productOptions = productOptions;
+        if (productOptions != null) this.productOptions = productOptions;
         this.productStockSummary = productStockSummary;
 
         return this;
@@ -85,6 +85,8 @@ public class ProductView {
                 .discountPrice(discountPrice)
                 .useYn(useYn)
                 .productOptions(productOptions)
+                .productStockSummary(productStockSummary)
+                .productStockSummaryName(productStockSummary.getStatus())
                 .build();
     }
 }
