@@ -46,7 +46,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 
         ProductStock productStock = this.stockAdjustmentProcess(product, isConsume, stock);
 
-        productStock = productStockRepository.save(productStock);
+        productStockRepository.save(productStock);
         ProductStockHistory productStockHistory = productStock.generateHistoryEntity(stock, dto.getProductStockProcessStatus());
         productStockHistoryRepository.save(productStockHistory);
 
