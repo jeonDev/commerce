@@ -17,9 +17,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final String id;
+    private final Long memberSeq;
     private final Authority authority;
-    private final String name;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -38,7 +37,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.memberSeq.toString();
     }
 
     @Override

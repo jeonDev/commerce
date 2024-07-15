@@ -25,9 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.AUTH_UNAUTHORIZED));
 
         return CustomUserDetails.builder()
-                .id(member.getId())
+                .memberSeq(member.getMemberSeq())
                 .authority(member.getAuthority())
-                .name(member.getName())
                 .build();
     }
 }
