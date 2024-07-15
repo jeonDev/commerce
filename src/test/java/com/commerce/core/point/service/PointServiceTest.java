@@ -2,12 +2,11 @@ package com.commerce.core.point.service;
 
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
-import com.commerce.core.point.entity.Point;
+import com.commerce.core.point.entity.MemberPoint;
 import com.commerce.core.point.repository.PointHistoryRepository;
 import com.commerce.core.point.repository.PointRepository;
 import com.commerce.core.point.vo.PointDto;
 import com.commerce.core.point.vo.PointProcessStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +54,7 @@ class PointServiceTest {
                 .pointProcessStatus(PointProcessStatus.CHARGE)
                 .build();
 
-        Point point = Point.builder()
+        MemberPoint point = MemberPoint.builder()
                 .point(10000L)
                 .id(1L)
                 .build();
@@ -77,7 +76,7 @@ class PointServiceTest {
                 .pointProcessStatus(PointProcessStatus.PAYMENT)
                 .build();
 
-        Point point = Point.builder()
+        MemberPoint point = MemberPoint.builder()
                 .point(10000L)
                 .id(1L)
                 .build();

@@ -2,6 +2,7 @@ package com.commerce.core.member.service;
 
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.repository.MemberRepository;
+import com.commerce.core.member.repository.dsl.MemberDslRepository;
 import com.commerce.core.member.vo.MemberDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,13 +23,15 @@ class MemberServiceTest {
     MemberRepository memberRepository;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    MemberDslRepository memberDslRepository;
 
     MemberService memberService;
 
 
     @BeforeEach
     void setUp() {
-        memberService = new MemberServiceImpl(memberRepository, passwordEncoder);
+        memberService = new MemberServiceImpl(memberRepository, memberDslRepository, passwordEncoder);
     }
 
     @Test

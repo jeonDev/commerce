@@ -4,7 +4,7 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
-import com.commerce.core.point.entity.Point;
+import com.commerce.core.point.entity.MemberPoint;
 import com.commerce.core.point.repository.PointHistoryRepository;
 import com.commerce.core.point.repository.PointRepository;
 import com.commerce.core.point.vo.PointDto;
@@ -34,15 +34,15 @@ public class PointServiceImpl implements PointService {
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Existing Point Find & Point Setting
-        Optional<Point> optionalPoint = pointRepository.findByMember(member);
-        Point point;
+        Optional<MemberPoint> optionalPoint = pointRepository.findByMember(member);
+        MemberPoint point;
         if(optionalPoint.isPresent()) {
             point = optionalPoint.get();
             point.pointChange(dto.getPoint(), dto.getPointProcessStatus());
         } else {
             if(dto.getPointProcessStatus() == PointProcessStatus.PAYMENT) throw new CommerceException(ExceptionStatus.POINT_LACK);
 
-            point = Point.builder()
+            point = MemberPoint.builder()
                     .member(member)
                     .point(dto.getPoint())
                     .build();
@@ -58,14 +58,14 @@ public class PointServiceImpl implements PointService {
                 .build();
     }
 
-    private void entitySaveAndHistoryGenerate(Point point, PointDto dto) {
+    private void entitySaveAndHistoryGenerate(MemberPoint point, PointDto dto) {
         pointRepository.save(point);
         pointHistoryRepository.save(point.generateHistoryEntity(dto.getPoint(), dto.getPointProcessStatus()));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Point> selectPoint(Long memberSeq) {
+    public Optional<MemberPoint> selectPoint(Long memberSeq) {
         return pointRepository.findByMember_MemberSeq(memberSeq);
     }
 

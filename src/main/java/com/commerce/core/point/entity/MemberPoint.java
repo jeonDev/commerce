@@ -17,8 +17,8 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @Builder
 @Getter
-@Table(name = "POINT")
-public class Point extends BaseEntity {
+@Table(name = "MEMBER_POINT")
+public class MemberPoint extends BaseEntity {
 
     @Id
     @Column(name = "MEMBER_SEQ")

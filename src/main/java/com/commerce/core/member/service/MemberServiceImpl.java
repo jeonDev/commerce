@@ -2,7 +2,10 @@ package com.commerce.core.member.service;
 
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.repository.MemberRepository;
+import com.commerce.core.member.repository.dsl.MemberDslRepository;
+import com.commerce.core.member.repository.dsl.vo.MemberInfoDAO;
 import com.commerce.core.member.vo.MemberDto;
+import com.commerce.core.member.vo.MyPageInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +20,7 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberDslRepository memberDslRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -50,5 +54,14 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member save(Member member) {
         return memberRepository.save(member);
+    }
+
+    @Override
+    public MyPageInfoDto selectMyInfo(Long memberSeq) {
+        MemberInfoDAO dao = memberDslRepository.selectMemberInfo(memberSeq);
+        return MyPageInfoDto.builder()
+                .name(dao.getName())
+                .point(dao.getPoint())
+                .build();
     }
 }

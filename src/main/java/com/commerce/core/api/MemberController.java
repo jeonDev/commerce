@@ -2,12 +2,14 @@ package com.commerce.core.api;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.common.utils.SessionUtils;
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.member.vo.LoginDto;
 import com.commerce.core.member.vo.LoginSuccessDto;
 import com.commerce.core.member.vo.MemberDto;
+import com.commerce.core.member.vo.MyPageInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -15,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자 API")
@@ -88,6 +91,18 @@ public class MemberController {
         return ResponseVO.<String>builder()
                 .code(ExceptionStatus.AUTH_REFRESH_TOKEN_FAIL.getCode())
                 .message(ExceptionStatus.AUTH_REFRESH_TOKEN_FAIL.getMessage())
+                .build();
+    }
+
+    @GetMapping("/v1/myInfo")
+    @Operation(summary = "내 정보 조회", description = "개인 정보 내역 조회")
+    public ResponseVO<MyPageInfoDto> myUserInfo() {
+        UserDetails myUserInfo = SessionUtils.getMyUserInfo();
+        assert myUserInfo != null;
+        String username = myUserInfo.getUsername();
+        MyPageInfoDto result = memberService.selectMyInfo(Long.parseLong(username));
+        return ResponseVO.<MyPageInfoDto>builder()
+                .data(result)
                 .build();
     }
 

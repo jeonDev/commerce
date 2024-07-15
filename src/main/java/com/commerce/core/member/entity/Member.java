@@ -3,6 +3,7 @@ package com.commerce.core.member.entity;
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.common.utils.DateUtils;
+import com.commerce.core.point.entity.MemberPoint;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,6 +60,9 @@ public class Member extends BaseEntity {
     @Column(name = "AUTHORITY")
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private MemberPoint memberPoint;
 
     public void setEncryptPassword(String encPassword) {
         this.password = encPassword;
