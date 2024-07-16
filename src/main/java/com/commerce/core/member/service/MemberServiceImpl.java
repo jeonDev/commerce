@@ -56,12 +56,26 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MyPageInfoDto selectMyInfo(Long memberSeq) {
         MemberInfoDAO dao = memberDslRepository.selectMemberInfo(memberSeq);
         return MyPageInfoDto.builder()
+                .id(dao.getId())
                 .name(dao.getName())
+                .tel(dao.getTel())
+                .addr(dao.getAddr())
+                .addrDetail(dao.getAddrDetail())
+                .zipCode(dao.getZipCode())
                 .point(dao.getPoint())
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public void updateUserInfo(MyPageInfoDto myPageInfoDto, Long memberSeq) {
+        Member member = this.selectMember(memberSeq).orElseThrow();
+        member.updateMyPageInfo(myPageInfoDto);
+        memberRepository.save(member);
     }
 }

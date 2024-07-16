@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MyPageInfoDto {
+    private String id;
     private String name;
+    private String tel;
+    private String addr;
+    private String addrDetail;
+    private String zipCode;
     private Long point;
 }

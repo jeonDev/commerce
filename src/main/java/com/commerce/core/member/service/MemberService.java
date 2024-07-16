@@ -14,5 +14,6 @@ public interface MemberService {
     Optional<Member> selectUseMember(String id);
     Member save(Member member);
     MyPageInfoDto selectMyInfo(Long memberSeq);
+    void updateUserInfo(MyPageInfoDto myPageInfoDto, Long memberSeq);
 
 }

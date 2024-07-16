@@ -106,4 +106,15 @@ public class MemberController {
                 .build();
     }
 
+    @PutMapping("/v1/member/update")
+    @Operation(summary = "내 정보 수정", description = "개인 정보 내역 수정")
+    public ResponseVO<?> updateUserInfo(@RequestBody MyPageInfoDto myPageInfoDto) {
+        UserDetails myUserInfo = SessionUtils.getMyUserInfo();
+        assert myUserInfo != null;
+        String username = myUserInfo.getUsername();
+        memberService.updateUserInfo(myPageInfoDto, Long.parseLong(username));
+        return ResponseVO.builder()
+                .build();
+    }
+
 }
