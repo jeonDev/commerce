@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자 API")
@@ -97,10 +96,7 @@ public class MemberController {
     @GetMapping("/v1/myInfo")
     @Operation(summary = "내 정보 조회", description = "개인 정보 내역 조회")
     public ResponseVO<MyPageInfoDto> myUserInfo() {
-        UserDetails myUserInfo = SessionUtils.getMyUserInfo();
-        assert myUserInfo != null;
-        String username = myUserInfo.getUsername();
-        MyPageInfoDto result = memberService.selectMyInfo(Long.parseLong(username));
+        MyPageInfoDto result = memberService.selectMyInfo(SessionUtils.getMemberSeq());
         return ResponseVO.<MyPageInfoDto>builder()
                 .data(result)
                 .build();
@@ -109,10 +105,7 @@ public class MemberController {
     @PutMapping("/v1/member/update")
     @Operation(summary = "내 정보 수정", description = "개인 정보 내역 수정")
     public ResponseVO<?> updateUserInfo(@RequestBody MyPageInfoDto myPageInfoDto) {
-        UserDetails myUserInfo = SessionUtils.getMyUserInfo();
-        assert myUserInfo != null;
-        String username = myUserInfo.getUsername();
-        memberService.updateUserInfo(myPageInfoDto, Long.parseLong(username));
+        memberService.updateUserInfo(myPageInfoDto, SessionUtils.getMemberSeq());
         return ResponseVO.builder()
                 .build();
     }

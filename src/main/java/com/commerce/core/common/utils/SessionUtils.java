@@ -15,4 +15,10 @@ public class SessionUtils {
         }
         return null;
     }
+
+    public static Long getMemberSeq() {
+        UserDetails myUserInfo = SessionUtils.getMyUserInfo();
+        if (myUserInfo == null) return null;
+        return Long.parseLong(myUserInfo.getUsername());
+    }
 }
