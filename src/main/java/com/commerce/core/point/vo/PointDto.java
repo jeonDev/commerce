@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 public class PointDto {
+    @Setter
     private Long memberSeq;
     private Long point;
     private Long balancePoint;
