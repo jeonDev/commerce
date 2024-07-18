@@ -8,10 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "사용자 포인트 API")
 @Slf4j
@@ -29,6 +28,15 @@ public class PointController {
         PointDto data = pointService.pointAdjustment(pointDto);
         return ResponseVO.<PointDto>builder()
                 .data(data)
+                .build();
+    }
+
+    @GetMapping("/history")
+    @Operation(summary = "포인트 내역", description = "포인트 충전/차감 내역 조회")
+    public ResponseVO<List<PointDto>> history() {
+        List<PointDto> result = pointService.selectPointHistory(SessionUtils.getMemberSeq());
+        return ResponseVO.<List<PointDto>>builder()
+                .data(result)
                 .build();
     }
 }

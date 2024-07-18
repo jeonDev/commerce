@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -61,6 +62,13 @@ public class PointServiceImpl implements PointService {
     private void entitySaveAndHistoryGenerate(MemberPoint point, PointDto dto) {
         pointRepository.save(point);
         pointHistoryRepository.save(point.generateHistoryEntity(dto.getPoint(), dto.getPointProcessStatus()));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<PointDto> selectPointHistory(Long memberSeq) {
+        // TODO:
+        return null;
     }
 
     @Transactional(readOnly = true)
