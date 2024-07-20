@@ -5,10 +5,14 @@ spring:
     username: order_system
     password: order_system
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: update
     open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    show-sql: true
   data:
     mongodb:
       host: localhost
@@ -29,6 +33,7 @@ logging:
   level:
     '[org.apache.kafka.clients.consumer.internals.ConsumerCoordinator]': warn
     '[org.apache.kafka.clients.consumer.ConsumerConfig]': warn
+    '[org.hibernate.orm.jdbc.bind]': trace
 
 security:
   secret-key: ABSDFSDREWRQW2d@#
