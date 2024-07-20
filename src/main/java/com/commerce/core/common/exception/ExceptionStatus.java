@@ -33,6 +33,7 @@ public enum ExceptionStatus {
 
     // COMMON lock occupied
     LOCK_OCCUPIED_ERROR("C001", "Lock 점유 실패"),
+    VALID_ERROR("C998", "Valid Error"),
     SYSTEM_ERROR("C999", "System Error");
 
     private final String code;

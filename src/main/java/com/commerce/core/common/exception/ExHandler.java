@@ -4,6 +4,7 @@ import com.commerce.core.common.vo.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +23,18 @@ public class ExHandler {
             return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
         if (ExceptionStatus.AUTH_FORBIDDEN.getCode().equals(e.getCode()) )
             return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ErrorResponseDto> handlerMethodArgNotValidException(MethodArgumentNotValidException e) {
+        log.error("handlerMethodArgNotValidException : {}", e.getMessage());
+        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        ErrorResponseDto errorDto = ErrorResponseDto.builder()
+                .code(ExceptionStatus.VALID_ERROR.getCode())
+                .message(message)
+                .build();
+
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 

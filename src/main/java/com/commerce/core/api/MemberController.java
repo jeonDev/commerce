@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행한다.")
-    public ResponseVO<Object> signup(@RequestBody MemberDto dto) {
+    public ResponseVO<Object> signup(@Valid @RequestBody MemberDto dto) {
         memberService.createMember(dto);
         return ResponseVO.builder()
                 .build();
@@ -39,7 +40,7 @@ public class MemberController {
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 처리한다.")
     public ResponseVO<LoginSuccessDto> login(HttpServletResponse res,
-                                             @RequestBody LoginDto dto) {
+                                             @Valid @RequestBody LoginDto dto) {
         LoginSuccessDto response = loginService.login(dto);
         res.addCookie(this.createCookie(response.getRefreshToken()));
         return ResponseVO.<LoginSuccessDto>builder()

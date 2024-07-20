@@ -10,6 +10,7 @@ import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductViewResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class ProductController {
 
     @PostMapping("/admin/product/register")
     @Operation(summary = "상품 등록", description = "관리자가 상품을 등록한다.")
-    public ResponseVO<Object> productRegister(@RequestBody ProductDto dto) {
+    public ResponseVO<Object> productRegister(@Valid @RequestBody ProductDto dto) {
         productService.add(dto);
         return ResponseVO.builder()
                 .build();

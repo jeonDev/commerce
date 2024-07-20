@@ -1,7 +1,7 @@
 package com.commerce.core.product.vo;
 
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductStock;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
@@ -9,8 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class ProductStockDto {
-
+    @NotNull
     private Long productSeq;
+    @Min(0)
+    @NotNull
     private Long stock;
+    @NotNull
     private ProductStockProcessStatus productStockProcessStatus;
 }

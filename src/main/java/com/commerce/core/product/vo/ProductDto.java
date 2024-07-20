@@ -1,6 +1,8 @@
 package com.commerce.core.product.vo;
 
 import com.commerce.core.product.entity.ProductInfo;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -9,8 +11,12 @@ import java.util.List;
 public class ProductDto {
 
     private Long productInfoSeq;
+    @NotNull
     private String productName;
+    @NotNull
     private String productDetail;
+    @Min(0)
+    @NotNull
     private Long price;
     private List<String> productOptions;
 

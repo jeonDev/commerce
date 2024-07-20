@@ -6,6 +6,7 @@ import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class PointController {
 
     @PostMapping("/adjustment")
     @Operation(summary = "포인트 충전/차감", description = "고객의 포인트를 충전 및 차감한다")
-    public ResponseVO<PointDto> pointCharge(@RequestBody PointDto pointDto) {
+    public ResponseVO<PointDto> pointCharge(@Valid @RequestBody PointDto pointDto) {
         pointDto.setMemberSeq(SessionUtils.getMemberSeq());
         PointDto data = pointService.pointAdjustment(pointDto);
         return ResponseVO.<PointDto>builder()
