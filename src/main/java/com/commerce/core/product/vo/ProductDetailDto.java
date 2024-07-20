@@ -12,5 +12,5 @@ public class ProductDetailDto {
     private String productName;
     private String productDetail;
     private Long price;
-    private List<String> productOptions;
+    private List<ProductOptions> productOptions;
 }

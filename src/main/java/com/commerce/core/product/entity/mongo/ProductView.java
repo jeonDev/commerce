@@ -1,5 +1,6 @@
 package com.commerce.core.product.entity.mongo;
 
+import com.commerce.core.product.vo.ProductOptions;
 import com.commerce.core.product.vo.ProductStockSummary;
 import com.commerce.core.product.vo.ProductViewResDto;
 import jakarta.persistence.Id;
@@ -57,14 +58,14 @@ public class ProductView {
     /**
      * 상품 옵션
      */
-    private List<String> productOptions;
+    private List<ProductOptions> productOptions;
 
     /**
      * 재고 현황
      */
     private ProductStockSummary productStockSummary;
 
-    public ProductView productViewSyncUpdate(Long productInfoSeq, String productName, String productDetail, Long price, String useYn, List<String> productOptions, ProductStockSummary productStockSummary) {
+    public ProductView productViewSyncUpdate(Long productInfoSeq, String productName, String productDetail, Long price, String useYn, List<ProductOptions> productOptions, ProductStockSummary productStockSummary) {
         this.productInfoSeq = productInfoSeq;
         this.productName = productName;
         this.productDetail = productDetail;

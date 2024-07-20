@@ -48,9 +48,12 @@ public class ProductViewServiceImpl implements ProductViewService {
         // 1. 기존 데이터 존재 여부 체크
         ProductInfo productInfo = productService.selectProductInfo(productInfoSeq).orElseThrow();
         ProductStockSummary productStockSummary = this.makingProductStockSummary(productInfo.getProducts());
-        List<String> productOptions = productService.selectProductToProductInfo(productInfo.getProductInfoSeq())
+        List<ProductOptions> productOptions = productService.selectProductToProductInfo(productInfo.getProductInfoSeq())
                 .stream()
-                .map(Product::getProductOptionCode)
+                .map(option -> ProductOptions.builder()
+                        .productSeq(option.getProductSeq())
+                        .productOption(option.getProductOptionCode())
+                        .build())
                 .toList();
 
         // 2. View Merge
@@ -66,7 +69,7 @@ public class ProductViewServiceImpl implements ProductViewService {
         this.productViewMerge(productInfo, productStockSummary, null);
     }
 
-    private void productViewMerge(ProductInfo productInfo, ProductStockSummary productStockSummary, List<String> productOptions) {
+    private void productViewMerge(ProductInfo productInfo, ProductStockSummary productStockSummary, List<ProductOptions> productOptions) {
         selectProductViewForProductDetail(productInfo.getProductInfoSeq())
                 .ifPresentOrElse(item -> {
                     item.productViewSyncUpdate(productInfo.getProductInfoSeq(),
@@ -115,8 +118,11 @@ public class ProductViewServiceImpl implements ProductViewService {
     @Override
     public ProductDetailDto selectProductViewDetail(Long productInfoSeq) {
         ProductInfo productInfo = productDslRepository.selectProductDetail(productInfoSeq);
-        List<String> productOptions = productService.selectProductToProductInfo(productInfoSeq).stream()
-                .map(Product::getProductOptionCode)
+        List<ProductOptions> productOptions = productService.selectProductToProductInfo(productInfoSeq).stream()
+                .map(option -> ProductOptions.builder()
+                        .productSeq(option.getProductSeq())
+                        .productOption(option.getProductOptionCode())
+                        .build())
                 .toList();
         return ProductDetailDto.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())
