@@ -4,10 +4,7 @@ import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.product.service.ProductService;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.ProductViewService;
-import com.commerce.core.product.vo.ProductDetailDto;
-import com.commerce.core.product.vo.ProductDto;
-import com.commerce.core.product.vo.ProductStockDto;
-import com.commerce.core.product.vo.ProductViewResDto;
+import com.commerce.core.product.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -40,6 +37,14 @@ public class ProductController {
     public ResponseVO<ProductDetailDto> productDetailList(@PathVariable("productInfoSeq") String productInfoSeq) {
         return ResponseVO.<ProductDetailDto>builder()
                 .data(productViewService.selectProductViewDetail(Long.valueOf(productInfoSeq)))
+                .build();
+    }
+
+    @GetMapping("/v1/product/{productSeq}")
+    @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
+    public ResponseVO<ProductOrderDto> productList(@PathVariable("productSeq") String productSeq) {
+        return ResponseVO.<ProductOrderDto>builder()
+                .data(productViewService.selectProductView(Long.valueOf(productSeq)))
                 .build();
     }
 

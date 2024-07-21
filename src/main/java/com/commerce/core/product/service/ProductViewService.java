@@ -2,6 +2,7 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.product.entity.mongo.ProductView;
 import com.commerce.core.product.vo.ProductDetailDto;
+import com.commerce.core.product.vo.ProductOrderDto;
 import com.commerce.core.product.vo.ProductViewDto;
 import com.commerce.core.product.vo.ProductViewResDto;
 
@@ -10,20 +11,12 @@ import java.util.Optional;
 
 public interface ProductViewService {
 
-    /**
-     * Product View Merge
-     */
     void merge(ProductViewDto dto);
 
-    /**
-     * Select ProductView
-     */
     Optional<ProductView> selectProductViewForProductDetail(Long productDetailSeq);
 
-    /**
-     * Select ProductView
-     */
     ProductDetailDto selectProductViewDetail(Long productInfoSeq);
+    ProductOrderDto selectProductView(Long productSeq);
 
     List<ProductViewResDto> selectProductViewList();
 }

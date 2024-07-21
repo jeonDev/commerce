@@ -5,6 +5,7 @@ import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.entity.ProductStock;
 import com.commerce.core.product.entity.mongo.ProductView;
 import com.commerce.core.product.repository.dsl.ProductDslRepository;
+import com.commerce.core.product.repository.dsl.vo.ProductDAO;
 import com.commerce.core.product.repository.mongo.ProductViewRepository;
 import com.commerce.core.product.vo.*;
 import lombok.RequiredArgsConstructor;
@@ -130,6 +131,19 @@ public class ProductViewServiceImpl implements ProductViewService {
                 .productDetail(productInfo.getProductDetail())
                 .price(productInfo.getPrice())
                 .productOptions(productOptions)
+                .build();
+    }
+
+    @Override
+    public ProductOrderDto selectProductView(Long productSeq) {
+        ProductDAO product = productDslRepository.selectProduct(productSeq);
+        return ProductOrderDto.builder()
+                .productSeq(product.getProductSeq())
+                .productOptionCode(product.getProductOptionCode())
+                .productInfoSeq(product.getProductInfoSeq())
+                .productName(product.getProductName())
+                .productDetail(product.getProductDetail())
+                .price(product.getPrice())
                 .build();
     }
 

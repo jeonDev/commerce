@@ -1,17 +1,11 @@
 package com.commerce.core.product.repository.dsl;
 
-import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
-import com.commerce.core.product.vo.ProductDetailDto;
-import com.commerce.core.product.vo.ProductDto;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.commerce.core.product.repository.dsl.vo.ProductDAO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 import static com.commerce.core.product.entity.QProduct.product;
 import static com.commerce.core.product.entity.QProductInfo.productInfo;
@@ -28,17 +22,19 @@ public class ProductDslRepository {
                 .fetchOne();
     }
 
-//    public Page<Product> findByAll(ProductDto dto) {
-//        List<Product> content = dsl
-//                .selectFrom(product)
-//                .offset(dto.getPage().getOffset())
-//                .limit(dto.getPage().getPageSize())
-//                .fetch();
-//
-//        JPAQuery<Long> countQuery = dsl
-//                .select(product.count())
-//                .from(product);
-//
-//        return PageableExecutionUtils.getPage(content, dto.getPage(), countQuery::fetchCount);
-//    }
+    public ProductDAO selectProduct(Long productSeq) {
+        return dsl.select(Projections.bean(ProductDAO.class,
+                        product.productSeq,
+                        product.productOptionCode,
+                        productInfo.productInfoSeq,
+                        productInfo.productName,
+                        productInfo.productDetail,
+                        productInfo.price
+                        )
+                )
+                .from(product)
+                .join(product.productInfo, productInfo)
+                .where(product.productSeq.eq(productSeq))
+                .fetchOne();
+    }
 }
