@@ -14,7 +14,7 @@ public class ExHandler {
 
     @ExceptionHandler(CommerceException.class)
     protected ResponseEntity<ErrorResponseDto> handlerCommerceException(CommerceException e) {
-        log.error("handlerCommerceException : [{}] {}", e.getCode(), e.getMessage());
+        log.error("handlerCommerceException : [{}] {}", e.getCode(), e.getMessage(), e);
         ErrorResponseDto errorDto = ErrorResponseDto.builder()
                 .code(e.getCode())
                 .message(e.getMessage())
@@ -40,7 +40,7 @@ public class ExHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponseDto> handlerException(Exception e) {
-        log.error("handlerException : {}", e);
+        log.error("handlerException : {}", e.getMessage(), e);
         ErrorResponseDto errorDto = ErrorResponseDto.builder()
                 .code(ExceptionStatus.SYSTEM_ERROR.getCode())
                 .message(ExceptionStatus.SYSTEM_ERROR.getMessage())
