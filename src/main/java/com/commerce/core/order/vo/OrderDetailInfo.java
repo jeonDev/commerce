@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class OrderDetailInfo {
     private Long orderDetailSeq;
     private Long productSeq;
+    private Long cnt;
     private String productName;
     private Long amount;
     private Long buyAmount;

@@ -102,6 +102,7 @@ public class OrderDetail extends BaseEntity {
         return OrderDetailInfo.builder()
                 .orderDetailSeq(this.orderDetailSeq)
                 .productSeq(this.product.getProductSeq())
+                .cnt(cnt)
                 .productName(this.product.getProductInfo().getProductName())
                 .amount(this.amount)
                 .buyAmount(this.buyAmount)
