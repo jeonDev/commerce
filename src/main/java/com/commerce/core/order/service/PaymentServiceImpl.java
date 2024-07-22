@@ -41,7 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 2. Payment Amount Calculator
         long payAmount = orderDetails.stream()
-                .mapToLong(OrderDetail::getPaidAmount)
+                .mapToLong(item -> item.getBuyAmount() - item.getPaidAmount())
                 .sum();
 
         // 2-1. Payment Amount Empty => Exception
