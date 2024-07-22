@@ -1,12 +1,11 @@
 package com.commerce.core.order.vo;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.List;
-
-@Data
+@Getter
 public class PaymentDto {
-
+    @Setter
     private Long memberSeq;
     private Long orderSeq;
 

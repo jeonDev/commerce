@@ -1,5 +1,6 @@
 package com.commerce.core.api;
 
+import com.commerce.core.common.utils.SessionUtils;
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.order.service.OrderService;
 import com.commerce.core.order.service.PaymentService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "주문/결제 API")
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/v1/order")
+@RequestMapping("/v1")
 @RestController
 public class OrderController {
 
@@ -26,15 +27,17 @@ public class OrderController {
 
     @PostMapping("/order")
     @Operation(summary = "상품 주문", description = "고객이 상품을 주문한다.")
-    public ResponseVO<Object> order(@RequestBody OrderDto dto) {
-        orderService.order(dto);
-        return ResponseVO.builder()
+    public ResponseVO<Long> order(@RequestBody OrderDto dto) {
+        dto.setMemberSeq(SessionUtils.getMemberSeq());
+        return ResponseVO.<Long>builder()
+                .data(orderService.order(dto).getOrderSeq())
                 .build();
     }
 
     @PostMapping("/payment")
     @Operation(summary = "주문 결제", description = "상품 주문 내역에 대한 결제 처리를 진행한다.")
     public ResponseVO<Object> payment(@RequestBody PaymentDto dto) {
+        dto.setMemberSeq(SessionUtils.getMemberSeq());
         paymentService.payment(dto);
         return ResponseVO.builder()
                 .build();

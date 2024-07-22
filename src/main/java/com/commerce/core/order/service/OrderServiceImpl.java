@@ -12,6 +12,7 @@ import com.commerce.core.order.repository.OrderDetailsRepository;
 import com.commerce.core.order.repository.OrdersRepository;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
+import com.commerce.core.order.vo.BuyProduct;
 import com.commerce.core.order.vo.OrderViewDto;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
@@ -58,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
                         .build());
 
         // 3. Product Stock Consume & Order Detail Setting
-        Arrays.stream(dto.getProductSeqs())
+        Arrays.stream(dto.getBuyProducts())
                 .forEach(item -> {
                     OrderDetail orderDetail = this.productStockConsumeAndOrderDetailSetting(order, item);
                     orderDetails.add(orderDetail);
@@ -77,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private OrderDetail productStockConsumeAndOrderDetailSetting(Orders order, Long item) {
+    private OrderDetail productStockConsumeAndOrderDetailSetting(Orders order, BuyProduct item) {
         // 3-1. Product Stock Consume
         Product product = this.productStockConsume(item);
         ProductInfo productInfo = product.getProductInfo();
@@ -93,10 +94,10 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
-    private Product productStockConsume(Long item) {
+    private Product productStockConsume(BuyProduct item) {
         ProductStockDto stock = ProductStockDto.builder()
-                .productSeq(item)
-                .stock(1L)
+                .productSeq(item.getProductSeq())
+                .stock(item.getCnt())
                 .productStockProcessStatus(ProductStockProcessStatus.CONSUME)
                 .build();
 
