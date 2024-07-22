@@ -86,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
         // 3-2. Order Detail Setting
         return OrderDetail.builder()
                 .product(product)
+                .cnt(item.getCnt())
                 .amount(productInfo.getPrice())
                 .buyAmount(productInfo.getPrice())
                 .paidAmount(0L)

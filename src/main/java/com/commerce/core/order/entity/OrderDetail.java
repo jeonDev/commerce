@@ -32,6 +32,9 @@ public class OrderDetail extends BaseEntity {
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 
+    @Column(name = "CNT", nullable = false)
+    private Long cnt;
+
     /**
      * 실제 금액
      */
@@ -65,6 +68,7 @@ public class OrderDetail extends BaseEntity {
                 .orderDetail(this)
                 .orders(orders)
                 .product(product)
+                .cnt(cnt)
                 .orderStatus(orderStatus)
                 .build();
     }

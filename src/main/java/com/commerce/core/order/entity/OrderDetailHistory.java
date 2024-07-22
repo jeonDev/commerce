@@ -34,6 +34,9 @@ public class OrderDetailHistory extends BaseEntity {
     @JoinColumn(name = "PRODUCT_SEQ")
     private Product product;
 
+    @Column(name = "CNT")
+    private Long cnt;
+
     /**
      * 주문 상태
      */
