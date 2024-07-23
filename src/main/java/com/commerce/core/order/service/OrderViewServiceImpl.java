@@ -1,12 +1,19 @@
 package com.commerce.core.order.service;
 
+
+
+import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.order.entity.mongo.OrderView;
 import com.commerce.core.order.repository.mongo.OrderViewRepository;
 import com.commerce.core.order.vo.OrderDetailInfo;
 import com.commerce.core.order.vo.OrderViewDto;
+import com.commerce.core.order.vo.OrderViewResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +33,7 @@ public class OrderViewServiceImpl implements OrderViewService {
     @Transactional
     @Override
     public void merge(OrderViewDto dto) {
+        log.debug(dto.toString());
         // 1. Data Setting
         Long buyAmount = 0L;
         Long amount = 0L;
@@ -61,5 +69,19 @@ public class OrderViewServiceImpl implements OrderViewService {
         }
 
         orderViewRepository.save(orderView);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageListVO<OrderViewResDto> selectOrderView(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<OrderView> list = orderViewRepository.findAll(pageable);
+        return PageListVO.<OrderViewResDto>builder()
+                .list(list.getContent().stream()
+                        .map(OrderView::documentToResDto)
+                        .toList()
+                )
+                .totalPage(list.getTotalPages())
+                .build();
     }
 }
