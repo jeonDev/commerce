@@ -1,6 +1,7 @@
 package com.commerce.core.order.entity.mongo;
 
 import com.commerce.core.order.vo.OrderDetailInfo;
+import com.commerce.core.order.vo.OrderViewResDto;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,5 +34,15 @@ public class OrderView {
         this.buyAmount = buyAmount;
         this.paidAmount = paidAmount;
         this.orderDetailInfos = orderDetailInfos;
+    }
+
+    public OrderViewResDto documentToResDto() {
+        return OrderViewResDto.builder()
+                .orderSeq(orderSeq)
+                .orderDetailInfos(orderDetailInfos)
+                .amount(amount)
+                .buyAmount(buyAmount)
+                .paidAmount(paidAmount)
+                .build();
     }
 }
