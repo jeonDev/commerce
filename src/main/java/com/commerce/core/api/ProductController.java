@@ -1,5 +1,6 @@
 package com.commerce.core.api;
 
+import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.product.service.ProductService;
 import com.commerce.core.product.service.ProductStockService;
@@ -11,8 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "상품 API")
 @Slf4j
@@ -26,9 +25,10 @@ public class ProductController {
 
     @GetMapping("/v2/product/view")
     @Operation(summary = "상품 목록", description = "고객에게 보여줄 상품 목록을 출력한다. (MongoDB)")
-    public ResponseVO<List<ProductViewResDto>> productViewList() {
-        return ResponseVO.<List<ProductViewResDto>>builder()
-                .data(productViewService.selectProductViewList())
+    public ResponseVO<PageListVO<ProductViewResDto>> productViewList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
+                                                                     @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
+        return ResponseVO.<PageListVO<ProductViewResDto>>builder()
+                .data(productViewService.selectProductViewList(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package com.commerce.core.product.service;
 
+import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.product.entity.mongo.ProductView;
 import com.commerce.core.product.vo.ProductDetailDto;
 import com.commerce.core.product.vo.ProductOrderDto;
@@ -18,5 +19,5 @@ public interface ProductViewService {
     ProductDetailDto selectProductViewDetail(Long productInfoSeq);
     ProductOrderDto selectProductView(Long productSeq);
 
-    List<ProductViewResDto> selectProductViewList();
+    PageListVO<ProductViewResDto> selectProductViewList(int pageNumber, int pageSize);
 }

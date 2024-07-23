@@ -1,5 +1,6 @@
 package com.commerce.core.product.service;
 
+import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.entity.ProductStock;
@@ -10,6 +11,9 @@ import com.commerce.core.product.repository.mongo.ProductViewRepository;
 import com.commerce.core.product.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,9 +153,15 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ProductViewResDto> selectProductViewList() {
-        return productViewRepository.findAll().stream()
-                .map(ProductView::documentToResDto)
-                .toList();
+    public PageListVO<ProductViewResDto> selectProductViewList(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<ProductView> list = productViewRepository.findAll(pageable);
+        return PageListVO.<ProductViewResDto>builder()
+                .list(list.getContent().stream()
+                        .map(ProductView::documentToResDto)
+                        .toList()
+                )
+                .totalPage(list.getTotalPages())
+                .build();
     }
 }
