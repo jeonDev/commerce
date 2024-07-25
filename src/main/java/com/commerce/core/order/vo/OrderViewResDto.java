@@ -15,4 +15,5 @@ public class OrderViewResDto {
     private Long amount;
     private Long buyAmount;
     private Long paidAmount;
+    private OrderStatus orderStatus;
 }

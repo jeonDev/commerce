@@ -1,12 +1,11 @@
 package com.commerce.core.order.service;
 
-
-
 import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.order.entity.OrderDetail;
 import com.commerce.core.order.entity.mongo.OrderView;
 import com.commerce.core.order.repository.mongo.OrderViewRepository;
 import com.commerce.core.order.vo.OrderDetailInfo;
+import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.order.vo.OrderViewDto;
 import com.commerce.core.order.vo.OrderViewResDto;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ import java.util.Optional;
 public class OrderViewServiceImpl implements OrderViewService {
 
     private final OrderViewRepository orderViewRepository;
-
     private final OrderService orderService;
 
     @Transactional
@@ -38,6 +36,7 @@ public class OrderViewServiceImpl implements OrderViewService {
         Long buyAmount = 0L;
         Long amount = 0L;
         Long paidAmount = 0L;
+        boolean isPaymentComplete = false;
         List<OrderDetailInfo> orderDetailInfos = new ArrayList<>();
 
         // 2. Order Detail Find
@@ -50,14 +49,17 @@ public class OrderViewServiceImpl implements OrderViewService {
             amount += orderDetail.getAmount();
             paidAmount += orderDetail.getPaidAmount();
             orderDetailInfos.add(orderDetail.entityToInfoDto());
+            if (OrderStatus.PAYMENT_COMPLETE == orderDetail.getOrderStatus()) isPaymentComplete = true;
         }
+
+        OrderStatus orderStatus = isPaymentComplete ? OrderStatus.PAYMENT_COMPLETE : OrderStatus.NEW_ORDER;
 
         // 4. Order View Data Save
         OrderView orderView;
         Optional<OrderView> optionalOrderView = orderViewRepository.findByOrderSeq(orderSeq);
         if(optionalOrderView.isPresent()) {
             orderView = optionalOrderView.get();
-            orderView.settingData(amount, buyAmount, paidAmount, orderDetailInfos);
+            orderView.settingData(amount, buyAmount, paidAmount, orderDetailInfos, orderStatus);
         } else {
             orderView = OrderView.builder()
                     .orderSeq(orderSeq)
@@ -65,6 +67,7 @@ public class OrderViewServiceImpl implements OrderViewService {
                     .amount(amount)
                     .buyAmount(buyAmount)
                     .paidAmount(paidAmount)
+                    .orderStatus(orderStatus)
                     .build();
         }
 
