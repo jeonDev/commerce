@@ -12,13 +12,10 @@ import com.commerce.core.order.repository.OrderDetailsRepository;
 import com.commerce.core.order.repository.OrdersRepository;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
-import com.commerce.core.order.vo.BuyProduct;
-import com.commerce.core.order.vo.OrderViewDto;
+import com.commerce.core.order.vo.*;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
 import com.commerce.core.product.service.ProductStockService;
-import com.commerce.core.order.vo.OrderStatus;
-import com.commerce.core.order.vo.OrderDto;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
 import lombok.RequiredArgsConstructor;
@@ -43,10 +40,12 @@ public class OrderServiceImpl implements OrderService {
     private final ProductStockService productStockService;
     private final MemberService memberService;
     private final EventSender eventSender;
+    private final PaymentService paymentService;
 
     @Transactional
     @Override
     public Orders order(OrderDto dto) {
+        log.debug("order : {}",dto.toString());
         // 1. Member Use Check
         Member member = memberService.selectUseMember(dto.getMemberSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
@@ -69,11 +68,21 @@ public class OrderServiceImpl implements OrderService {
         orderDetailsRepository.saveAll(orderDetails);
         orderDetailHistoryRepository.saveAll(orderDetailHistories);
 
-        // 4. Event Send (Order View Mongo DB)
-        OrderViewDto orderViewDto = OrderViewDto.builder()
-                .orderSeq(order.getOrderSeq())
-                .build();
-        eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
+        // 4. 결제 & 결제 시도 안할 시, Event Send
+        if (dto.isPayment()) {
+            // 4-1. 결제
+            PaymentDto paymentDto = PaymentDto.builder()
+                    .memberSeq(dto.getMemberSeq())
+                    .orderSeq(order.getOrderSeq())
+                    .build();
+            paymentService.payment(paymentDto);
+        } else {
+            // 4-2. Event Send (Order View Mongo DB)
+            OrderViewDto orderViewDto = OrderViewDto.builder()
+                    .orderSeq(order.getOrderSeq())
+                    .build();
+            eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
+        }
 
         return order;
     }
@@ -109,21 +118,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Optional<Orders> selectOrder(Long orderSeq) {
         return ordersRepository.findById(orderSeq);
-    }
-
-    @Transactional
-    @Override
-    public OrderDetail updateOrderStatus(OrderDto dto) {
-        OrderDetail orderDetail = this.selectOrderDetail(dto.getOrderDetailSeq())
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
-
-        orderDetail.updateOrderStatus(dto.getOrderStatus());
-        orderDetail = orderDetailsRepository.save(orderDetail);
-
-        OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();
-        orderDetailHistoryRepository.save(orderDetailHistory);
-
-        return orderDetail;
     }
 
     @Transactional(readOnly = true)

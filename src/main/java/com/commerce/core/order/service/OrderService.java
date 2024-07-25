@@ -19,11 +19,6 @@ public interface OrderService {
     Optional<Orders> selectOrder(Long orderSeq);
 
     /**
-     * Order Status Update
-     */
-    OrderDetail updateOrderStatus(OrderDto dto);
-
-    /**
      * Select Order Detail
      */
     Optional<OrderDetail> selectOrderDetail(Long orderDetailSeq);

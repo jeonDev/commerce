@@ -40,12 +40,14 @@ class OrderServiceImplTest {
     private MemberService memberService;
     @Mock
     private EventSender eventSender;
+    @Mock
+    private PaymentService paymentService;
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
         orderService = new OrderServiceImpl(ordersRepository,
-                orderDetailsRepository, orderDetailHistoryRepository, productStockService, memberService, eventSender);
+                orderDetailsRepository, orderDetailHistoryRepository, productStockService, memberService, eventSender, paymentService);
     }
 
     @Test

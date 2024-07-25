@@ -5,8 +5,9 @@ import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.order.entity.OrderDetail;
+import com.commerce.core.order.entity.OrderDetailHistory;
 import com.commerce.core.order.entity.Orders;
-import com.commerce.core.order.entity.PaymentHistory;
+import com.commerce.core.order.repository.OrderDetailHistoryRepository;
 import com.commerce.core.order.repository.OrderDetailsRepository;
 import com.commerce.core.order.repository.PaymentHistoryRepository;
 import com.commerce.core.order.vo.*;
@@ -26,9 +27,9 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
 
     private final OrderDetailsRepository orderDetailsRepository;
+    private final OrderDetailHistoryRepository orderDetailHistoryRepository;
     private final PaymentHistoryRepository paymentHistoryRepository;
 
-    private final OrderService orderService;
     private final PointService pointService;
     private final EventSender eventSender;
 
@@ -37,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Orders payment(PaymentDto dto) {
         // 1. Order Detail Find
         Long orderSeq = dto.getOrderSeq();
-        List<OrderDetail> orderDetails = orderService.selectOrderDetailList(orderSeq);
+        List<OrderDetail> orderDetails = orderDetailsRepository.findByOrders_OrderSeq(orderSeq);
 
         // 2. Payment Amount Calculator
         long payAmount = orderDetails.stream()
@@ -58,8 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
         pointService.pointAdjustment(pointDto);
 
         // 4. Payment Success Save
-        orderDetails.stream()
-                .forEach(this::paymentAmountBeforeProcess);
+        orderDetails.forEach(this::paymentAmountBeforeProcess);
         orderDetailsRepository.saveAll(orderDetails);
 
         // 5. Event Send(Order View Mongo DB)
@@ -77,8 +77,21 @@ public class PaymentServiceImpl implements PaymentService {
                 .orderDetailSeq(item.getOrderDetailSeq())
                 .orderStatus(OrderStatus.PAYMENT_COMPLETE)
                 .build();
-        orderService.updateOrderStatus(orderDto);
+        this.updateOrderStatus(orderDto);
 
         paymentHistoryRepository.save(item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT));
+    }
+
+    private OrderDetail updateOrderStatus(OrderDto dto) {
+        OrderDetail orderDetail = orderDetailsRepository.findById(dto.getOrderDetailSeq())
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+
+        orderDetail.updateOrderStatus(dto.getOrderStatus());
+        orderDetail = orderDetailsRepository.save(orderDetail);
+
+        OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();
+        orderDetailHistoryRepository.save(orderDetailHistory);
+
+        return orderDetail;
     }
 }

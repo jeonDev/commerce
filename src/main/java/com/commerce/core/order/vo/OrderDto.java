@@ -1,5 +1,6 @@
 package com.commerce.core.order.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Builder
@@ -13,4 +14,6 @@ public class OrderDto {
     private Long memberSeq;
     private OrderStatus orderStatus;
     private BuyProduct[] buyProducts;
+    @JsonProperty("isPayment")
+    private boolean payment;
 }

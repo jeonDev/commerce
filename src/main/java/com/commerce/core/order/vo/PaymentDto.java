@@ -1,8 +1,10 @@
 package com.commerce.core.order.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class PaymentDto {
     @Setter
