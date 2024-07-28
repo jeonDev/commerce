@@ -164,4 +164,14 @@ public class ProductViewServiceImpl implements ProductViewService {
                 .totalPage(list.getTotalPages())
                 .build();
     }
+
+    @Override
+    public PageListVO<AdminProductListResDto> selectProductList(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<AdminProductListResDto> list = productDslRepository.selectProductList(pageable);
+        return PageListVO.<AdminProductListResDto>builder()
+                .list(list.get().toList())
+                .totalPage(list.getTotalPages())
+                .build();
+    }
 }

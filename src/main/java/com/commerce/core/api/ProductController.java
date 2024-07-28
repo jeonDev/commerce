@@ -63,4 +63,12 @@ public class ProductController {
         return ResponseVO.builder()
                 .build();
     }
+
+    @GetMapping("/admin/product/list")
+    public ResponseVO<PageListVO<AdminProductListResDto>> adminProductList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
+                                          @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
+        return ResponseVO.<PageListVO<AdminProductListResDto>>builder()
+                .data(productViewService.selectProductList(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
+                .build();
+    }
 }
