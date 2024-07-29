@@ -46,18 +46,19 @@ public class ProductDslRepository {
 
     public Page<AdminProductListResDto> selectProductList(Pageable pageable) {
         List<AdminProductListResDto> content = dsl.select(Projections.bean(AdminProductListResDto.class,
-                        product.productSeq
+                        productInfo.productInfoSeq,
+                        productInfo.productName,
+                        productInfo.productDetail,
+                        productInfo.price.coalesce(0L).as("price")
                         )
                 )
-                .from(product)
-                .join(product.productInfo, productInfo)
+                .from(productInfo)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         Long totalCount = dsl.select(productInfo.count())
-                .from(product)
-                .join(product.productInfo, productInfo)
+                .from(productInfo)
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, totalCount);

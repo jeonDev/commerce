@@ -6,5 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminProductListResDto {
-    private Long productSeq;
+
+    private Long productInfoSeq;
+    private String productName;
+    private String productDetail;
+    private Long price;
 }
