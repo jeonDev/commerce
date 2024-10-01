@@ -16,19 +16,24 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@RequiredArgsConstructor
-@Aspect
-@Component
+//@RequiredArgsConstructor
+//@Aspect
+//@Component
 @Order(1)
 @Profile("basic")
+@Deprecated
 public class RedissonLockAspect {
 
     private static final int WAIT_TIME_SECOND = 5;
 
     private final RedissonClient redissonClient;
 
+    public RedissonLockAspect(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
+    }
+
     // com.commerce.core.common.redis.RedissonLockTarget
-    @Around("@annotation(redisTarget)")
+//    @Around("@annotation(redisTarget)")
     public Object redisLockAspect(ProceedingJoinPoint joinPoint, RedissonLockTarget redisTarget) throws Throwable {
         log.info("Redisson Proxy 호출!!");
 

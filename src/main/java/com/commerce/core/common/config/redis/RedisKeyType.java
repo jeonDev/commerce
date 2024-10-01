@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Deprecated
 public enum RedisKeyType {
 
     PRODUCT_STOCK("PS");

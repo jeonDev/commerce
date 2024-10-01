@@ -1,7 +1,5 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.common.config.redis.RedisKeyType;
-import com.commerce.core.common.config.redis.RedissonLockTarget;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
@@ -32,7 +30,6 @@ public class ProductStockServiceImpl implements ProductStockService {
     private final ProductService productService;
     private final EventSender eventSender;
 
-    @RedissonLockTarget(RedisKeyType.PRODUCT_STOCK)
     @Transactional
     @Override
     public ProductStock productStockAdjustment(ProductStockDto dto) {
@@ -57,7 +54,7 @@ public class ProductStockServiceImpl implements ProductStockService {
     }
 
     private ProductStock stockAdjustmentProcess(Product product, boolean isConsume, Long stock) {
-        Optional<ProductStock> productStockOptional = productStockRepository.findById(product.getProductSeq());
+        Optional<ProductStock> productStockOptional = productStockRepository.findWithPessimisticLockById(product.getProductSeq());
 
         if(productStockOptional.isPresent()) {
             ProductStock productStock = productStockOptional.get();
