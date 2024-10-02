@@ -6,6 +6,7 @@ import com.commerce.core.common.utils.SessionUtils;
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
+import com.commerce.core.member.service.OAuthService;
 import com.commerce.core.member.vo.LoginDto;
 import com.commerce.core.member.vo.LoginSuccessDto;
 import com.commerce.core.member.vo.MemberDto;
@@ -28,6 +29,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
+    private final OAuthService oAuthService;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행한다.")
@@ -108,6 +110,24 @@ public class MemberController {
     public ResponseVO<?> updateUserInfo(@RequestBody MyPageInfoDto myPageInfoDto) {
         memberService.updateUserInfo(myPageInfoDto, SessionUtils.getMemberSeq());
         return ResponseVO.builder()
+                .build();
+    }
+
+    @GetMapping("/oauth/login")
+    @Operation(summary = "OAuth 로그인 페이지 가져오기")
+    public ResponseVO<String> getOAuthPage(@RequestParam("type") String type) {
+        String result = oAuthService.getPage(type);
+        return ResponseVO.<String>builder()
+                .data(result)
+                .build();
+    }
+
+    @GetMapping("/oauth/github/callback")
+    @Operation(summary = "Github OAuth Login Callback")
+    public ResponseVO<String> githubCallback(@RequestParam("code") String code) {
+        String accessToken = oAuthService.getAccessToken(code);
+        return ResponseVO.<String>builder()
+                .data(accessToken)
                 .build();
     }
 
