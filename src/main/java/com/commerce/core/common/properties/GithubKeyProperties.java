@@ -13,8 +13,8 @@ public class GithubKeyProperties {
     private String clientId;
     @Value("${client_secret}")
     private String clientSecret;
-    @Value("${redirect_uri}")
-    private String redirectUri;
     @Value("${login_url}")
     private String loginUrl;
+    @Value(("${oauth-access-token-url}"))
+    private String oauthAccessTokenUrl;
 }

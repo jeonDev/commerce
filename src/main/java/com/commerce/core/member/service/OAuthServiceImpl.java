@@ -3,7 +3,11 @@ package com.commerce.core.member.service;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.properties.GithubKeyProperties;
-import com.commerce.core.member.vo.OAuthType;
+import com.commerce.core.member.vo.oauth.GithubAccessTokenRequest;
+import com.commerce.core.member.vo.oauth.GithubAccessTokenResponse;
+import com.commerce.core.member.vo.oauth.OAuthTokenResponse;
+import com.commerce.core.member.vo.oauth.OAuthType;
+import com.commerce.core.request.OAuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class OAuthServiceImpl implements OAuthService {
 
     private final GithubKeyProperties githubKeyProperties;
+    private final OAuthClient oAuthClient;
 
     @Override
     public String getPage(String type) {
@@ -28,12 +33,32 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public String getAccessToken(String code) {
-        return null;
+    public OAuthTokenResponse getAccessToken(String type, String code) {
+        OAuthType oAuthType = OAuthType.valueOf(type);
+        switch (oAuthType) {
+            case GITHUB -> {
+                GithubAccessTokenResponse githubAccessTokenResponse = this.githubGetAccessToken(code);
+                return OAuthTokenResponse.builder()
+                        .accessToken(githubAccessTokenResponse.getAccessToken())
+                        .type(githubAccessTokenResponse.getTokenType())
+                        .oAuthType(OAuthType.GITHUB)
+                        .build();
+            }
+            default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
+        }
     }
 
     private String githubGetPage() {
         return githubKeyProperties.getLoginUrl() + "?client_id=" + githubKeyProperties.getClientId();
+    }
+
+    private GithubAccessTokenResponse githubGetAccessToken(String code) {
+        GithubAccessTokenRequest request = GithubAccessTokenRequest.builder()
+                .clientId(githubKeyProperties.getClientId())
+                .clientSecret(githubKeyProperties.getClientSecret())
+                .code(code)
+                .build();
+        return oAuthClient.getAccessTokenApiCall(githubKeyProperties.getOauthAccessTokenUrl(), request, GithubAccessTokenResponse.class);
     }
 
 }
