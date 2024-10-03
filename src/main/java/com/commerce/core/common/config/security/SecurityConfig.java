@@ -48,6 +48,9 @@ public class SecurityConfig {
                         .requestMatchers("/login"
                                 , "/signup"
                                 , "/tokenReIssue"
+                                , "/oauth/login"
+                                , "/oauth/*/callback"
+                                , "/oauth/user"
                                 , "/swagger-ui/**"
                                 , "/v3/api-docs/**")
                         .permitAll()
