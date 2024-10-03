@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
             OrderViewDto orderViewDto = OrderViewDto.builder()
                     .orderSeq(order.getOrderSeq())
                     .build();
-            eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
+            eventSender.send(EventTopic.SYNC_ORDER, orderViewDto);
         }
 
         return order;

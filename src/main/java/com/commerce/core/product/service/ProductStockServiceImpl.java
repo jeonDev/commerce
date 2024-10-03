@@ -92,7 +92,7 @@ public class ProductStockServiceImpl implements ProductStockService {
                 .productInfoSeq(productInfoSeq)
                 .productViewStatus(ProductViewStatus.STOCK_ADJUSTMENT)
                 .build();
-        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
+        eventSender.send(EventTopic.SYNC_PRODUCT, productViewDto);
     }
 
     @Transactional(readOnly = true)

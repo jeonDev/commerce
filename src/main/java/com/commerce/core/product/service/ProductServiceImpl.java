@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
                 .productInfoSeq(productInfo.getProductInfoSeq())
                 .productViewStatus(ProductViewStatus.REGISTER)
                 .build();
-        eventSender.send(EventTopic.SYNC_PRODUCT.getTopic(), productViewDto);
+        eventSender.send(EventTopic.SYNC_PRODUCT, productViewDto);
 
         return ProductResDto.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())

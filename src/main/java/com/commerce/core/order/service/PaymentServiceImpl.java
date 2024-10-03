@@ -66,7 +66,7 @@ public class PaymentServiceImpl implements PaymentService {
         OrderViewDto orderViewDto = OrderViewDto.builder()
                 .orderSeq(orderSeq)
                 .build();
-        eventSender.send(EventTopic.SYNC_ORDER.getTopic(), orderViewDto);
+        eventSender.send(EventTopic.SYNC_ORDER, orderViewDto);
 
         return null;
     }

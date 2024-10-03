@@ -1,5 +1,6 @@
 package com.commerce.core.product.service;
 
+import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.entity.Product;
 import com.commerce.core.product.entity.ProductInfo;
@@ -71,7 +72,7 @@ class ProductStockServiceTest {
         Mockito.when(productStockRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.of(productStock));
 
-        Mockito.doNothing().when(eventSender).send(Mockito.any(), Mockito.any());
+        Mockito.doNothing().when(eventSender).send(Mockito.any(EventTopic.class), Mockito.any());
 
         // when
         ProductStock result = productStockService.productStockAdjustment(productStockDto);

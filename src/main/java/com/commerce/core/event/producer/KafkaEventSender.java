@@ -1,6 +1,7 @@
 package com.commerce.core.event.producer;
 
 import com.commerce.core.common.utils.ConverterUtils;
+import com.commerce.core.event.EventTopic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -14,8 +15,8 @@ public class KafkaEventSender implements EventSender {
     private final KafkaTemplate<String ,Object> kafkaTemplate;
 
     @Override
-    public void send(String topic, Object data) {
-        log.info("Kafka Producer Send (Topic : {} Data : {})", topic, data.toString());
-        kafkaTemplate.send(topic, ConverterUtils.strToJsonData(data));
+    public void send(EventTopic eventTopic, Object data) {
+        log.info("Kafka Producer Send (Topic : {} Data : {})", eventTopic, data.toString());
+        kafkaTemplate.send(eventTopic.getTopic(), ConverterUtils.strToJsonData(data));
     }
 }

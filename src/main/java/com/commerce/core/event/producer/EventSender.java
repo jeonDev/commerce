@@ -1,5 +1,7 @@
 package com.commerce.core.event.producer;
 
+import com.commerce.core.event.EventTopic;
+
 public interface EventSender {
-    void send(String topic, Object data);
+    void send(EventTopic topic, Object data);
 }
