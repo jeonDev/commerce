@@ -12,6 +12,7 @@ import com.commerce.core.member.vo.LoginSuccessDto;
 import com.commerce.core.member.vo.MemberDto;
 import com.commerce.core.member.vo.MyPageInfoDto;
 import com.commerce.core.member.vo.oauth.OAuthTokenResponse;
+import com.commerce.core.member.vo.oauth.OAuthUserInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -129,6 +130,18 @@ public class MemberController {
         OAuthTokenResponse response = oAuthService.getAccessToken("GITHUB", code);
         return ResponseVO.<OAuthTokenResponse>builder()
                 .data(response)
+                .build();
+    }
+
+    @GetMapping("/oauth/user")
+    @Operation(summary = "OAuth User Info")
+    public ResponseVO<OAuthUserInfoResponse> getUserInfo(
+            @RequestParam("type") String type,
+            @RequestHeader(value = "Authorization", required = false) String authorization
+    ) {
+        OAuthUserInfoResponse userInfo = oAuthService.getUserInfo(type, authorization);
+        return ResponseVO.<OAuthUserInfoResponse>builder()
+                .data(userInfo)
                 .build();
     }
 

@@ -27,4 +27,19 @@ public class OAuthClient {
         assert responseEntity != null;
         return responseEntity.getBody();
     }
+
+    public <O> O getUserInfoApiCall(String uri, String authorization, Class<O> responseClass) {
+        ResponseEntity<O> responseEntity = webClient.get()
+                .uri(uri)
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders ->
+                        httpHeaders.add("Authorization", authorization)
+                )
+                .retrieve()
+                .toEntity(responseClass)
+                .block();
+
+        assert responseEntity != null;
+        return responseEntity.getBody();
+    }
 }

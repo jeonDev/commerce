@@ -3,10 +3,7 @@ package com.commerce.core.member.service;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.properties.GithubKeyProperties;
-import com.commerce.core.member.vo.oauth.GithubAccessTokenRequest;
-import com.commerce.core.member.vo.oauth.GithubAccessTokenResponse;
-import com.commerce.core.member.vo.oauth.OAuthTokenResponse;
-import com.commerce.core.member.vo.oauth.OAuthType;
+import com.commerce.core.member.vo.oauth.*;
 import com.commerce.core.request.OAuthClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +35,19 @@ public class OAuthServiceImpl implements OAuthService {
         switch (oAuthType) {
             case GITHUB -> {
                 GithubAccessTokenResponse githubAccessTokenResponse = this.githubGetAccessToken(code);
-                return OAuthTokenResponse.builder()
-                        .accessToken(githubAccessTokenResponse.getAccessToken())
-                        .type(githubAccessTokenResponse.getTokenType())
-                        .oAuthType(OAuthType.GITHUB)
-                        .build();
+                return githubAccessTokenResponse.toResponse();
+            }
+            default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
+        }
+    }
+
+    @Override
+    public OAuthUserInfoResponse getUserInfo(String type, String authorization) {
+        OAuthType oAuthType = OAuthType.valueOf(type);
+        switch (oAuthType) {
+            case GITHUB -> {
+                GithubUserInfoResponse githubUserInfoResponse = this.githubGetUserInfo(authorization);
+                return githubUserInfoResponse.toResponse();
             }
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }
@@ -59,6 +64,10 @@ public class OAuthServiceImpl implements OAuthService {
                 .code(code)
                 .build();
         return oAuthClient.getAccessTokenApiCall(githubKeyProperties.getOauthAccessTokenUrl(), request, GithubAccessTokenResponse.class);
+    }
+
+    private GithubUserInfoResponse githubGetUserInfo(String authorization) {
+        return oAuthClient.getUserInfoApiCall(githubKeyProperties.getOauthApiUserUrl(), authorization, GithubUserInfoResponse.class);
     }
 
 }

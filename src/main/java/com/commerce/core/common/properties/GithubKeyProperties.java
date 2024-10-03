@@ -17,4 +17,6 @@ public class GithubKeyProperties {
     private String loginUrl;
     @Value(("${oauth-access-token-url}"))
     private String oauthAccessTokenUrl;
+    @Value("${oauth-api-user}")
+    private String oauthApiUserUrl;
 }

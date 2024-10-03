@@ -50,6 +50,7 @@ public class SecurityConfig {
                                 , "/tokenReIssue"
                                 , "/oauth/login"
                                 , "/oauth/*/callback"
+                                , "/oauth/user"
                                 , "/swagger-ui/**"
                                 , "/v3/api-docs/**")
                         .permitAll()

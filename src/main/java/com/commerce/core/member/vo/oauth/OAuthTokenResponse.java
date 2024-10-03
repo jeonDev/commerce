@@ -8,5 +8,6 @@ import lombok.Getter;
 public class OAuthTokenResponse {
     private String accessToken;
     private String type;
+    private String scope;
     private OAuthType oAuthType;
 }
