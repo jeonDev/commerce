@@ -6,6 +6,7 @@ import com.commerce.core.event.LocalEventDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -21,6 +22,7 @@ public class LocalSyncConsumer {
         this.localSyncProductConsumer = localSyncProductConsumer;
     }
 
+    @Async
     @EventListener
     public void listener(Object data) {
         if (!(data instanceof LocalEventDto eventData)){
