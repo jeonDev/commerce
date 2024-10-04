@@ -31,8 +31,8 @@ public class LocalSyncConsumer {
         log.info("Consumer Topic : {} {}", eventData.getTopic(), eventData.getData().toString());
 
         switch (eventData.getTopic()) {
-            case SYNC_PRODUCT -> localSyncOrderConsumer.listener(eventData.getData());
-            case SYNC_ORDER -> localSyncProductConsumer.listener(eventData.getData());
+            case SYNC_PRODUCT -> localSyncProductConsumer.listener(eventData);
+            case SYNC_ORDER -> localSyncOrderConsumer.listener(eventData);
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }
     }
