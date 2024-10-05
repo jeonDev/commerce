@@ -1,7 +1,6 @@
 package com.commerce.core.common.config.security;
 
 import com.commerce.core.common.config.security.filter.JwtFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -27,9 +25,17 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
+    private final List<String> corsDomains;
 
-    @Value("${cors.domain}")
-    private List<String> corsDomains;
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider,
+                          AuthenticationEntryPoint authenticationEntryPoint,
+                          AccessDeniedHandler accessDeniedHandler,
+                          @Value("${cors.domain}") List<String> corsDomains) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.corsDomains = corsDomains;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,18 +45,17 @@ public class SecurityConfig {
                 )
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v2/**")
-                        .permitAll()
-                        .requestMatchers("/v1/**")
-                        .hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/admin/**")
-                        .hasRole("ADMIN")
-                        .requestMatchers("/login"
+                        .requestMatchers("/v1/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/v2/**"
+                                , "/login"
                                 , "/signup"
                                 , "/tokenReIssue"
                                 , "/oauth/login"
                                 , "/oauth/*/callback"
                                 , "/oauth/user"
+                                , "/h2-console/**"
                                 , "/swagger-ui/**"
                                 , "/v3/api-docs/**")
                         .permitAll()
@@ -63,9 +68,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * Cors Configuration
-     * */
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfigurationSource = new CorsConfiguration();
 
