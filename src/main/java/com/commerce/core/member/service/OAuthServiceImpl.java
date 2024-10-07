@@ -4,18 +4,21 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.properties.GithubKeyProperties;
 import com.commerce.core.member.vo.oauth.*;
-import com.commerce.core.request.OAuthClient;
-import lombok.RequiredArgsConstructor;
+import com.commerce.core.request.OAuthApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class OAuthServiceImpl implements OAuthService {
 
     private final GithubKeyProperties githubKeyProperties;
-    private final OAuthClient oAuthClient;
+    private final OAuthApiClient githubOAuthClient;
+
+    public OAuthServiceImpl(GithubKeyProperties githubKeyProperties, OAuthApiClient githubOAuthClient) {
+        this.githubKeyProperties = githubKeyProperties;
+        this.githubOAuthClient = githubOAuthClient;
+    }
 
     @Override
     public String getPage(String type) {
@@ -63,11 +66,11 @@ public class OAuthServiceImpl implements OAuthService {
                 .clientSecret(githubKeyProperties.getClientSecret())
                 .code(code)
                 .build();
-        return oAuthClient.getAccessTokenApiCall(githubKeyProperties.getOauthAccessTokenUrl(), request, GithubAccessTokenResponse.class);
+        return githubOAuthClient.getAccessTokenApiCall(githubKeyProperties.getOauthAccessTokenUrl(), request, GithubAccessTokenResponse.class);
     }
 
     private GithubUserInfoResponse githubGetUserInfo(String authorization) {
-        return oAuthClient.getUserInfoApiCall(githubKeyProperties.getOauthApiUserUrl(), authorization, GithubUserInfoResponse.class);
+        return githubOAuthClient.getUserInfoApiCall(githubKeyProperties.getOauthApiUserUrl(), authorization, GithubUserInfoResponse.class);
     }
 
 }
