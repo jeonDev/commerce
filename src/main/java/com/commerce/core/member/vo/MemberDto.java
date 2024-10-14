@@ -2,7 +2,9 @@ package com.commerce.core.member.vo;
 
 import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.vo.oauth.OAuthType;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.Data;
 
 @Data
@@ -23,6 +25,8 @@ public class MemberDto {
     private String addrDetail;
     @NotNull
     private String zipCode;
+    @Null
+    private OAuthType oAuthType;
 
     public Member dtoToEntity() {
         return Member.builder()
@@ -37,6 +41,7 @@ public class MemberDto {
                 .passwordFailCount(0L)
                 .authority(Authority.ROLE_USER)
                 .useYn("Y")
+                .oauthType(oAuthType)
                 .build();
     }
 }

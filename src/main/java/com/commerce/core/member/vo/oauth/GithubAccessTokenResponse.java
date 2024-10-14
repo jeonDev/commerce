@@ -11,13 +11,4 @@ public class GithubAccessTokenResponse {
     private String tokenType;
     @JsonProperty("scope")
     private String scope;
-
-    public OAuthTokenResponse toResponse() {
-        return OAuthTokenResponse.builder()
-                .accessToken(accessToken)
-                .type(tokenType)
-                .scope(scope)
-                .oAuthType(OAuthType.GITHUB)
-                .build();
-    }
 }

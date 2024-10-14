@@ -4,6 +4,7 @@ import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.common.utils.DateUtils;
 import com.commerce.core.member.vo.MyPageInfoDto;
+import com.commerce.core.member.vo.oauth.OAuthType;
 import com.commerce.core.point.entity.MemberPoint;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -64,6 +65,10 @@ public class Member extends BaseEntity {
 
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private MemberPoint memberPoint;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "OAUTH_TYPE")
+    private OAuthType oauthType;
 
     public void setEncryptPassword(String encPassword) {
         this.password = encPassword;

@@ -3,19 +3,36 @@ package com.commerce.core.member.service;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.properties.GithubKeyProperties;
+import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.repository.MemberRepository;
+import com.commerce.core.member.vo.LoginDto;
+import com.commerce.core.member.vo.LoginSuccessDto;
+import com.commerce.core.member.vo.MemberDto;
 import com.commerce.core.member.vo.oauth.*;
 import com.commerce.core.request.OAuthApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class OAuthServiceImpl implements OAuthService {
 
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final LoginService loginService;
     private final GithubKeyProperties githubKeyProperties;
     private final OAuthApiClient githubOAuthClient;
 
-    public OAuthServiceImpl(GithubKeyProperties githubKeyProperties, OAuthApiClient githubOAuthClient) {
+    public OAuthServiceImpl(MemberRepository memberRepository,
+                            MemberService memberService,
+                            LoginService loginService,
+                            GithubKeyProperties githubKeyProperties,
+                            OAuthApiClient githubOAuthClient) {
+        this.memberRepository = memberRepository;
+        this.memberService = memberService;
+        this.loginService = loginService;
         this.githubKeyProperties = githubKeyProperties;
         this.githubOAuthClient = githubOAuthClient;
     }
@@ -33,15 +50,39 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public OAuthTokenResponse getAccessToken(String type, String code) {
+    public LoginSuccessDto getAccessToken(String type, String code) {
         OAuthType oAuthType = OAuthType.valueOf(type);
+        String id = null;
+        String name = null;
         switch (oAuthType) {
             case GITHUB -> {
                 GithubAccessTokenResponse githubAccessTokenResponse = this.githubGetAccessToken(code);
-                return githubAccessTokenResponse.toResponse();
+                OAuthUserInfoResponse githubUserInfo =
+                        this.getUserInfo("GITHUB", githubAccessTokenResponse.getTokenType() + " " + githubAccessTokenResponse.getAccessToken());
+                String githubId = githubUserInfo.getId();
+                name = githubUserInfo.getName();
+                id = oAuthType + "_" + githubId;
             }
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }
+
+        Optional<Member> optionalMember = memberRepository.findByIdAndOauthType(id, oAuthType);
+        LoginDto loginDto = new LoginDto();
+        if (optionalMember.isPresent()) {
+            // Token 발급
+            Member member = optionalMember.get();
+            loginDto.setId(member.getId());
+        } else {
+            // 회원가입 & Token 발급
+            MemberDto memberDto = new MemberDto();
+            memberDto.setId(id);
+            memberDto.setName(name);
+            memberDto.setOAuthType(oAuthType);
+            Member member = memberService.createMember(memberDto);
+            loginDto.setId(member.getId());
+        }
+
+        return loginService.login(loginDto);
     }
 
     @Override

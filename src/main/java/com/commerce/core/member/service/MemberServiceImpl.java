@@ -27,8 +27,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member createMember(MemberDto dto) {
         Member member = dto.dtoToEntity();
-        String encPassword = passwordEncoder.encode(dto.getPassword());
-        member.setEncryptPassword(encPassword);
+        if (dto.getOAuthType() == null) {
+            String encPassword = passwordEncoder.encode(dto.getPassword());
+            member.setEncryptPassword(encPassword);
+        }
         return memberRepository.save(member);
     }
 
