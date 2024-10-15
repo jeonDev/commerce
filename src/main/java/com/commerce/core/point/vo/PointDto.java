@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -20,4 +22,6 @@ public class PointDto {
 
     @NotNull
     private PointProcessStatus pointProcessStatus;
+
+    private LocalDateTime createDt;
 }

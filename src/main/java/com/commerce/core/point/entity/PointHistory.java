@@ -39,6 +39,7 @@ public class PointHistory extends BaseEntity {
                 .memberSeq(member.getMemberSeq())
                 .point(point)
                 .pointProcessStatus(pointProcessStatus)
+                .createDt(this.getCreateDt())
                 .build();
     }
 }
