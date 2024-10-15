@@ -2,15 +2,20 @@ package com.commerce.core.point.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.member.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.point.entity.MemberPoint;
+import com.commerce.core.point.entity.PointHistory;
 import com.commerce.core.point.repository.PointHistoryRepository;
 import com.commerce.core.point.repository.PointRepository;
 import com.commerce.core.point.vo.PointDto;
 import com.commerce.core.point.vo.PointProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,9 +71,20 @@ public class PointServiceImpl implements PointService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<PointDto> selectPointHistory(Long memberSeq) {
-        // TODO:
-        return null;
+    public PageListVO<PointDto> selectPointHistory(int pageNumber, int pageSize, Long memberSeq) {
+        Member member = memberService.selectMember(memberSeq)
+                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<PointHistory> list = pointHistoryRepository.findByMember(pageable, member);
+
+        return PageListVO.<PointDto>builder()
+                .list(list.getContent().stream()
+                        .map(PointHistory::entityToResponse)
+                        .toList()
+                )
+                .totalPage(list.getTotalPages())
+                .build();
     }
 
     @Transactional(readOnly = true)

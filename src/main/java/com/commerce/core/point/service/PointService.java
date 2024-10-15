@@ -1,9 +1,9 @@
 package com.commerce.core.point.service;
 
+import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.point.entity.MemberPoint;
 import com.commerce.core.point.vo.PointDto;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface PointService {
@@ -16,7 +16,7 @@ public interface PointService {
     /**
      * Point History
      */
-    List<PointDto> selectPointHistory(Long memberSeq);
+    PageListVO<PointDto> selectPointHistory(int pageNumber, int pageSize, Long memberSeq);
 
     /**
      * Point Select

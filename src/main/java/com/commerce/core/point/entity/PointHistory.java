@@ -2,6 +2,7 @@ package com.commerce.core.point.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.member.entity.Member;
+import com.commerce.core.point.vo.PointDto;
 import com.commerce.core.point.vo.PointProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,5 +34,11 @@ public class PointHistory extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private PointProcessStatus pointProcessStatus;
 
-
+    public PointDto entityToResponse() {
+        return PointDto.builder()
+                .memberSeq(member.getMemberSeq())
+                .point(point)
+                .pointProcessStatus(pointProcessStatus)
+                .build();
+    }
 }
