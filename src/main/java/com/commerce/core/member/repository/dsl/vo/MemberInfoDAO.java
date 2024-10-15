@@ -1,6 +1,7 @@
 package com.commerce.core.member.repository.dsl.vo;
 
 import com.commerce.core.common.config.security.vo.Authority;
+import com.commerce.core.member.vo.oauth.OAuthType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public class MemberInfoDAO {
     private String passwordFailCount;
     private String useYn;
     private Authority authority;
+    private OAuthType oAuthType;
     private Long point;
 
 }

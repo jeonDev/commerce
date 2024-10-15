@@ -30,6 +30,7 @@ public class MemberDslRepository {
                                 member.password,
                                 member.useYn,
                                 member.authority,
+                                member.oauthType,
                                 memberPoint.point.coalesce(0L).as("point")
                         )
                 )
