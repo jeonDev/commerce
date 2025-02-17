@@ -1,9 +1,8 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.event.producer.EventSender;
+import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.entity.ProductInfo;
-import com.commerce.core.product.domain.repository.ProductInfoRepository;
-import com.commerce.core.product.domain.repository.ProductRepository;
 import com.commerce.core.product.vo.ProductDto;
 import com.commerce.core.product.vo.ProductResDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductServiceTest {
 
     @Mock
-    ProductRepository productRepository;
-    @Mock
-    ProductInfoRepository productInfoRepository;
+    ProductDao productDao;
     @Mock
     EventSender eventSender;
 
@@ -34,8 +31,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productService = new ProductServiceImpl(productRepository,
-                productInfoRepository, eventSender);
+        productService = new ProductServiceImpl(productDao, eventSender);
     }
 
     @Test
@@ -50,7 +46,7 @@ class ProductServiceTest {
         productDto.setPrice(1000L);
 
         ProductInfo productInfo = productDto.dtoToEntity();
-        Mockito.when(productInfoRepository.findById(Mockito.any()))
+        Mockito.when(productDao.productInfoFindById(Mockito.any()))
                 .thenReturn(Optional.of(productInfo));
 
         // when
