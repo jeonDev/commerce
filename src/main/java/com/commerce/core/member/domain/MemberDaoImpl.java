@@ -13,7 +13,8 @@ public class MemberDaoImpl implements MemberDao {
     private final MemberDslRepository memberDslRepository;
     private final MemberRepository memberRepository;
 
-    public MemberDaoImpl(MemberDslRepository memberDslRepository, MemberRepository memberRepository) {
+    public MemberDaoImpl(MemberDslRepository memberDslRepository,
+                         MemberRepository memberRepository) {
         this.memberDslRepository = memberDslRepository;
         this.memberRepository = memberRepository;
     }

@@ -1,13 +1,12 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.common.vo.PageListVO;
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductInfo;
-import com.commerce.core.product.entity.ProductStock;
-import com.commerce.core.product.entity.mongo.ProductView;
-import com.commerce.core.product.repository.dsl.ProductDslRepository;
-import com.commerce.core.product.repository.dsl.vo.ProductDAO;
-import com.commerce.core.product.repository.mongo.ProductViewRepository;
+import com.commerce.core.product.domain.ProductDao;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
+import com.commerce.core.product.domain.entity.ProductStock;
+import com.commerce.core.product.domain.entity.mongo.ProductView;
+import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
 import com.commerce.core.product.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +24,10 @@ import java.util.Optional;
 @Service
 public class ProductViewServiceImpl implements ProductViewService {
 
-    private final ProductViewRepository productViewRepository;
+    private final ProductDao productDao;
 
     private final ProductService productService;
     private final ProductStockService productStockService;
-    private final ProductDslRepository productDslRepository;
 
     @Transactional
     @Override
@@ -84,7 +82,7 @@ public class ProductViewServiceImpl implements ProductViewService {
                             "Y",
                             productOptions,
                             productStockSummary);
-                    productViewRepository.save(item);
+                    productDao.productViewSave(item);
                 }, () -> {
                     ProductView productView = ProductView.builder()
                             .productInfoSeq(productInfo.getProductInfoSeq())
@@ -95,7 +93,7 @@ public class ProductViewServiceImpl implements ProductViewService {
                             .productOptions(productOptions)
                             .productStockSummary(productStockSummary)
                             .build();
-                    productViewRepository.save(productView);
+                    productDao.productViewSave(productView);
                 });
     }
 
@@ -116,13 +114,13 @@ public class ProductViewServiceImpl implements ProductViewService {
     @Transactional(readOnly = true)
     @Override
     public Optional<ProductView> selectProductViewForProductDetail(Long productDetailSeq) {
-        return productViewRepository.findByProductInfoSeq(productDetailSeq);
+        return productDao.productViewFindByProductInfoSeq(productDetailSeq);
     }
 
     @Transactional(readOnly = true)
     @Override
     public ProductDetailDto selectProductViewDetail(Long productInfoSeq) {
-        ProductInfo productInfo = productDslRepository.selectProductDetail(productInfoSeq);
+        ProductInfo productInfo = productDao.selectProductDetail(productInfoSeq);
         List<ProductOptions> productOptions = productService.selectProductToProductInfo(productInfoSeq).stream()
                 .map(option -> ProductOptions.builder()
                         .productSeq(option.getProductSeq())
@@ -140,7 +138,7 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Override
     public ProductOrderDto selectProductView(Long productSeq) {
-        ProductDAO product = productDslRepository.selectProduct(productSeq);
+        ProductDAO product = productDao.selectProduct(productSeq);
         return ProductOrderDto.builder()
                 .productSeq(product.getProductSeq())
                 .productOptionCode(product.getProductOptionCode())
@@ -155,7 +153,7 @@ public class ProductViewServiceImpl implements ProductViewService {
     @Override
     public PageListVO<ProductViewResDto> selectProductViewList(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<ProductView> list = productViewRepository.findAll(pageable);
+        Page<ProductView> list = productDao.productViewFindAll(pageable);
         return PageListVO.<ProductViewResDto>builder()
                 .list(list.getContent().stream()
                         .map(ProductView::documentToResDto)
@@ -168,7 +166,7 @@ public class ProductViewServiceImpl implements ProductViewService {
     @Override
     public PageListVO<AdminProductListResDto> selectProductList(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<AdminProductListResDto> list = productDslRepository.selectProductList(pageable);
+        Page<AdminProductListResDto> list = productDao.selectProductList(pageable);
         return PageListVO.<AdminProductListResDto>builder()
                 .list(list.get().toList())
                 .totalPage(list.getTotalPages())

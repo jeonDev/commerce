@@ -1,12 +1,12 @@
 package com.commerce.core.order.service;
 
-import com.commerce.core.order.entity.OrderDetail;
-import com.commerce.core.order.entity.Orders;
-import com.commerce.core.order.repository.mongo.OrderViewRepository;
+import com.commerce.core.order.domain.OrderDao;
+import com.commerce.core.order.domain.entity.OrderDetail;
+import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.order.vo.OrderViewDto;
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductInfo;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,14 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
 @DisplayName("주문이벤트_서비스")
 class OrderViewServiceImplTest {
 
     @Mock
-    private OrderViewRepository orderViewRepository;
+    private OrderDao orderDao;
     @Mock
     private OrderService orderService;
 
@@ -33,7 +31,7 @@ class OrderViewServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        orderViewService = new OrderViewServiceImpl(orderViewRepository, orderService);
+        orderViewService = new OrderViewServiceImpl(orderDao, orderService);
     }
 
     @Test
@@ -70,7 +68,7 @@ class OrderViewServiceImplTest {
 
         Mockito.when(orderService.selectOrderDetailList(Mockito.anyLong()))
                         .thenReturn(List.of(orderDetail1, orderDetail2));
-        Mockito.when(orderViewRepository.findByOrderSeq(Mockito.anyLong()))
+        Mockito.when(orderDao.orderViewFindByOrderSeq(Mockito.anyLong()))
                         .thenReturn(Optional.ofNullable(null));
 
         orderViewService.merge(orderViewDto);

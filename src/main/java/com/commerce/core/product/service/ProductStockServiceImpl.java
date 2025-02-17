@@ -4,11 +4,13 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductStock;
-import com.commerce.core.product.entity.ProductStockHistory;
-import com.commerce.core.product.repository.ProductStockHistoryRepository;
-import com.commerce.core.product.repository.ProductStockRepository;
+import com.commerce.core.product.domain.ProductDao;
+import com.commerce.core.product.domain.ProductStockDao;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductStock;
+import com.commerce.core.product.domain.entity.ProductStockHistory;
+import com.commerce.core.product.domain.repository.ProductStockHistoryRepository;
+import com.commerce.core.product.domain.repository.ProductStockRepository;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
 import com.commerce.core.product.vo.ProductViewDto;
@@ -25,8 +27,7 @@ import java.util.Optional;
 @Service
 public class ProductStockServiceImpl implements ProductStockService {
 
-    private final ProductStockRepository productStockRepository;
-    private final ProductStockHistoryRepository productStockHistoryRepository;
+    private final ProductStockDao productStockDao;
     private final ProductService productService;
     private final EventSender eventSender;
 
@@ -43,9 +44,9 @@ public class ProductStockServiceImpl implements ProductStockService {
 
         ProductStock productStock = this.stockAdjustmentProcess(product, isConsume, stock);
 
-        productStockRepository.save(productStock);
+        productStockDao.save(productStock);
         ProductStockHistory productStockHistory = productStock.generateHistoryEntity(stock, dto.getProductStockProcessStatus());
-        productStockHistoryRepository.save(productStockHistory);
+        productStockDao.productStockHistorySave(productStockHistory);
 
         // 3. Event Send(Product View Mongo DB)
         this.productStockEventSend(product.getProductInfo().getProductInfoSeq(), productStock.getStock(), isConsume);
@@ -54,7 +55,7 @@ public class ProductStockServiceImpl implements ProductStockService {
     }
 
     private ProductStock stockAdjustmentProcess(Product product, boolean isConsume, Long stock) {
-        Optional<ProductStock> productStockOptional = productStockRepository.findWithPessimisticLockById(product.getProductSeq());
+        Optional<ProductStock> productStockOptional = productStockDao.lockFindById(product.getProductSeq());
 
         if(productStockOptional.isPresent()) {
             ProductStock productStock = productStockOptional.get();
@@ -98,7 +99,7 @@ public class ProductStockServiceImpl implements ProductStockService {
     @Transactional(readOnly = true)
     @Override
     public Optional<ProductStock> selectProductStock(Long productSeq) {
-        return productStockRepository.findById(productSeq);
+        return productStockDao.productStockFindById(productSeq);
     }
 
 }

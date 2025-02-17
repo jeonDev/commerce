@@ -2,15 +2,12 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductInfo;
-import com.commerce.core.product.entity.ProductStock;
-import com.commerce.core.product.repository.ProductStockHistoryRepository;
-import com.commerce.core.product.repository.ProductStockRepository;
+import com.commerce.core.product.domain.ProductStockDao;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
+import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
-import com.commerce.core.product.vo.ProductViewDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,16 +19,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("상품 재고 서비스")
 class ProductStockServiceTest {
 
     @Mock
-    ProductStockRepository productStockRepository;
-    @Mock
-    ProductStockHistoryRepository productStockHistoryRepository;
+    ProductStockDao productStockDao;
     @Mock
     ProductService productService;
     @Mock
@@ -41,8 +35,8 @@ class ProductStockServiceTest {
 
     @BeforeEach
     void setUp() {
-        productStockService = new ProductStockServiceImpl(productStockRepository,
-                productStockHistoryRepository, productService, eventSender);
+        productStockService = new ProductStockServiceImpl(productStockDao,
+                productService, eventSender);
     }
 
     @Test
@@ -69,7 +63,7 @@ class ProductStockServiceTest {
                 .stock(1L)
                 .product(product)
                 .build();
-        Mockito.when(productStockRepository.findById(Mockito.anyLong()))
+        Mockito.when(productStockDao.productStockFindById(Mockito.anyLong()))
                 .thenReturn(Optional.of(productStock));
 
         Mockito.doNothing().when(eventSender).send(Mockito.any(EventTopic.class), Mockito.any());

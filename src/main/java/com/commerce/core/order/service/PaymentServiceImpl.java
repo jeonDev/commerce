@@ -4,12 +4,10 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.order.entity.OrderDetail;
-import com.commerce.core.order.entity.OrderDetailHistory;
-import com.commerce.core.order.entity.Orders;
-import com.commerce.core.order.repository.OrderDetailHistoryRepository;
-import com.commerce.core.order.repository.OrderDetailsRepository;
-import com.commerce.core.order.repository.PaymentHistoryRepository;
+import com.commerce.core.order.domain.OrderDao;
+import com.commerce.core.order.domain.entity.OrderDetail;
+import com.commerce.core.order.domain.entity.OrderDetailHistory;
+import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.vo.*;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
@@ -26,10 +24,7 @@ import java.util.List;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    private final OrderDetailsRepository orderDetailsRepository;
-    private final OrderDetailHistoryRepository orderDetailHistoryRepository;
-    private final PaymentHistoryRepository paymentHistoryRepository;
-
+    private final OrderDao orderDao;
     private final PointService pointService;
     private final EventSender eventSender;
 
@@ -38,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Orders payment(PaymentDto dto) {
         // 1. Order Detail Find
         Long orderSeq = dto.getOrderSeq();
-        List<OrderDetail> orderDetails = orderDetailsRepository.findByOrders_OrderSeq(orderSeq);
+        List<OrderDetail> orderDetails = orderDao.orderDetailListByOrderSeq(orderSeq);
 
         // 2. Payment Amount Calculator
         long payAmount = orderDetails.stream()
@@ -60,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 4. Payment Success Save
         orderDetails.forEach(this::paymentAmountBeforeProcess);
-        orderDetailsRepository.saveAll(orderDetails);
+        orderDao.orderDetailSaveAll(orderDetails);
 
         // 5. Event Send(Order View Mongo DB)
         OrderViewDto orderViewDto = OrderViewDto.builder()
@@ -79,18 +74,18 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
         this.updateOrderStatus(orderDto);
 
-        paymentHistoryRepository.save(item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT));
+        orderDao.paymentHistorySave(item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT));
     }
 
     private OrderDetail updateOrderStatus(OrderDto dto) {
-        OrderDetail orderDetail = orderDetailsRepository.findById(dto.getOrderDetailSeq())
+        OrderDetail orderDetail = orderDao.orderDetailFindById(dto.getOrderDetailSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         orderDetail.updateOrderStatus(dto.getOrderStatus());
-        orderDetail = orderDetailsRepository.save(orderDetail);
+        orderDetail = orderDao.orderDetailSave(orderDetail);
 
         OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();
-        orderDetailHistoryRepository.save(orderDetailHistory);
+        orderDao.orderDetailHistorySave(orderDetailHistory);
 
         return orderDetail;
     }

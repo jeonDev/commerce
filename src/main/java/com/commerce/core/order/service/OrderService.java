@@ -1,7 +1,7 @@
 package com.commerce.core.order.service;
 
-import com.commerce.core.order.entity.OrderDetail;
-import com.commerce.core.order.entity.Orders;
+import com.commerce.core.order.domain.entity.OrderDetail;
+import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.vo.OrderDto;
 
 import java.util.List;

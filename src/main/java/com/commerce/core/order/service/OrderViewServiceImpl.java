@@ -1,9 +1,9 @@
 package com.commerce.core.order.service;
 
 import com.commerce.core.common.vo.PageListVO;
-import com.commerce.core.order.entity.OrderDetail;
-import com.commerce.core.order.entity.mongo.OrderView;
-import com.commerce.core.order.repository.mongo.OrderViewRepository;
+import com.commerce.core.order.domain.OrderDao;
+import com.commerce.core.order.domain.entity.OrderDetail;
+import com.commerce.core.order.domain.entity.mongo.OrderView;
 import com.commerce.core.order.vo.OrderDetailInfo;
 import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.order.vo.OrderViewDto;
@@ -25,7 +25,7 @@ import java.util.Optional;
 @Service
 public class OrderViewServiceImpl implements OrderViewService {
 
-    private final OrderViewRepository orderViewRepository;
+    private final OrderDao orderDao;
     private final OrderService orderService;
 
     @Transactional
@@ -56,7 +56,7 @@ public class OrderViewServiceImpl implements OrderViewService {
 
         // 4. Order View Data Save
         OrderView orderView;
-        Optional<OrderView> optionalOrderView = orderViewRepository.findByOrderSeq(orderSeq);
+        Optional<OrderView> optionalOrderView = orderDao.orderViewFindByOrderSeq(orderSeq);
         if(optionalOrderView.isPresent()) {
             orderView = optionalOrderView.get();
             orderView.settingData(amount, buyAmount, paidAmount, orderDetailInfos, orderStatus);
@@ -71,14 +71,14 @@ public class OrderViewServiceImpl implements OrderViewService {
                     .build();
         }
 
-        orderViewRepository.save(orderView);
+        orderDao.orderViewSave(orderView);
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageListVO<OrderViewResDto> selectOrderView(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<OrderView> list = orderViewRepository.findAll(pageable);
+        Page<OrderView> list = orderDao.orderViewFindAll(pageable);
         return PageListVO.<OrderViewResDto>builder()
                 .list(list.getContent().stream()
                         .map(OrderView::documentToResDto)

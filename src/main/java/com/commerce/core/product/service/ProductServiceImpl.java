@@ -4,10 +4,11 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductInfo;
-import com.commerce.core.product.repository.ProductInfoRepository;
-import com.commerce.core.product.repository.ProductRepository;
+import com.commerce.core.product.domain.ProductDao;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
+import com.commerce.core.product.domain.repository.ProductInfoRepository;
+import com.commerce.core.product.domain.repository.ProductRepository;
 import com.commerce.core.product.vo.ProductDto;
 import com.commerce.core.product.vo.ProductResDto;
 import com.commerce.core.product.vo.ProductViewDto;
@@ -25,10 +26,8 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
-    private final ProductInfoRepository productInfoRepository;
 
-
+    private final ProductDao productDao;
     private final EventSender eventSender;
 
     @Transactional
@@ -45,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
                         .productOptionCode(s)
                         .build())
                 .toList();
-        List<Product> products = productRepository.saveAll(list);
+        List<Product> products = productDao.saveAll(list);
 
         // 3. Event Producer Push
         ProductViewDto productViewDto = ProductViewDto.builder()
@@ -65,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     @Override
     public Optional<Product> selectProduct(Long productSeq) {
-        return productRepository.findById(productSeq);
+        return productDao.findById(productSeq);
     }
 
     private ProductInfo mergeProductInfo(ProductDto dto) {
@@ -84,19 +83,19 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     @Override
     public List<Product> selectProductToProductInfo(Long productInfoSeq) {
-        return productRepository.findByProductInfo_ProductInfoSeq(productInfoSeq);
+        return productDao.findByProductInfoSeq(productInfoSeq);
     }
 
 
     @Transactional
     @Override
     public ProductInfo productInfoAdd(ProductDto dto) {
-        return productInfoRepository.save(dto.dtoToEntity());
+        return productDao.productInfoSave(dto.dtoToEntity());
     }
 
     @Transactional(readOnly = true)
     @Override
     public Optional<ProductInfo> selectProductInfo(Long productInfoSeq) {
-        return productInfoRepository.findById(productInfoSeq);
+        return productDao.productInfoFindById(productInfoSeq);
     }
 }

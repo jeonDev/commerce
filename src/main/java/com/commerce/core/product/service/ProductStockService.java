@@ -1,6 +1,6 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.product.entity.ProductStock;
+import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductStockSummary;
 

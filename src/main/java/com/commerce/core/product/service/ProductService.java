@@ -1,9 +1,8 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductInfo;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.vo.ProductDto;
-import com.commerce.core.product.vo.ProductInfoDto;
 import com.commerce.core.product.vo.ProductResDto;
 
 import java.util.List;

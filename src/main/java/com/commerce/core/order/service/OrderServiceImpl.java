@@ -4,17 +4,15 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.order.entity.OrderDetail;
-import com.commerce.core.order.entity.OrderDetailHistory;
-import com.commerce.core.order.entity.Orders;
-import com.commerce.core.order.repository.OrderDetailHistoryRepository;
-import com.commerce.core.order.repository.OrderDetailsRepository;
-import com.commerce.core.order.repository.OrdersRepository;
+import com.commerce.core.order.domain.OrderDao;
+import com.commerce.core.order.domain.entity.OrderDetail;
+import com.commerce.core.order.domain.entity.OrderDetailHistory;
+import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.vo.*;
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductInfo;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.vo.ProductStockDto;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
@@ -33,9 +31,7 @@ import java.util.Optional;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private final OrdersRepository ordersRepository;
-    private final OrderDetailsRepository orderDetailsRepository;
-    private final OrderDetailHistoryRepository orderDetailHistoryRepository;
+    private final OrderDao orderDao;
 
     private final ProductStockService productStockService;
     private final MemberService memberService;
@@ -53,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
         // 2. Data Setting
         final List<OrderDetail> orderDetails = new ArrayList<>();
         final List<OrderDetailHistory> orderDetailHistories = new ArrayList<>();
-        final Orders order = ordersRepository.save(Orders.builder()
+        final Orders order = orderDao.save(Orders.builder()
                         .member(member)
                         .build());
 
@@ -65,8 +61,8 @@ public class OrderServiceImpl implements OrderService {
                     orderDetailHistories.add(orderDetail.generateHistoryEntity());
                 });
 
-        orderDetailsRepository.saveAll(orderDetails);
-        orderDetailHistoryRepository.saveAll(orderDetailHistories);
+        orderDao.orderDetailSaveAll(orderDetails);
+        orderDao.orderDetailHistorySaveAll(orderDetailHistories);
 
         // 4. 결제 & 결제 시도 안할 시, Event Send
         if (dto.isPayment()) {
@@ -117,18 +113,18 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     @Override
     public Optional<Orders> selectOrder(Long orderSeq) {
-        return ordersRepository.findById(orderSeq);
+        return orderDao.findById(orderSeq);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Optional<OrderDetail> selectOrderDetail(Long orderDetailSeq) {
-        return orderDetailsRepository.findById(orderDetailSeq);
+        return orderDao.orderDetailFindById(orderDetailSeq);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<OrderDetail> selectOrderDetailList(Long orderSeq) {
-        return orderDetailsRepository.findByOrders_OrderSeq(orderSeq);
+        return orderDao.orderDetailListByOrderSeq(orderSeq);
     }
 }

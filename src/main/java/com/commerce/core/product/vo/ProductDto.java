@@ -1,6 +1,6 @@
 package com.commerce.core.product.vo;
 
-import com.commerce.core.product.entity.ProductInfo;
+import com.commerce.core.product.domain.entity.ProductInfo;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.product.entity.ProductInfo;
-import com.commerce.core.product.repository.ProductInfoRepository;
-import com.commerce.core.product.repository.ProductRepository;
+import com.commerce.core.product.domain.entity.ProductInfo;
+import com.commerce.core.product.domain.repository.ProductInfoRepository;
+import com.commerce.core.product.domain.repository.ProductRepository;
 import com.commerce.core.product.vo.ProductDto;
 import com.commerce.core.product.vo.ProductResDto;
 import org.junit.jupiter.api.BeforeEach;

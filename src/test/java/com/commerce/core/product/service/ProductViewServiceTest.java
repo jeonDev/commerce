@@ -1,9 +1,10 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.product.entity.Product;
-import com.commerce.core.product.entity.ProductInfo;
-import com.commerce.core.product.repository.dsl.ProductDslRepository;
-import com.commerce.core.product.repository.mongo.ProductViewRepository;
+import com.commerce.core.product.domain.ProductDao;
+import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
+import com.commerce.core.product.domain.repository.dsl.ProductDslRepository;
+import com.commerce.core.product.domain.repository.mongo.ProductViewRepository;
 import com.commerce.core.product.vo.ProductViewDto;
 import com.commerce.core.product.vo.ProductViewStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,25 +18,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("상품 정보 동기화 서비스")
 class ProductViewServiceTest {
 
     @Mock
-    ProductViewRepository productViewRepository;
+    ProductDao productDao;
     @Mock
     ProductService productService;
     @Mock
     ProductStockService productStockService;
-    @Mock
-    ProductDslRepository productDslRepository;
     ProductViewService productViewService;
 
     @BeforeEach
     void setUp() {
-        productViewService = new ProductViewServiceImpl(productViewRepository,
-                productService, productStockService, productDslRepository);
+        productViewService = new ProductViewServiceImpl(productDao,
+                productService, productStockService);
         ProductInfo productInfo = ProductInfo.builder()
                 .products(List.of(Product.builder().productOptionCode("A").build()))
                 .build();

@@ -5,10 +5,9 @@ import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
-import com.commerce.core.point.entity.MemberPoint;
-import com.commerce.core.point.entity.PointHistory;
-import com.commerce.core.point.repository.PointHistoryRepository;
-import com.commerce.core.point.repository.PointRepository;
+import com.commerce.core.point.domain.PointDao;
+import com.commerce.core.point.domain.entity.MemberPoint;
+import com.commerce.core.point.domain.entity.PointHistory;
 import com.commerce.core.point.vo.PointDto;
 import com.commerce.core.point.vo.PointProcessStatus;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,7 @@ import java.util.Optional;
 @Service
 public class PointServiceImpl implements PointService {
 
-    private final PointRepository pointRepository;
-    private final PointHistoryRepository pointHistoryRepository;
-
+    private final PointDao pointDao;
     private final MemberService memberService;
 
     @Transactional
@@ -39,7 +36,7 @@ public class PointServiceImpl implements PointService {
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Existing Point Find & Point Setting
-        Optional<MemberPoint> optionalPoint = pointRepository.findByMember(member);
+        Optional<MemberPoint> optionalPoint = pointDao.findByMember(member);
         MemberPoint point;
         if(optionalPoint.isPresent()) {
             point = optionalPoint.get();
@@ -64,8 +61,8 @@ public class PointServiceImpl implements PointService {
     }
 
     private void entitySaveAndHistoryGenerate(MemberPoint point, PointDto dto) {
-        pointRepository.save(point);
-        pointHistoryRepository.save(point.generateHistoryEntity(dto.getPoint(), dto.getPointProcessStatus()));
+        pointDao.memberPointSave(point);
+        pointDao.pointHistorySave(point.generateHistoryEntity(dto.getPoint(), dto.getPointProcessStatus()));
     }
 
     @Transactional(readOnly = true)
@@ -75,7 +72,7 @@ public class PointServiceImpl implements PointService {
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<PointHistory> list = pointHistoryRepository.findByMember(pageable, member);
+        Page<PointHistory> list = pointDao.findByMemberPaging(pageable, member);
 
         return PageListVO.<PointDto>builder()
                 .list(list.getContent().stream()
@@ -89,7 +86,7 @@ public class PointServiceImpl implements PointService {
     @Transactional(readOnly = true)
     @Override
     public Optional<MemberPoint> selectPoint(Long memberSeq) {
-        return pointRepository.findByMember_MemberSeq(memberSeq);
+        return pointDao.findByMemberSeq(memberSeq);
     }
 
 }

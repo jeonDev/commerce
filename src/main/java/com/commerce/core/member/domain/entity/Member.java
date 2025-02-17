@@ -5,7 +5,7 @@ import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.common.utils.DateUtils;
 import com.commerce.core.member.vo.MyPageInfoDto;
 import com.commerce.core.member.vo.oauth.OAuthType;
-import com.commerce.core.point.entity.MemberPoint;
+import com.commerce.core.point.domain.entity.MemberPoint;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,7 +1,7 @@
 package com.commerce.core.point.service;
 
 import com.commerce.core.common.vo.PageListVO;
-import com.commerce.core.point.entity.MemberPoint;
+import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.vo.PointDto;
 
 import java.util.Optional;

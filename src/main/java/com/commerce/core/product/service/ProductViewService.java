@@ -1,7 +1,7 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.common.vo.PageListVO;
-import com.commerce.core.product.entity.mongo.ProductView;
+import com.commerce.core.product.domain.entity.mongo.ProductView;
 import com.commerce.core.product.vo.*;
 
 import java.util.Optional;

@@ -2,9 +2,10 @@ package com.commerce.core.point.service;
 
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
-import com.commerce.core.point.entity.MemberPoint;
-import com.commerce.core.point.repository.PointHistoryRepository;
-import com.commerce.core.point.repository.PointRepository;
+import com.commerce.core.point.domain.PointDao;
+import com.commerce.core.point.domain.entity.MemberPoint;
+import com.commerce.core.point.domain.repository.PointHistoryRepository;
+import com.commerce.core.point.domain.repository.PointRepository;
 import com.commerce.core.point.vo.PointDto;
 import com.commerce.core.point.vo.PointProcessStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,9 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("포인트 서비스")
 class PointServiceTest {
     @Mock
-    PointRepository pointRepository;
-    @Mock
-    PointHistoryRepository pointHistoryRepository;
+    PointDao pointDao;
     @Mock
     MemberService memberService;
 
@@ -34,8 +33,7 @@ class PointServiceTest {
 
     @BeforeEach
     void setUp() {
-        pointService = new PointServiceImpl(pointRepository,
-                pointHistoryRepository, memberService);
+        pointService = new PointServiceImpl(pointDao, memberService);
         Member member = Member.builder()
                 .memberSeq(1L)
                 .build();
@@ -57,7 +55,7 @@ class PointServiceTest {
                 .point(10000L)
                 .id(1L)
                 .build();
-        Mockito.when(pointRepository.findByMember(Mockito.any(Member.class)))
+        Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
                 .thenReturn(Optional.of(point));
         // when
         PointDto result = pointService.pointAdjustment(pointDto);
@@ -79,7 +77,7 @@ class PointServiceTest {
                 .point(10000L)
                 .id(1L)
                 .build();
-        Mockito.when(pointRepository.findByMember(Mockito.any(Member.class)))
+        Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
                 .thenReturn(Optional.of(point));
 
         // when
@@ -98,7 +96,7 @@ class PointServiceTest {
                 .pointProcessStatus(PointProcessStatus.CHARGE)
                 .build();
 
-        Mockito.when(pointRepository.findByMember(Mockito.any(Member.class)))
+        Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
                 .thenReturn(Optional.ofNullable(null));
         // when
         PointDto result = pointService.pointAdjustment(pointDto);

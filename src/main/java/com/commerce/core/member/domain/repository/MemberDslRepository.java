@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import static com.commerce.core.member.domain.entity.QMember.member;
-import static com.commerce.core.point.entity.QMemberPoint.memberPoint;
+import static com.commerce.core.point.domain.entity.QMemberPoint.memberPoint;
 
 @Slf4j
 @RequiredArgsConstructor
