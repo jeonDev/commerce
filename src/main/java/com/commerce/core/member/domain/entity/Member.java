@@ -1,4 +1,4 @@
-package com.commerce.core.member.entity;
+package com.commerce.core.member.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.common.config.security.vo.Authority;

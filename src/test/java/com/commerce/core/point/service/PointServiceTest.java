@@ -1,6 +1,6 @@
 package com.commerce.core.point.service;
 
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.point.entity.MemberPoint;
 import com.commerce.core.point.repository.PointHistoryRepository;
@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("포인트 서비스")

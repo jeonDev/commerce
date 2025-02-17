@@ -1,4 +1,4 @@
-package com.commerce.core.member.repository.dsl.vo;
+package com.commerce.core.member.domain.dto;
 
 import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.member.vo.oauth.OAuthType;

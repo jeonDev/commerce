@@ -1,7 +1,7 @@
 package com.commerce.core.order.service;
 
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.entity.Orders;
 import com.commerce.core.order.repository.OrderDetailHistoryRepository;
@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

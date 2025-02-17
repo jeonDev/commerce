@@ -1,6 +1,6 @@
 package com.commerce.core.point.repository;
 
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.point.entity.PointHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,7 +2,7 @@ package com.commerce.core.member.service;
 
 import com.commerce.core.common.config.security.IdentifierProvider;
 import com.commerce.core.common.service.CacheService;
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.vo.LoginDto;
 import com.commerce.core.member.vo.LoginSuccessDto;
 import io.jsonwebtoken.impl.DefaultClaims;

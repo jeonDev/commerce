@@ -1,7 +1,7 @@
 package com.commerce.core.member.vo;
 
 import com.commerce.core.common.config.security.vo.Authority;
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.vo.oauth.OAuthType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;

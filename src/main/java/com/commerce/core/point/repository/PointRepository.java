@@ -1,6 +1,6 @@
 package com.commerce.core.point.repository;
 
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.point.entity.MemberPoint;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;

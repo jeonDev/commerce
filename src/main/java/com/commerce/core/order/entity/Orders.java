@@ -1,7 +1,7 @@
 package com.commerce.core.order.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

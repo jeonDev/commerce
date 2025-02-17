@@ -10,7 +10,7 @@ import com.commerce.core.order.entity.Orders;
 import com.commerce.core.order.repository.OrderDetailHistoryRepository;
 import com.commerce.core.order.repository.OrderDetailsRepository;
 import com.commerce.core.order.repository.OrdersRepository;
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.vo.*;
 import com.commerce.core.product.entity.Product;

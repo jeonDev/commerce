@@ -1,8 +1,7 @@
 package com.commerce.core.member.service;
 
-import com.commerce.core.member.entity.Member;
-import com.commerce.core.member.repository.MemberRepository;
-import com.commerce.core.member.repository.dsl.MemberDslRepository;
+import com.commerce.core.member.domain.MemberDao;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.vo.MemberDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,18 +19,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemberServiceTest {
 
     @Mock
-    MemberRepository memberRepository;
+    MemberDao memberDao;
     @Mock
     PasswordEncoder passwordEncoder;
-    @Mock
-    MemberDslRepository memberDslRepository;
 
     MemberService memberService;
 
 
     @BeforeEach
     void setUp() {
-        memberService = new MemberServiceImpl(memberRepository, memberDslRepository, passwordEncoder);
+        memberService = new MemberServiceImpl(memberDao, passwordEncoder);
     }
 
     @Test
@@ -46,7 +43,7 @@ class MemberServiceTest {
         Mockito.when(passwordEncoder.encode(Mockito.any()))
                 .thenReturn("9999");
 
-        Mockito.when(memberRepository.save(Mockito.any()))
+        Mockito.when(memberDao.save(Mockito.any()))
                 .thenReturn(memberDto.dtoToEntity());
 
         // when

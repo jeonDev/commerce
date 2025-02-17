@@ -1,6 +1,6 @@
-package com.commerce.core.member.repository;
+package com.commerce.core.member.domain.repository;
 
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.vo.oauth.OAuthType;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,13 +1,13 @@
-package com.commerce.core.member.repository.dsl;
+package com.commerce.core.member.domain.repository;
 
-import com.commerce.core.member.repository.dsl.vo.MemberInfoDAO;
+import com.commerce.core.member.domain.dto.MemberInfoDAO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import static com.commerce.core.member.entity.QMember.member;
+import static com.commerce.core.member.domain.entity.QMember.member;
 import static com.commerce.core.point.entity.QMemberPoint.memberPoint;
 
 @Slf4j

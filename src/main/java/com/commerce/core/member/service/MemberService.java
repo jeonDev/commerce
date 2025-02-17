@@ -1,6 +1,6 @@
 package com.commerce.core.member.service;
 
-import com.commerce.core.member.entity.Member;
+import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.vo.MemberDto;
 import com.commerce.core.member.vo.MyPageInfoDto;
 
