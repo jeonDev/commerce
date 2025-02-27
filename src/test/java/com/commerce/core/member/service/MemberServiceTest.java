@@ -35,10 +35,11 @@ class MemberServiceTest {
     @DisplayName("고객정보생성")
     void 고객정보생성_성공() {
         // given
-        MemberDto memberDto = new MemberDto();
-        memberDto.setId("new-id");
-        memberDto.setPassword("1234");
-        memberDto.setAddr("주소");
+        MemberDto memberDto = MemberDto.builder()
+                .id("new-id")
+                .password("1234")
+                .addr("주소")
+                .build();
 
         Mockito.when(passwordEncoder.encode(Mockito.any()))
                 .thenReturn("9999");
@@ -50,8 +51,8 @@ class MemberServiceTest {
         Member member = memberService.createMember(memberDto);
 
         // then
-        assertThat(member.getId()).isEqualTo(memberDto.getId());
+        assertThat(member.getId()).isEqualTo(memberDto.id());
 //        assertThat(member.getPassword()).isEqualTo("9999");
-        assertThat(member.getAddr()).isEqualTo(memberDto.getAddr());
+        assertThat(member.getAddr()).isEqualTo(memberDto.addr());
     }
 }

@@ -47,9 +47,10 @@ class LoginServiceTest {
     @DisplayName("로그인 성공")
     void 로그인_성공() {
         // given
-        LoginDto dto = new LoginDto();
-        dto.setId("test");
-        dto.setPassword("1234");
+        LoginDto dto = LoginDto.builder()
+                .id("test")
+                .password("1234")
+                .build();
 
         Optional<Member> member = Optional.of(Member.builder()
                         .id("test")

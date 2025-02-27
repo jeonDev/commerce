@@ -54,6 +54,7 @@ public class OAuthServiceImpl implements OAuthService {
         OAuthType oAuthType = OAuthType.valueOf(type);
         String id = null;
         String name = null;
+
         switch (oAuthType) {
             case GITHUB -> {
                 GithubAccessTokenResponse githubAccessTokenResponse = this.githubGetAccessToken(code);
@@ -66,23 +67,23 @@ public class OAuthServiceImpl implements OAuthService {
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }
 
-        Optional<Member> optionalMember = memberRepository.findByIdAndOauthType(id, oAuthType);
-        LoginDto loginDto = new LoginDto();
-        if (optionalMember.isPresent()) {
-            // Token 발급
-            Member member = optionalMember.get();
-            loginDto.setId(member.getId());
-        } else {
-            // 회원가입 & Token 발급
-            MemberDto memberDto = new MemberDto();
-            memberDto.setId(id);
-            memberDto.setName(name);
-            memberDto.setOAuthType(oAuthType);
-            Member member = memberService.createMember(memberDto);
-            loginDto.setId(member.getId());
-        }
+        Member member = memberRepository.findByIdAndOauthType(id, oAuthType)
+                .orElse(this.oauthCreateMember(id, name, oAuthType));
+
+        LoginDto loginDto = LoginDto.builder()
+                .id(member.getId())
+                .build();
 
         return loginService.login(loginDto);
+    }
+
+    private Member oauthCreateMember(String id, String name, OAuthType oAuthType) {
+        MemberDto memberDto = MemberDto.builder()
+                .id(id)
+                .name(name)
+                .oAuthType(oAuthType)
+                .build();
+        return memberService.createMember(memberDto);
     }
 
     @Override

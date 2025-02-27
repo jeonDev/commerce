@@ -1,5 +1,8 @@
 package com.commerce.core.api;
 
+import com.commerce.core.api.request.LoginRequest;
+import com.commerce.core.api.request.MemberRequest;
+import com.commerce.core.api.response.LoginResponse;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.utils.SessionUtils;
@@ -7,9 +10,7 @@ import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.member.service.OAuthService;
-import com.commerce.core.member.vo.LoginDto;
 import com.commerce.core.member.vo.LoginSuccessDto;
-import com.commerce.core.member.vo.MemberDto;
 import com.commerce.core.member.vo.MyPageInfoDto;
 import com.commerce.core.member.vo.oauth.OAuthUserInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,19 +35,20 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행한다.")
-    public ResponseVO<Object> signup(@Valid @RequestBody MemberDto dto) {
-        memberService.createMember(dto);
+    public ResponseVO<Object> signup(@Valid @RequestBody MemberRequest dto) {
+        memberService.createMember(dto.requestToDto());
         return ResponseVO.builder()
                 .build();
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 처리한다.")
-    public ResponseVO<LoginSuccessDto> login(HttpServletResponse res,
-                                             @Valid @RequestBody LoginDto dto) {
-        LoginSuccessDto response = loginService.login(dto);
-        res.addCookie(this.createCookie(response.getRefreshToken()));
-        return ResponseVO.<LoginSuccessDto>builder()
+    public ResponseVO<LoginResponse> login(HttpServletResponse res,
+                                           @Valid @RequestBody LoginRequest dto) {
+        LoginResponse response = loginService.login(dto.requestToDto())
+                .toLoginResponse();
+        res.addCookie(this.createCookie(response.refreshToken()));
+        return ResponseVO.<LoginResponse>builder()
                 .data(response)
                 .build();
     }

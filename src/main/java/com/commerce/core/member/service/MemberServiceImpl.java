@@ -25,10 +25,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member createMember(MemberDto dto) {
         Member member = dto.dtoToEntity();
-        if (dto.getOAuthType() == null) {
-            String encPassword = passwordEncoder.encode(dto.getPassword());
-            member.setEncryptPassword(encPassword);
-        }
+
+        String encryptPassword = member.getOauthType() == null ? member.getPassword() : passwordEncoder.encode(member.getPassword());
+        member.setEncryptPassword(encryptPassword);
+
         return memberDao.save(member);
     }
 

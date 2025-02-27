@@ -31,7 +31,7 @@ public class LoginServiceImpl implements LoginService {
     @Transactional(noRollbackFor = CommerceException.class)
     @Override
     public LoginSuccessDto login(LoginDto dto) {
-        String id = dto.getId();
+        String id = dto.id();
 
         Member member = memberService.selectUseMember(id)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID));
@@ -42,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // Login Success
-        if(member.getOauthType() != null || passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
+        if(member.getOauthType() != null || passwordEncoder.matches(dto.password(), member.getPassword())) {
             log.info("Login Success");
             IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
