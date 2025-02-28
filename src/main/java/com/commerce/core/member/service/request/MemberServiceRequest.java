@@ -1,4 +1,4 @@
-package com.commerce.core.member.vo;
+package com.commerce.core.member.service.request;
 
 import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.member.domain.entity.Member;
@@ -6,7 +6,7 @@ import com.commerce.core.member.vo.oauth.OAuthType;
 import lombok.Builder;
 
 @Builder
-public record MemberDto(
+public record MemberServiceRequest(
         Long memberSeq,
         String id,
         String name,
@@ -20,7 +20,7 @@ public record MemberDto(
 
 
 
-    public Member dtoToEntity() {
+    public Member toEntity() {
         return Member.builder()
                 .id(id)
                 .memberSeq(memberSeq)

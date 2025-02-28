@@ -1,14 +1,14 @@
 package com.commerce.core.member.service;
 
-import com.commerce.core.member.vo.LoginDto;
-import com.commerce.core.member.vo.LoginSuccessDto;
+import com.commerce.core.member.service.request.LoginServiceRequest;
+import com.commerce.core.member.service.response.LoginServiceResponse;
 
 public interface LoginService {
 
     /**
      * Login
      */
-    LoginSuccessDto login(LoginDto dto);
+    LoginServiceResponse login(LoginServiceRequest request);
 
     /**
      * Token ReIssue

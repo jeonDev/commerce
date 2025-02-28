@@ -1,6 +1,6 @@
 package com.commerce.core.member.domain.repository;
 
-import com.commerce.core.member.domain.dto.MemberInfoDAO;
+import com.commerce.core.member.domain.dto.MemberInfoDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,8 @@ public class MemberDslRepository {
 
     private final JPAQueryFactory dsl;
 
-    public MemberInfoDAO selectMemberInfo(Long memberSeq) {
-        return dsl.select(Projections.bean(MemberInfoDAO.class,
+    public MemberInfoDto selectMemberInfo(Long memberSeq) {
+        return dsl.select(Projections.bean(MemberInfoDto.class,
                                 member.memberSeq,
                                 member.id,
                                 member.name,

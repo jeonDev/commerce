@@ -3,7 +3,7 @@ package com.commerce.core.member.domain.entity;
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.common.config.security.vo.Authority;
 import com.commerce.core.common.utils.DateUtils;
-import com.commerce.core.member.vo.MyPageInfoDto;
+import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
 import com.commerce.core.member.vo.oauth.OAuthType;
 import com.commerce.core.point.domain.entity.MemberPoint;
 import jakarta.persistence.*;
@@ -83,11 +83,12 @@ public class Member extends BaseEntity {
         this.lastLoginDttm = DateUtils.getNowDate("yyyyMMdd");
     }
 
-    public void updateMyPageInfo(MyPageInfoDto dto) {
-        this.name = dto.getName();
-        this.tel = dto.getTel();
-        this.addr = dto.getAddr();
-        this.addrDetail = dto.getAddrDetail();
-        this.zipCode = dto.getZipCode();
+    public Member updateMyPageInfo(MemberUpdateServiceRequest request) {
+        this.name = request.name();
+        this.tel = request.tel();
+        this.addr = request.addr();
+        this.addrDetail = request.addrDetail();
+        this.zipCode = request.zipCode();
+        return this;
     }
 }

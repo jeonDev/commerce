@@ -3,8 +3,8 @@ package com.commerce.core.member.service;
 import com.commerce.core.common.config.security.IdentifierProvider;
 import com.commerce.core.common.service.CacheService;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.vo.LoginDto;
-import com.commerce.core.member.vo.LoginSuccessDto;
+import com.commerce.core.member.service.request.LoginServiceRequest;
+import com.commerce.core.member.service.response.LoginServiceResponse;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +47,7 @@ class LoginServiceTest {
     @DisplayName("로그인 성공")
     void 로그인_성공() {
         // given
-        LoginDto dto = LoginDto.builder()
+        LoginServiceRequest dto = LoginServiceRequest.builder()
                 .id("test")
                 .password("1234")
                 .build();
@@ -66,11 +66,11 @@ class LoginServiceTest {
                         .thenReturn("token");
 
         // when
-        LoginSuccessDto login = loginService.login(dto);
+        LoginServiceResponse login = loginService.login(dto);
 
         // then
-        assertThat(login.getAccessToken()).isEqualTo("token");
-        assertThat(login.getId()).isEqualTo("test");
+        assertThat(login.accessToken()).isEqualTo("token");
+        assertThat(login.id()).isEqualTo("test");
     }
 
     @Test

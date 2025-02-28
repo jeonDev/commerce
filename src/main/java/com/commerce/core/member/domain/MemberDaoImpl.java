@@ -1,6 +1,6 @@
 package com.commerce.core.member.domain;
 
-import com.commerce.core.member.domain.dto.MemberInfoDAO;
+import com.commerce.core.member.domain.dto.MemberInfoDto;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.domain.repository.MemberDslRepository;
 import com.commerce.core.member.domain.repository.MemberRepository;
@@ -41,7 +41,7 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public MemberInfoDAO selectMemberInfo(Long memberSeq) {
+    public MemberInfoDto selectMemberInfo(Long memberSeq) {
         return memberDslRepository.selectMemberInfo(memberSeq);
     }
 }

@@ -1,19 +1,20 @@
 package com.commerce.core.member.service;
 
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.vo.MemberDto;
-import com.commerce.core.member.vo.MyPageInfoDto;
+import com.commerce.core.member.service.request.MemberServiceRequest;
+import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
+import com.commerce.core.member.service.response.MyPageInfoServiceResponse;
 
 import java.util.Optional;
 
 public interface MemberService {
 
-    Member createMember(MemberDto dto);
+    Member createMember(MemberServiceRequest request);
     Optional<Member> selectMember(Long memberSeq);
     Optional<Member> selectUseMember(Long memberSeq);
     Optional<Member> selectUseMember(String id);
     Member save(Member member);
-    MyPageInfoDto selectMyInfo(Long memberSeq);
-    void updateUserInfo(MyPageInfoDto myPageInfoDto, Long memberSeq);
+    MyPageInfoServiceResponse selectMyInfo(Long memberSeq);
+    void updateMember(MemberUpdateServiceRequest request, Long memberSeq);
 
 }

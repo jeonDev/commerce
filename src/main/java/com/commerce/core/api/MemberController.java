@@ -2,7 +2,9 @@ package com.commerce.core.api;
 
 import com.commerce.core.api.request.LoginRequest;
 import com.commerce.core.api.request.MemberRequest;
+import com.commerce.core.api.request.MemberUpdateRequest;
 import com.commerce.core.api.response.LoginResponse;
+import com.commerce.core.api.response.MyInfoResponse;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.utils.SessionUtils;
@@ -10,8 +12,7 @@ import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.member.service.OAuthService;
-import com.commerce.core.member.vo.LoginSuccessDto;
-import com.commerce.core.member.vo.MyPageInfoDto;
+import com.commerce.core.member.service.response.LoginServiceResponse;
 import com.commerce.core.member.vo.oauth.OAuthUserInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,8 +36,8 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행한다.")
-    public ResponseVO<Object> signup(@Valid @RequestBody MemberRequest dto) {
-        memberService.createMember(dto.requestToDto());
+    public ResponseVO<Object> signup(@Valid @RequestBody MemberRequest request) {
+        memberService.createMember(request.toRequest());
         return ResponseVO.builder()
                 .build();
     }
@@ -44,8 +45,8 @@ public class MemberController {
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 처리한다.")
     public ResponseVO<LoginResponse> login(HttpServletResponse res,
-                                           @Valid @RequestBody LoginRequest dto) {
-        LoginResponse response = loginService.login(dto.requestToDto())
+                                           @Valid @RequestBody LoginRequest request) {
+        LoginResponse response = loginService.login(request.toRequest())
                 .toLoginResponse();
         res.addCookie(this.createCookie(response.refreshToken()));
         return ResponseVO.<LoginResponse>builder()
@@ -101,17 +102,18 @@ public class MemberController {
 
     @GetMapping("/v1/myInfo")
     @Operation(summary = "내 정보 조회", description = "개인 정보 내역 조회")
-    public ResponseVO<MyPageInfoDto> myUserInfo() {
-        MyPageInfoDto result = memberService.selectMyInfo(SessionUtils.getMemberSeq());
-        return ResponseVO.<MyPageInfoDto>builder()
-                .data(result)
+    public ResponseVO<MyInfoResponse> myUserInfo() {
+        return ResponseVO.<MyInfoResponse>builder()
+                .data(memberService.selectMyInfo(SessionUtils.getMemberSeq())
+                        .toResponse()
+                )
                 .build();
     }
 
     @PutMapping("/v1/member/update")
     @Operation(summary = "내 정보 수정", description = "개인 정보 내역 수정")
-    public ResponseVO<?> updateUserInfo(@RequestBody MyPageInfoDto myPageInfoDto) {
-        memberService.updateUserInfo(myPageInfoDto, SessionUtils.getMemberSeq());
+    public ResponseVO<?> updateUserInfo(@RequestBody MemberUpdateRequest request) {
+        memberService.updateMember(request.toRequest(), SessionUtils.getMemberSeq());
         return ResponseVO.builder()
                 .build();
     }
@@ -127,12 +129,12 @@ public class MemberController {
 
     @GetMapping("/oauth/github/callback")
     @Operation(summary = "Github OAuth Login Callback")
-    public ResponseVO<LoginSuccessDto> githubCallback(HttpServletResponse res,
-                                                      @RequestParam("code") String code) {
-        LoginSuccessDto response = oAuthService.getAccessToken("GITHUB", code);
-        res.addCookie(this.createCookie(response.getRefreshToken()));
+    public ResponseVO<LoginServiceResponse> githubCallback(HttpServletResponse res,
+                                                           @RequestParam("code") String code) {
+        LoginServiceResponse response = oAuthService.getAccessToken("GITHUB", code);
+        res.addCookie(this.createCookie(response.refreshToken()));
 
-        return ResponseVO.<LoginSuccessDto>builder()
+        return ResponseVO.<LoginServiceResponse>builder()
                 .data(response)
                 .build();
     }

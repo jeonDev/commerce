@@ -5,15 +5,13 @@ import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.properties.GithubKeyProperties;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.domain.repository.MemberRepository;
-import com.commerce.core.member.vo.LoginDto;
-import com.commerce.core.member.vo.LoginSuccessDto;
-import com.commerce.core.member.vo.MemberDto;
+import com.commerce.core.member.service.request.LoginServiceRequest;
+import com.commerce.core.member.service.response.LoginServiceResponse;
+import com.commerce.core.member.service.request.MemberServiceRequest;
 import com.commerce.core.member.vo.oauth.*;
 import com.commerce.core.request.OAuthApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -50,7 +48,7 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public LoginSuccessDto getAccessToken(String type, String code) {
+    public LoginServiceResponse getAccessToken(String type, String code) {
         OAuthType oAuthType = OAuthType.valueOf(type);
         String id = null;
         String name = null;
@@ -70,20 +68,20 @@ public class OAuthServiceImpl implements OAuthService {
         Member member = memberRepository.findByIdAndOauthType(id, oAuthType)
                 .orElse(this.oauthCreateMember(id, name, oAuthType));
 
-        LoginDto loginDto = LoginDto.builder()
+        LoginServiceRequest request = LoginServiceRequest.builder()
                 .id(member.getId())
                 .build();
 
-        return loginService.login(loginDto);
+        return loginService.login(request);
     }
 
     private Member oauthCreateMember(String id, String name, OAuthType oAuthType) {
-        MemberDto memberDto = MemberDto.builder()
+        MemberServiceRequest request = MemberServiceRequest.builder()
                 .id(id)
                 .name(name)
                 .oAuthType(oAuthType)
                 .build();
-        return memberService.createMember(memberDto);
+        return memberService.createMember(request);
     }
 
     @Override

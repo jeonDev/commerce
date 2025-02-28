@@ -1,6 +1,6 @@
 package com.commerce.core.member.domain;
 
-import com.commerce.core.member.domain.dto.MemberInfoDAO;
+import com.commerce.core.member.domain.dto.MemberInfoDto;
 import com.commerce.core.member.domain.entity.Member;
 
 import java.util.Optional;
@@ -13,5 +13,5 @@ public interface MemberDao {
 
     Optional<Member> findByUsingId(String id);
 
-    MemberInfoDAO selectMemberInfo(Long memberSeq);
+    MemberInfoDto selectMemberInfo(Long memberSeq);
 }

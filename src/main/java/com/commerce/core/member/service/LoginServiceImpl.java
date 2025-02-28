@@ -8,8 +8,8 @@ import com.commerce.core.common.config.security.vo.IdentificationGenerateVO;
 import com.commerce.core.common.config.security.vo.JwtIdentificationGenerateVO;
 import com.commerce.core.common.config.security.vo.JwtToken;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.vo.LoginDto;
-import com.commerce.core.member.vo.LoginSuccessDto;
+import com.commerce.core.member.service.request.LoginServiceRequest;
+import com.commerce.core.member.service.response.LoginServiceResponse;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +30,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Transactional(noRollbackFor = CommerceException.class)
     @Override
-    public LoginSuccessDto login(LoginDto dto) {
-        String id = dto.id();
+    public LoginServiceResponse login(LoginServiceRequest request) {
+        String id = request.id();
 
         Member member = memberService.selectUseMember(id)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID));
@@ -42,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // Login Success
-        if(member.getOauthType() != null || passwordEncoder.matches(dto.password(), member.getPassword())) {
+        if(member.getOauthType() != null || passwordEncoder.matches(request.password(), member.getPassword())) {
             log.info("Login Success");
             IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
@@ -58,7 +58,7 @@ public class LoginServiceImpl implements LoginService {
 
             redisService.setCache(accessToken, refreshToken);
 
-            LoginSuccessDto login = LoginSuccessDto.builder()
+            LoginServiceResponse login = LoginServiceResponse.builder()
                     .id(member.getId())
                     .name(member.getName())
                     .tel(member.getTel())

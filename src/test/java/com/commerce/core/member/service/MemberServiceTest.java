@@ -2,7 +2,7 @@ package com.commerce.core.member.service;
 
 import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.vo.MemberDto;
+import com.commerce.core.member.service.request.MemberServiceRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class MemberServiceTest {
     @DisplayName("고객정보생성")
     void 고객정보생성_성공() {
         // given
-        MemberDto memberDto = MemberDto.builder()
+        MemberServiceRequest memberDto = MemberServiceRequest.builder()
                 .id("new-id")
                 .password("1234")
                 .addr("주소")
@@ -45,7 +45,7 @@ class MemberServiceTest {
                 .thenReturn("9999");
 
         Mockito.when(memberDao.save(Mockito.any()))
-                .thenReturn(memberDto.dtoToEntity());
+                .thenReturn(memberDto.toEntity());
 
         // when
         Member member = memberService.createMember(memberDto);

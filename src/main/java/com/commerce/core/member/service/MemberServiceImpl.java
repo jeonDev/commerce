@@ -2,9 +2,9 @@ package com.commerce.core.member.service;
 
 import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.domain.dto.MemberInfoDAO;
-import com.commerce.core.member.vo.MemberDto;
-import com.commerce.core.member.vo.MyPageInfoDto;
+import com.commerce.core.member.service.request.MemberServiceRequest;
+import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
+import com.commerce.core.member.service.response.MyPageInfoServiceResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,8 +23,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public Member createMember(MemberDto dto) {
-        Member member = dto.dtoToEntity();
+    public Member createMember(MemberServiceRequest request) {
+        Member member = request.toEntity();
 
         String encryptPassword = member.getOauthType() == null ? member.getPassword() : passwordEncoder.encode(member.getPassword());
         member.setEncryptPassword(encryptPassword);
@@ -58,25 +58,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional(readOnly = true)
     @Override
-    public MyPageInfoDto selectMyInfo(Long memberSeq) {
-        MemberInfoDAO dao = memberDao.selectMemberInfo(memberSeq);
-        return MyPageInfoDto.builder()
-                .id(dao.getId())
-                .name(dao.getName())
-                .tel(dao.getTel())
-                .addr(dao.getAddr())
-                .addrDetail(dao.getAddrDetail())
-                .zipCode(dao.getZipCode())
-                .point(dao.getPoint())
-                .build();
+    public MyPageInfoServiceResponse selectMyInfo(Long memberSeq) {
+        return memberDao.selectMemberInfo(memberSeq)
+                .toResponse();
     }
 
     @Transactional
     @Override
-    public void updateUserInfo(MyPageInfoDto myPageInfoDto, Long memberSeq) {
-        Member member = this.selectMember(memberSeq)
-                .orElseThrow();
-        member.updateMyPageInfo(myPageInfoDto);
-        memberDao.save(member);
+    public void updateMember(MemberUpdateServiceRequest request, Long memberSeq) {
+        memberDao.save(this.selectMember(memberSeq)
+                .orElseThrow()
+                .updateMyPageInfo(request)
+        );
     }
 }
