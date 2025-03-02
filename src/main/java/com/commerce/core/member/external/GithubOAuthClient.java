@@ -1,4 +1,4 @@
-package com.commerce.core.request;
+package com.commerce.core.member.external;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

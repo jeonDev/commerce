@@ -1,4 +1,4 @@
-package com.commerce.core.request;
+package com.commerce.core.member.external;
 
 public interface OAuthApiClient {
 

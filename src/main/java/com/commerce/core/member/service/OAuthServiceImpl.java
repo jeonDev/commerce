@@ -9,7 +9,7 @@ import com.commerce.core.member.service.request.LoginServiceRequest;
 import com.commerce.core.member.service.response.LoginServiceResponse;
 import com.commerce.core.member.service.request.MemberServiceRequest;
 import com.commerce.core.member.vo.oauth.*;
-import com.commerce.core.request.OAuthApiClient;
+import com.commerce.core.member.external.OAuthApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
