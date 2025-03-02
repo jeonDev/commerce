@@ -1,7 +1,7 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.product.domain.entity.ProductStock;
-import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.vo.ProductStockSummary;
 
 import java.util.Optional;
@@ -10,7 +10,7 @@ public interface ProductStockService {
 
     Long STOCK_SOLD_OUT_COUNT = 0L;
 
-    ProductStock productStockAdjustment(ProductStockDto dto);
+    ProductStock productStockAdjustment(ProductStockServiceRequest request);
 
     Optional<ProductStock> selectProductStock(Long productSeq);
 

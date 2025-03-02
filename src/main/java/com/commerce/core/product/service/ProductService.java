@@ -2,15 +2,15 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
-import com.commerce.core.product.vo.ProductDto;
-import com.commerce.core.product.vo.ProductResDto;
+import com.commerce.core.product.service.request.ProductServiceRequest;
+import com.commerce.core.product.service.response.ProductServiceResponse;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
 
-    ProductResDto add(ProductDto dto);
+    ProductServiceResponse add(ProductServiceRequest request);
 
     Optional<Product> selectProduct(Long productSeq);
 
@@ -19,7 +19,7 @@ public interface ProductService {
     /**
      * Product Info Add
      */
-    ProductInfo productInfoAdd(ProductDto dto);
+    ProductInfo productInfoAdd(ProductServiceRequest request);
 
     /**
      * Select Product Info

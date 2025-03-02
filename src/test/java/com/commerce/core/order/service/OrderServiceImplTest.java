@@ -11,7 +11,7 @@ import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.service.ProductStockService;
-import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +58,7 @@ class OrderServiceImplTest {
                 .thenReturn(Optional.ofNullable(Member.builder()
                         .memberSeq(1L)
                         .build()));
-        Mockito.when(productStockService.productStockAdjustment(Mockito.any(ProductStockDto.class)))
+        Mockito.when(productStockService.productStockAdjustment(Mockito.any(ProductStockServiceRequest.class)))
                 .thenReturn(ProductStock.builder()
                         .product(Product.builder()
                                 .productSeq(1L)

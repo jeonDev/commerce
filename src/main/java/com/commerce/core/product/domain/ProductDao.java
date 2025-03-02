@@ -20,7 +20,7 @@ public interface ProductDao {
 
     ProductInfo productInfoSave(ProductInfo productInfo);
 
-    Optional<ProductInfo> productInfoFindById(Long productInfoSeq);
+    Optional<ProductInfo> findProductInfoById(Long productInfoSeq);
 
     void productViewSave(ProductView item);
 

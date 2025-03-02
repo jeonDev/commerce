@@ -17,7 +17,7 @@ import com.commerce.core.order.vo.*;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.ProductStockService;
-import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,13 +104,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Product productStockConsume(BuyProduct item) {
-        ProductStockDto stock = ProductStockDto.builder()
+        ProductStockServiceRequest request = ProductStockServiceRequest.builder()
                 .productSeq(item.getProductSeq())
                 .stock(item.getCnt())
                 .productStockProcessStatus(ProductStockProcessStatus.CONSUME)
                 .build();
 
-        return productStockService.productStockAdjustment(stock).getProduct();
+        return productStockService.productStockAdjustment(request).getProduct();
     }
 
     @Transactional(readOnly = true)

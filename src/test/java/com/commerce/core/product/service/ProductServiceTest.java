@@ -3,8 +3,8 @@ package com.commerce.core.product.service;
 import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.entity.ProductInfo;
-import com.commerce.core.product.vo.ProductDto;
-import com.commerce.core.product.vo.ProductResDto;
+import com.commerce.core.product.service.request.ProductServiceRequest;
+import com.commerce.core.product.service.response.ProductServiceResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,24 +38,25 @@ class ProductServiceTest {
     @DisplayName("상품정보등록")
     void 상품정보등록_성공() {
         // given
-        ProductDto productDto = new ProductDto();
-        productDto.setProductInfoSeq(1L);
-        productDto.setProductOptions(List.of("A", "B"));
-        productDto.setProductDetail("productDetail");
-        productDto.setProductName("productName");
-        productDto.setPrice(1000L);
+        ProductServiceRequest productDto = ProductServiceRequest.builder()
+                .productInfoSeq(1L)
+                .productOptions(List.of("A", "B"))
+                .productDetail("productDetail")
+                .productName("productName")
+                .price(1000L)
+                .build();
 
-        ProductInfo productInfo = productDto.dtoToEntity();
-        Mockito.when(productDao.productInfoFindById(Mockito.any()))
+        ProductInfo productInfo = productDto.requestToEntity();
+        Mockito.when(productDao.findProductInfoById(Mockito.any()))
                 .thenReturn(Optional.of(productInfo));
 
         // when
-        ProductResDto result = productService.add(productDto);
+        ProductServiceResponse result = productService.add(productDto);
 
         // then
-        assertThat(result.getPrice()).isEqualTo(productDto.getPrice());
-        assertThat(result.getProductName()).isEqualTo(productDto.getProductName());
-        assertThat(result.getProductDetail()).isEqualTo(productDto.getProductDetail());
-        assertThat(result.getProductInfoSeq()).isEqualTo(productDto.getProductInfoSeq());
+        assertThat(result.price()).isEqualTo(productDto.price());
+        assertThat(result.productName()).isEqualTo(productDto.productName());
+        assertThat(result.productDetail()).isEqualTo(productDto.productDetail());
+        assertThat(result.productInfoSeq()).isEqualTo(productDto.productInfoSeq());
     }
 }

@@ -55,7 +55,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Optional<ProductInfo> productInfoFindById(Long productInfoSeq) {
+    public Optional<ProductInfo> findProductInfoById(Long productInfoSeq) {
         return productInfoRepository.findById(productInfoSeq);
     }
 

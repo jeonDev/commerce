@@ -4,14 +4,11 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
-import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
-import com.commerce.core.product.domain.repository.ProductStockHistoryRepository;
-import com.commerce.core.product.domain.repository.ProductStockRepository;
-import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
 import com.commerce.core.product.vo.ProductViewDto;
 import com.commerce.core.product.vo.ProductViewStatus;
@@ -33,19 +30,19 @@ public class ProductStockServiceImpl implements ProductStockService {
 
     @Transactional
     @Override
-    public ProductStock productStockAdjustment(ProductStockDto dto) {
+    public ProductStock productStockAdjustment(ProductStockServiceRequest request) {
         // 1. Product Exists Check
-        Product product = productService.selectProduct(dto.getProductSeq())
+        Product product = productService.selectProduct(request.productSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Product Stock Adjustment
-        final boolean isConsume = dto.getProductStockProcessStatus() == ProductStockProcessStatus.CONSUME;
-        final Long stock = Math.abs(dto.getStock()) * (isConsume ? -1 : 1);
+        final boolean isConsume = request.productStockProcessStatus() == ProductStockProcessStatus.CONSUME;
+        final Long stock = Math.abs(request.stock()) * (isConsume ? -1 : 1);
 
         ProductStock productStock = this.stockAdjustmentProcess(product, isConsume, stock);
 
         productStockDao.save(productStock);
-        ProductStockHistory productStockHistory = productStock.generateHistoryEntity(stock, dto.getProductStockProcessStatus());
+        ProductStockHistory productStockHistory = productStock.generateHistoryEntity(stock, request.productStockProcessStatus());
         productStockDao.productStockHistorySave(productStockHistory);
 
         // 3. Event Send(Product View Mongo DB)

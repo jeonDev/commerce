@@ -6,7 +6,7 @@ import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
-import com.commerce.core.product.vo.ProductStockDto;
+import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,10 +43,11 @@ class ProductStockServiceTest {
     @DisplayName("상품재고 추가")
     void 상품재고추가_성공() {
         // given
-        ProductStockDto productStockDto = new ProductStockDto();
-        productStockDto.setProductSeq(1L);
-        productStockDto.setStock(1L);
-        productStockDto.setProductStockProcessStatus(ProductStockProcessStatus.ADD);
+        ProductStockServiceRequest productStockRequest = ProductStockServiceRequest.builder()
+                .productSeq(1L)
+                .stock(1L)
+                .productStockProcessStatus(ProductStockProcessStatus.ADD)
+                .build();
 
         ProductInfo productInfo = ProductInfo.builder()
                 .productInfoSeq(1L)
@@ -69,7 +70,7 @@ class ProductStockServiceTest {
         Mockito.doNothing().when(eventSender).send(Mockito.any(EventTopic.class), Mockito.any());
 
         // when
-        ProductStock result = productStockService.productStockAdjustment(productStockDto);
+        ProductStock result = productStockService.productStockAdjustment(productStockRequest);
 
         // then
         assertThat(result.getStock()).isEqualTo(2L);
