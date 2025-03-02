@@ -13,6 +13,8 @@ import com.commerce.core.member.external.OAuthApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class OAuthServiceImpl implements OAuthService {
@@ -65,8 +67,10 @@ public class OAuthServiceImpl implements OAuthService {
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }
 
-        Member member = memberRepository.findByIdAndOauthType(id, oAuthType)
-                .orElse(this.oauthCreateMember(id, name, oAuthType));
+        Optional<Member> optionalMember = memberRepository.findByIdAndOauthType(id, oAuthType);
+        Member member = optionalMember.isPresent()
+                ? optionalMember.get()
+                : this.oauthCreateMember(id, name, oAuthType);
 
         LoginServiceRequest request = LoginServiceRequest.builder()
                 .id(member.getId())

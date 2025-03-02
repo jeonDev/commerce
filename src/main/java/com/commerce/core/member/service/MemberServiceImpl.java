@@ -26,7 +26,7 @@ public class MemberServiceImpl implements MemberService {
     public Member createMember(MemberServiceRequest request) {
         Member member = request.toEntity();
 
-        String encryptPassword = member.getOauthType() == null ? member.getPassword() : passwordEncoder.encode(member.getPassword());
+        String encryptPassword = member.getOauthType() != null ? member.getPassword() : passwordEncoder.encode(member.getPassword());
         member.setEncryptPassword(encryptPassword);
 
         return memberDao.save(member);
