@@ -14,8 +14,12 @@ public record ProductRegisterRequest(
         List<String> productOptions
 ) {
     public ProductServiceRequest toRequest() {
-
         return ProductServiceRequest.builder()
+                .productInfoSeq(productInfoSeq)
+                .productName(productName)
+                .productDetail(productDetail)
+                .price(price)
+                .productOptions(productOptions)
                 .build();
     }
 }
