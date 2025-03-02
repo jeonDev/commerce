@@ -12,7 +12,6 @@ import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.member.service.LoginService;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.member.service.OAuthService;
-import com.commerce.core.member.service.response.LoginServiceResponse;
 import com.commerce.core.member.vo.oauth.OAuthUserInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -129,12 +128,12 @@ public class MemberController {
 
     @GetMapping("/oauth/github/callback")
     @Operation(summary = "Github OAuth Login Callback")
-    public ResponseVO<LoginServiceResponse> githubCallback(HttpServletResponse res,
+    public ResponseVO<LoginResponse> githubCallback(HttpServletResponse res,
                                                            @RequestParam("code") String code) {
-        LoginServiceResponse response = oAuthService.getAccessToken("GITHUB", code);
+        LoginResponse response = oAuthService.getAccessToken("GITHUB", code).toLoginResponse();
         res.addCookie(this.createCookie(response.refreshToken()));
 
-        return ResponseVO.<LoginServiceResponse>builder()
+        return ResponseVO.<LoginResponse>builder()
                 .data(response)
                 .build();
     }

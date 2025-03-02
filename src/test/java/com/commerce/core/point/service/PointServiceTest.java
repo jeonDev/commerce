@@ -4,9 +4,8 @@ import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.point.domain.PointDao;
 import com.commerce.core.point.domain.entity.MemberPoint;
-import com.commerce.core.point.domain.repository.PointHistoryRepository;
-import com.commerce.core.point.domain.repository.PointRepository;
-import com.commerce.core.point.vo.PointDto;
+import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
+import com.commerce.core.point.service.response.PointAdjustmentServiceResponse;
 import com.commerce.core.point.vo.PointProcessStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +44,7 @@ class PointServiceTest {
     @DisplayName("포인트 충전")
     void 포인트_충전_성공() {
         // given
-        PointDto pointDto = PointDto.builder()
+        PointAdjustmentServiceRequest request = PointAdjustmentServiceRequest.builder()
                 .memberSeq(1L)
                 .point(100L)
                 .pointProcessStatus(PointProcessStatus.CHARGE)
@@ -58,16 +57,16 @@ class PointServiceTest {
         Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
                 .thenReturn(Optional.of(point));
         // when
-        PointDto result = pointService.pointAdjustment(pointDto);
+        PointAdjustmentServiceResponse result = pointService.pointAdjustment(request);
         // then
-        assertThat(result.getBalancePoint()).isEqualTo(10100L);
+        assertThat(result.balancePoint()).isEqualTo(10100L);
     }
 
     @Test
     @DisplayName("포인트 차감")
     void 포인트_차감_성공() {
         // given
-        PointDto pointDto = PointDto.builder()
+        PointAdjustmentServiceRequest request = PointAdjustmentServiceRequest.builder()
                 .memberSeq(1L)
                 .point(100L)
                 .pointProcessStatus(PointProcessStatus.PAYMENT)
@@ -81,16 +80,16 @@ class PointServiceTest {
                 .thenReturn(Optional.of(point));
 
         // when
-        PointDto result = pointService.pointAdjustment(pointDto);
+        PointAdjustmentServiceResponse result = pointService.pointAdjustment(request);
         // then
-        assertThat(result.getBalancePoint()).isEqualTo(9900L);
+        assertThat(result.balancePoint()).isEqualTo(9900L);
     }
 
     @Test
     @DisplayName("포인트정보 없을 시, 충전")
     void 포인트_충전_empty_성공() {
         // given
-        PointDto pointDto = PointDto.builder()
+        PointAdjustmentServiceRequest request = PointAdjustmentServiceRequest.builder()
                 .memberSeq(1L)
                 .point(100L)
                 .pointProcessStatus(PointProcessStatus.CHARGE)
@@ -99,8 +98,8 @@ class PointServiceTest {
         Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
                 .thenReturn(Optional.ofNullable(null));
         // when
-        PointDto result = pointService.pointAdjustment(pointDto);
+        PointAdjustmentServiceResponse result = pointService.pointAdjustment(request);
         // then
-        assertThat(result.getBalancePoint()).isEqualTo(100L);
+        assertThat(result.balancePoint()).isEqualTo(100L);
     }
 }

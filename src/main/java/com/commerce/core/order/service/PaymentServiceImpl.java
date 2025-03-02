@@ -13,7 +13,7 @@ import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.order.service.request.PaymentServiceRequest;
 import com.commerce.core.order.vo.*;
 import com.commerce.core.point.service.PointService;
-import com.commerce.core.point.vo.PointDto;
+import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
 import com.commerce.core.point.vo.PointProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,12 +49,12 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         // 3. Payment (Point Withdraw)
-        PointDto pointDto = PointDto.builder()
+        PointAdjustmentServiceRequest pointAdjustmentRequest = PointAdjustmentServiceRequest.builder()
                 .memberSeq(request.memberSeq())
                 .point(payAmount)
                 .pointProcessStatus(PointProcessStatus.PAYMENT)
                 .build();
-        pointService.pointAdjustment(pointDto);
+        pointService.pointAdjustment(pointAdjustmentRequest);
 
         // 4. Payment Success Save
         orderDetails.forEach(this::paymentAmountBeforeProcess);
