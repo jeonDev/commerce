@@ -2,16 +2,19 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.product.domain.entity.mongo.ProductView;
+import com.commerce.core.product.service.request.ProductViewServiceRequest;
+import com.commerce.core.product.service.response.ProductDetailServiceResponse;
+import com.commerce.core.product.service.response.ProductOrderServiceResponse;
 import com.commerce.core.product.vo.*;
 
 import java.util.Optional;
 
 public interface ProductViewService {
 
-    void merge(ProductViewDto dto);
+    void merge(ProductViewServiceRequest request);
     Optional<ProductView> selectProductViewForProductDetail(Long productDetailSeq);
-    ProductDetailDto selectProductViewDetail(Long productInfoSeq);
-    ProductOrderDto selectProductView(Long productSeq);
+    ProductDetailServiceResponse selectProductViewDetail(Long productInfoSeq);
+    ProductOrderServiceResponse selectProductView(Long productSeq);
     PageListVO<ProductViewResDto> selectProductViewList(int pageNumber, int pageSize);
     PageListVO<AdminProductListResDto> selectProductList(int pageNumber, int pageSize);
 }

@@ -9,7 +9,7 @@ import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.request.ProductServiceRequest;
 import com.commerce.core.product.service.response.ProductServiceResponse;
-import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.service.request.ProductViewServiceRequest;
 import com.commerce.core.product.vo.ProductViewStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
         productDao.saveAll(list);
 
         // 3. Event Producer Push
-        ProductViewDto productViewDto = ProductViewDto.builder()
+        ProductViewServiceRequest productViewDto = ProductViewServiceRequest.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())
                 .productViewStatus(ProductViewStatus.REGISTER)
                 .build();

@@ -2,12 +2,13 @@ package com.commerce.core.api;
 
 import com.commerce.core.api.request.ProductRegisterRequest;
 import com.commerce.core.api.request.ProductStockRequest;
+import com.commerce.core.api.response.ProductInfoResponse;
+import com.commerce.core.api.response.ProductOrderResponse;
 import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.product.service.ProductService;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.ProductViewService;
-import com.commerce.core.product.service.request.ProductServiceRequest;
 import com.commerce.core.product.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,17 +38,17 @@ public class ProductController {
 
     @GetMapping("/v2/productInfo/{productInfoSeq}")
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
-    public ResponseVO<ProductDetailDto> productDetailList(@PathVariable("productInfoSeq") String productInfoSeq) {
-        return ResponseVO.<ProductDetailDto>builder()
-                .data(productViewService.selectProductViewDetail(Long.valueOf(productInfoSeq)))
+    public ResponseVO<ProductInfoResponse> productDetailList(@PathVariable("productInfoSeq") String productInfoSeq) {
+        return ResponseVO.<ProductInfoResponse>builder()
+                .data(productViewService.selectProductViewDetail(Long.valueOf(productInfoSeq)).toResponse())
                 .build();
     }
 
     @GetMapping("/v2/product/{productSeq}")
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
-    public ResponseVO<ProductOrderDto> productList(@PathVariable("productSeq") String productSeq) {
-        return ResponseVO.<ProductOrderDto>builder()
-                .data(productViewService.selectProductView(Long.valueOf(productSeq)))
+    public ResponseVO<ProductOrderResponse> productList(@PathVariable("productSeq") String productSeq) {
+        return ResponseVO.<ProductOrderResponse>builder()
+                .data(productViewService.selectProductView(Long.valueOf(productSeq)).toResponse())
                 .build();
     }
 

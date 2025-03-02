@@ -10,7 +10,7 @@ import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.vo.ProductStockProcessStatus;
-import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.service.request.ProductViewServiceRequest;
 import com.commerce.core.product.vo.ProductViewStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +86,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 
         if (!isEventSend) return;
 
-        ProductViewDto productViewDto = ProductViewDto.builder()
+        ProductViewServiceRequest productViewDto = ProductViewServiceRequest.builder()
                 .productInfoSeq(productInfoSeq)
                 .productViewStatus(ProductViewStatus.STOCK_ADJUSTMENT)
                 .build();

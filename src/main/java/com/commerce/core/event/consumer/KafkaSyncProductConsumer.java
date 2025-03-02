@@ -1,7 +1,7 @@
 package com.commerce.core.event.consumer;
 
 import com.commerce.core.product.service.ProductViewService;
-import com.commerce.core.product.vo.ProductViewDto;
+import com.commerce.core.product.service.request.ProductViewServiceRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Profile("basic")
-public class KafkaSyncProductConsumer extends AbstractEventConsumer<ProductViewDto>  {
+public class KafkaSyncProductConsumer extends AbstractEventConsumer<ProductViewServiceRequest>  {
 
     private final static String TOPIC_NAME = "sync-product";
     private final static String GROUP_ID = "group_1";
@@ -26,12 +26,12 @@ public class KafkaSyncProductConsumer extends AbstractEventConsumer<ProductViewD
     @KafkaListener(topics = TOPIC_NAME, groupId = GROUP_ID)
     @Override
     public void listener(Object data) {
-        eventExecuteTemplate(data, ProductViewDto.class);
+        eventExecuteTemplate(data, ProductViewServiceRequest.class);
     }
 
     @Override
-    public void eventProcess(ProductViewDto data) {
-        log.info(data.toString());
-        productViewService.merge(data);
+    public void eventProcess(ProductViewServiceRequest request) {
+        log.info(request.toString());
+        productViewService.merge(request);
     }
 }

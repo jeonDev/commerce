@@ -7,6 +7,9 @@ import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.mongo.ProductView;
 import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
+import com.commerce.core.product.service.request.ProductViewServiceRequest;
+import com.commerce.core.product.service.response.ProductDetailServiceResponse;
+import com.commerce.core.product.service.response.ProductOrderServiceResponse;
 import com.commerce.core.product.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,15 +34,15 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Transactional
     @Override
-    public void merge(ProductViewDto dto) {
-        log.info("Event Request : {} {} ", dto.getProductInfoSeq(), dto.getProductViewStatus());
+    public void merge(ProductViewServiceRequest request) {
+        log.info("Event Request : {} {} ", request.productInfoSeq(), request.productViewStatus());
 
-        switch (dto.getProductViewStatus()) {
+        switch (request.productViewStatus()) {
             case REGISTER:
-                this.productViewUpdate(dto.getProductInfoSeq());
+                this.productViewUpdate(request.productInfoSeq());
                 break;
             case STOCK_ADJUSTMENT:
-                this.productViewStockUpdate(dto.getProductInfoSeq());
+                this.productViewStockUpdate(request.productInfoSeq());
                 break;
             default:
                 log.error("ProductViewStatus 매칭 실패");
@@ -119,7 +122,7 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Transactional(readOnly = true)
     @Override
-    public ProductDetailDto selectProductViewDetail(Long productInfoSeq) {
+    public ProductDetailServiceResponse selectProductViewDetail(Long productInfoSeq) {
         ProductInfo productInfo = productDao.selectProductDetail(productInfoSeq);
         List<ProductOptions> productOptions = productService.selectProductToProductInfo(productInfoSeq).stream()
                 .map(option -> ProductOptions.builder()
@@ -127,7 +130,7 @@ public class ProductViewServiceImpl implements ProductViewService {
                         .productOption(option.getProductOptionCode())
                         .build())
                 .toList();
-        return ProductDetailDto.builder()
+        return ProductDetailServiceResponse.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())
                 .productName(productInfo.getProductName())
                 .productDetail(productInfo.getProductDetail())
@@ -137,9 +140,9 @@ public class ProductViewServiceImpl implements ProductViewService {
     }
 
     @Override
-    public ProductOrderDto selectProductView(Long productSeq) {
+    public ProductOrderServiceResponse selectProductView(Long productSeq) {
         ProductDAO product = productDao.selectProduct(productSeq);
-        return ProductOrderDto.builder()
+        return ProductOrderServiceResponse.builder()
                 .productSeq(product.getProductSeq())
                 .productOptionCode(product.getProductOptionCode())
                 .productInfoSeq(product.getProductInfoSeq())
