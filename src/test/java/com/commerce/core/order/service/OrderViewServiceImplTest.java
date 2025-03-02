@@ -4,7 +4,7 @@ import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.vo.OrderStatus;
-import com.commerce.core.order.vo.OrderViewDto;
+import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ class OrderViewServiceImplTest {
     @Test
     @DisplayName("주문 이벤트")
     void 주문이벤트_성공() {
-        OrderViewDto orderViewDto = OrderViewDto.builder()
+        OrderViewMergeServiceRequest orderViewMergeRequest = OrderViewMergeServiceRequest.builder()
                 .orderSeq(1L)
                 .build();
 
@@ -71,6 +71,6 @@ class OrderViewServiceImplTest {
         Mockito.when(orderDao.orderViewFindByOrderSeq(Mockito.anyLong()))
                         .thenReturn(Optional.ofNullable(null));
 
-        orderViewService.merge(orderViewDto);
+        orderViewService.merge(orderViewMergeRequest);
     }
 }

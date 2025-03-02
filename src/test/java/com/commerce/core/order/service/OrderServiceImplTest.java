@@ -6,7 +6,7 @@ import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.vo.BuyProduct;
-import com.commerce.core.order.vo.OrderDto;
+import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
@@ -46,7 +46,7 @@ class OrderServiceImplTest {
     @Test
     void order() {
         BuyProduct[] buyProduct = {new BuyProduct(1L, 2L), new BuyProduct(2L, 1L)};
-        OrderDto dto = OrderDto.builder()
+        OrderServiceRequest request = OrderServiceRequest.builder()
                 .buyProducts(buyProduct)
                 .memberSeq(1L)
                 .build();
@@ -69,7 +69,7 @@ class OrderServiceImplTest {
                         .stock(3L)
                         .build());
 
-        Orders order = orderService.order(dto);
+        Orders order = orderService.order(request);
         assertEquals(order.getOrderSeq(), 1L);
     }
 

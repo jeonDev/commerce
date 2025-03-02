@@ -1,7 +1,7 @@
 package com.commerce.core.event.consumer;
 
 import com.commerce.core.order.service.OrderViewService;
-import com.commerce.core.order.vo.OrderViewDto;
+import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Profile("basic")
-public class KafkaSyncOrderConsumer extends AbstractEventConsumer<OrderViewDto> {
+public class KafkaSyncOrderConsumer extends AbstractEventConsumer<OrderViewMergeServiceRequest> {
     private final static String TOPIC_NAME = "sync-order";
     private final static String GROUP_ID = "group_1";
 
@@ -25,12 +25,12 @@ public class KafkaSyncOrderConsumer extends AbstractEventConsumer<OrderViewDto> 
     @KafkaListener(topics = TOPIC_NAME, groupId = GROUP_ID)
     @Override
     public void listener(Object data) {
-        eventExecuteTemplate(data, OrderViewDto.class);
+        eventExecuteTemplate(data, OrderViewMergeServiceRequest.class);
     }
 
     @Override
-    public void eventProcess(OrderViewDto data) {
-        log.info(data.toString());
-        orderViewService.merge(data);
+    public void eventProcess(OrderViewMergeServiceRequest request) {
+        log.info(request.toString());
+        orderViewService.merge(request);
     }
 }

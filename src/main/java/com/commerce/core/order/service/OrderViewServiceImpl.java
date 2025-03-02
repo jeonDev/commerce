@@ -6,7 +6,7 @@ import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.mongo.OrderView;
 import com.commerce.core.order.vo.OrderDetailInfo;
 import com.commerce.core.order.vo.OrderStatus;
-import com.commerce.core.order.vo.OrderViewDto;
+import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.order.vo.OrderViewResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +30,8 @@ public class OrderViewServiceImpl implements OrderViewService {
 
     @Transactional
     @Override
-    public void merge(OrderViewDto dto) {
-        log.debug(dto.toString());
+    public void merge(OrderViewMergeServiceRequest request) {
+        log.debug(request.toString());
         // 1. Data Setting
         Long buyAmount = 0L;
         Long amount = 0L;
@@ -40,7 +40,7 @@ public class OrderViewServiceImpl implements OrderViewService {
         List<OrderDetailInfo> orderDetailInfos = new ArrayList<>();
 
         // 2. Order Detail Find
-        Long orderSeq = dto.getOrderSeq();
+        Long orderSeq = request.orderSeq();
         List<OrderDetail> orderDetails = orderService.selectOrderDetailList(orderSeq);
 
         // 3. Amount Data Setting

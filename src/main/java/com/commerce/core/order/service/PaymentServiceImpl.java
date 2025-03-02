@@ -8,6 +8,9 @@ import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.OrderDetailHistory;
 import com.commerce.core.order.domain.entity.Orders;
+import com.commerce.core.order.service.request.OrderServiceRequest;
+import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
+import com.commerce.core.order.service.request.PaymentServiceRequest;
 import com.commerce.core.order.vo.*;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.vo.PointDto;
@@ -30,9 +33,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional
     @Override
-    public Orders payment(PaymentDto dto) {
+    public Orders payment(PaymentServiceRequest request) {
         // 1. Order Detail Find
-        Long orderSeq = dto.getOrderSeq();
+        Long orderSeq = request.orderSeq();
         List<OrderDetail> orderDetails = orderDao.orderDetailListByOrderSeq(orderSeq);
 
         // 2. Payment Amount Calculator
@@ -47,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 3. Payment (Point Withdraw)
         PointDto pointDto = PointDto.builder()
-                .memberSeq(dto.getMemberSeq())
+                .memberSeq(request.memberSeq())
                 .point(payAmount)
                 .pointProcessStatus(PointProcessStatus.PAYMENT)
                 .build();
@@ -58,30 +61,30 @@ public class PaymentServiceImpl implements PaymentService {
         orderDao.orderDetailSaveAll(orderDetails);
 
         // 5. Event Send(Order View Mongo DB)
-        OrderViewDto orderViewDto = OrderViewDto.builder()
+        OrderViewMergeServiceRequest orderEventRequest = OrderViewMergeServiceRequest.builder()
                 .orderSeq(orderSeq)
                 .build();
-        eventSender.send(EventTopic.SYNC_ORDER, orderViewDto);
+        eventSender.send(EventTopic.SYNC_ORDER, orderEventRequest);
 
         return null;
     }
 
     private void paymentAmountBeforeProcess(OrderDetail item) {
         item.paymentSuccessSettingPaidAmount(item.getBuyAmount());
-        OrderDto orderDto = OrderDto.builder()
+        OrderServiceRequest orderRequest = OrderServiceRequest.builder()
                 .orderDetailSeq(item.getOrderDetailSeq())
                 .orderStatus(OrderStatus.PAYMENT_COMPLETE)
                 .build();
-        this.updateOrderStatus(orderDto);
+        this.updateOrderStatus(orderRequest);
 
         orderDao.paymentHistorySave(item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT));
     }
 
-    private OrderDetail updateOrderStatus(OrderDto dto) {
-        OrderDetail orderDetail = orderDao.orderDetailFindById(dto.getOrderDetailSeq())
+    private OrderDetail updateOrderStatus(OrderServiceRequest request) {
+        OrderDetail orderDetail = orderDao.orderDetailFindById(request.orderDetailSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        orderDetail.updateOrderStatus(dto.getOrderStatus());
+        orderDetail.updateOrderStatus(request.orderStatus());
         orderDetail = orderDao.orderDetailSave(orderDetail);
 
         OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();

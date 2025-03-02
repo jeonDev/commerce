@@ -10,6 +10,9 @@ import com.commerce.core.order.domain.entity.OrderDetailHistory;
 import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
+import com.commerce.core.order.service.request.OrderServiceRequest;
+import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
+import com.commerce.core.order.service.request.PaymentServiceRequest;
 import com.commerce.core.order.vo.*;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
@@ -40,10 +43,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public Orders order(OrderDto dto) {
-        log.debug("order : {}",dto.toString());
+    public Orders order(OrderServiceRequest request) {
+        log.debug("order : {}",request.toString());
         // 1. Member Use Check
-        Member member = memberService.selectUseMember(dto.getMemberSeq())
+        Member member = memberService.selectUseMember(request.memberSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Data Setting
@@ -54,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
                         .build());
 
         // 3. Product Stock Consume & Order Detail Setting
-        Arrays.stream(dto.getBuyProducts())
+        Arrays.stream(request.buyProducts())
                 .forEach(item -> {
                     OrderDetail orderDetail = this.productStockConsumeAndOrderDetailSetting(order, item);
                     orderDetails.add(orderDetail);
@@ -65,16 +68,16 @@ public class OrderServiceImpl implements OrderService {
         orderDao.orderDetailHistorySaveAll(orderDetailHistories);
 
         // 4. 결제 & 결제 시도 안할 시, Event Send
-        if (dto.isPayment()) {
+        if (request.payment()) {
             // 4-1. 결제
-            PaymentDto paymentDto = PaymentDto.builder()
-                    .memberSeq(dto.getMemberSeq())
+            PaymentServiceRequest paymentRequest = PaymentServiceRequest.builder()
+                    .memberSeq(request.memberSeq())
                     .orderSeq(order.getOrderSeq())
                     .build();
-            paymentService.payment(paymentDto);
+            paymentService.payment(paymentRequest);
         } else {
             // 4-2. Event Send (Order View Mongo DB)
-            OrderViewDto orderViewDto = OrderViewDto.builder()
+            OrderViewMergeServiceRequest orderViewDto = OrderViewMergeServiceRequest.builder()
                     .orderSeq(order.getOrderSeq())
                     .build();
             eventSender.send(EventTopic.SYNC_ORDER, orderViewDto);
