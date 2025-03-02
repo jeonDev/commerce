@@ -1,4 +1,4 @@
-package com.commerce.core.event.consumer;
+package com.commerce.core.event.consumer.kafka;
 
 import com.commerce.core.product.service.ProductViewService;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;

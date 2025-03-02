@@ -1,6 +1,6 @@
 package com.commerce.core.event.consumer.local;
 
-import com.commerce.core.event.consumer.AbstractEventConsumer;
+import com.commerce.core.event.consumer.kafka.AbstractEventConsumer;
 import com.commerce.core.product.service.ProductViewService;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
 import lombok.extern.slf4j.Slf4j;
