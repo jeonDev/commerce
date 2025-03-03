@@ -1,4 +1,4 @@
-package com.commerce.core.event;
+package com.commerce.core.event.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

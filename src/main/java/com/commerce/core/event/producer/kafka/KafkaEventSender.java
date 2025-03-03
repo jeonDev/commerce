@@ -1,7 +1,7 @@
 package com.commerce.core.event.producer.kafka;
 
 import com.commerce.core.common.utils.ConverterUtils;
-import com.commerce.core.event.EventTopic;
+import com.commerce.core.event.type.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

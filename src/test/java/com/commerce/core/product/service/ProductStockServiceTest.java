@@ -1,6 +1,6 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.event.EventTopic;
+import com.commerce.core.event.type.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;

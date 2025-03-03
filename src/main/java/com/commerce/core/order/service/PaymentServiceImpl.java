@@ -2,7 +2,7 @@ package com.commerce.core.order.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.event.EventTopic;
+import com.commerce.core.event.type.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
