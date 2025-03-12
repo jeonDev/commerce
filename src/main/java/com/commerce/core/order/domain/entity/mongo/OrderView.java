@@ -1,8 +1,8 @@
 package com.commerce.core.order.domain.entity.mongo;
 
+import com.commerce.core.order.service.response.OrderViewServiceResponse;
 import com.commerce.core.order.vo.OrderDetailInfo;
 import com.commerce.core.order.vo.OrderStatus;
-import com.commerce.core.order.vo.OrderViewResDto;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +39,8 @@ public class OrderView {
         this.orderStatus = orderStatus;
     }
 
-    public OrderViewResDto documentToResDto() {
-        return OrderViewResDto.builder()
+    public OrderViewServiceResponse documentToResDto() {
+        return OrderViewServiceResponse.builder()
                 .orderSeq(orderSeq)
                 .orderDetailInfos(orderDetailInfos)
                 .amount(amount)

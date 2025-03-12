@@ -8,8 +8,11 @@ import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.mongo.ProductView;
 import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
+import com.commerce.core.product.domain.dto.AdminProductListDto;
+import com.commerce.core.product.service.response.AdminProductListServiceResponse;
 import com.commerce.core.product.service.response.ProductDetailServiceResponse;
 import com.commerce.core.product.service.response.ProductOrderServiceResponse;
+import com.commerce.core.product.service.response.ProductViewServiceResponse;
 import com.commerce.core.product.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -154,10 +157,10 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageListVO<ProductViewResDto> selectProductViewList(int pageNumber, int pageSize) {
+    public PageListVO<ProductViewServiceResponse> selectProductViewList(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<ProductView> list = productDao.productViewFindAll(pageable);
-        return PageListVO.<ProductViewResDto>builder()
+        return PageListVO.<ProductViewServiceResponse>builder()
                 .list(list.getContent().stream()
                         .map(ProductView::documentToResDto)
                         .toList()
@@ -167,11 +170,14 @@ public class ProductViewServiceImpl implements ProductViewService {
     }
 
     @Override
-    public PageListVO<AdminProductListResDto> selectProductList(int pageNumber, int pageSize) {
+    public PageListVO<AdminProductListServiceResponse> selectProductList(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<AdminProductListResDto> list = productDao.selectProductList(pageable);
-        return PageListVO.<AdminProductListResDto>builder()
-                .list(list.get().toList())
+        Page<AdminProductListDto> list = productDao.selectProductList(pageable);
+        return PageListVO.<AdminProductListServiceResponse>builder()
+                .list(list.stream()
+                        .map(AdminProductListDto::toResponse)
+                        .toList()
+                )
                 .totalPage(list.getTotalPages())
                 .build();
     }

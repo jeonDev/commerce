@@ -4,10 +4,10 @@ import com.commerce.core.common.vo.PageListVO;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.mongo.OrderView;
+import com.commerce.core.order.service.response.OrderViewServiceResponse;
 import com.commerce.core.order.vo.OrderDetailInfo;
 import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
-import com.commerce.core.order.vo.OrderViewResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -76,10 +76,10 @@ public class OrderViewServiceImpl implements OrderViewService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageListVO<OrderViewResDto> selectOrderView(int pageNumber, int pageSize) {
+    public PageListVO<OrderViewServiceResponse> selectOrderView(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<OrderView> list = orderDao.orderViewFindAll(pageable);
-        return PageListVO.<OrderViewResDto>builder()
+        return PageListVO.<OrderViewServiceResponse>builder()
                 .list(list.getContent().stream()
                         .map(OrderView::documentToResDto)
                         .toList()

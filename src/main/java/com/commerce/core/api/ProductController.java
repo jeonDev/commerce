@@ -9,7 +9,9 @@ import com.commerce.core.common.vo.ResponseVO;
 import com.commerce.core.product.service.ProductService;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.ProductViewService;
-import com.commerce.core.product.vo.*;
+import com.commerce.core.product.domain.dto.AdminProductListDto;
+import com.commerce.core.product.service.response.AdminProductListServiceResponse;
+import com.commerce.core.product.service.response.ProductViewServiceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,9 +31,9 @@ public class ProductController {
 
     @GetMapping("/v2/product/view")
     @Operation(summary = "상품 목록", description = "고객에게 보여줄 상품 목록을 출력한다. (MongoDB)")
-    public ResponseVO<PageListVO<ProductViewResDto>> productViewList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
-                                                                     @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
-        return ResponseVO.<PageListVO<ProductViewResDto>>builder()
+    public ResponseVO<PageListVO<ProductViewServiceResponse>> productViewList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
+                                                                              @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
+        return ResponseVO.<PageListVO<ProductViewServiceResponse>>builder()
                 .data(productViewService.selectProductViewList(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
                 .build();
     }
@@ -69,9 +71,9 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product/list")
-    public ResponseVO<PageListVO<AdminProductListResDto>> adminProductList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
-                                          @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
-        return ResponseVO.<PageListVO<AdminProductListResDto>>builder()
+    public ResponseVO<PageListVO<AdminProductListServiceResponse>> adminProductList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
+                                                                                    @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
+        return ResponseVO.<PageListVO<AdminProductListServiceResponse>>builder()
                 .data(productViewService.selectProductList(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
                 .build();
     }

@@ -2,7 +2,7 @@ package com.commerce.core.product.domain.repository.dsl;
 
 import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
 import com.commerce.core.product.domain.entity.ProductInfo;
-import com.commerce.core.product.vo.AdminProductListResDto;
+import com.commerce.core.product.domain.dto.AdminProductListDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +44,8 @@ public class ProductDslRepository {
                 .fetchOne();
     }
 
-    public Page<AdminProductListResDto> selectProductList(Pageable pageable) {
-        List<AdminProductListResDto> content = dsl.select(Projections.bean(AdminProductListResDto.class,
+    public Page<AdminProductListDto> selectProductList(Pageable pageable) {
+        List<AdminProductListDto> content = dsl.select(Projections.bean(AdminProductListDto.class,
                         productInfo.productInfoSeq,
                         productInfo.productName,
                         productInfo.productDetail,

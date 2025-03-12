@@ -4,7 +4,7 @@ import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.mongo.ProductView;
 import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
-import com.commerce.core.product.vo.AdminProductListResDto;
+import com.commerce.core.product.domain.dto.AdminProductListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -32,5 +32,5 @@ public interface ProductDao {
 
     Page<ProductView> productViewFindAll(Pageable pageable);
 
-    Page<AdminProductListResDto> selectProductList(Pageable pageable);
+    Page<AdminProductListDto> selectProductList(Pageable pageable);
 }

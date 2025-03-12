@@ -8,7 +8,7 @@ import com.commerce.core.product.domain.repository.ProductRepository;
 import com.commerce.core.product.domain.repository.dsl.ProductDslRepository;
 import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
 import com.commerce.core.product.domain.repository.mongo.ProductViewRepository;
-import com.commerce.core.product.vo.AdminProductListResDto;
+import com.commerce.core.product.domain.dto.AdminProductListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -85,7 +85,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Page<AdminProductListResDto> selectProductList(Pageable pageable) {
+    public Page<AdminProductListDto> selectProductList(Pageable pageable) {
         return productDslRepository.selectProductList(pageable);
     }
 }
