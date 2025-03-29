@@ -33,18 +33,25 @@ public class MemberPoint extends BaseEntity {
     @Column(name = "POINT", nullable = false)
     private Long point;
 
-    public void pointChange(Long point, PointProcessStatus status) {
-        if(status == null) throw new CommerceException(ExceptionStatus.SYSTEM_ERROR);
+    public void pointAdjustment(Long point, PointProcessStatus status) {
+        if (point <= 0 || status == null) throw new CommerceException(ExceptionStatus.VALID_ERROR);
 
-        if(status == PointProcessStatus.CHARGE) {
-            this.point += point;
+        if (status == PointProcessStatus.CHARGE) {
+            this.depositPoint(point);
         } else if (status == PointProcessStatus.PAYMENT) {
-            this.point -= point;
+            this.withdrawPoint(point);
         }
+    }
 
-        if(this.point < 0) {
+    private void withdrawPoint(Long point) {
+        if(this.point - point < 0) {
             throw new CommerceException(ExceptionStatus.POINT_LACK);
         }
+        this.point -= point;
+    }
+
+    private void depositPoint(Long point) {
+        this.point += point;
     }
 
     public PointHistory generateHistoryEntity(Long point, PointProcessStatus status) {

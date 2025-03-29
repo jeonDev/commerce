@@ -5,6 +5,7 @@ import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.domain.entity.PointHistory;
 import com.commerce.core.point.domain.repository.PointHistoryRepository;
 import com.commerce.core.point.domain.repository.PointRepository;
+import com.commerce.core.point.vo.PointProcessStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -35,13 +36,13 @@ public class PointDaoImpl implements PointDao {
     }
 
     @Override
-    public PointHistory pointHistorySave(PointHistory pointHistory) {
-        return pointHistoryRepository.save(pointHistory);
+    public PointHistory pointHistorySave(MemberPoint memberPoint, Long point, PointProcessStatus pointProcessStatus) {
+        return pointHistoryRepository.save(memberPoint.generateHistoryEntity(point, pointProcessStatus));
     }
 
     @Override
-    public Page<PointHistory> findByMemberPaging(Pageable pageable, Member member) {
-        return pointHistoryRepository.findByMember(pageable, member);
+    public Page<PointHistory> findByMemberPaging(Pageable pageable, Long memberSeq) {
+        return pointHistoryRepository.findByMember_MemberSeq(pageable, memberSeq);
     }
 
     @Override

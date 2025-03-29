@@ -10,7 +10,6 @@ import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.domain.entity.PointHistory;
 import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
 import com.commerce.core.point.service.response.PointAdjustmentServiceResponse;
-import com.commerce.core.point.vo.PointProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,48 +31,41 @@ public class PointServiceImpl implements PointService {
     @Transactional
     @Override
     public PointAdjustmentServiceResponse pointAdjustment(PointAdjustmentServiceRequest request) {
+        log.info("[Point] 포인트 조정 (고객번호 : {} 조정금액 {}[{}])", request.memberSeq(), request.point(), request.pointProcessStatus());
+
         // 1. Member Use Find
         Member member = memberService.selectUseMember(request.memberSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Existing Point Find & Point Setting
-        Optional<MemberPoint> optionalPoint = pointDao.findByMember(member);
-        MemberPoint point;
-        if(optionalPoint.isPresent()) {
-            point = optionalPoint.get();
-            point.pointChange(request.point(), request.pointProcessStatus());
-        } else {
-            if(request.pointProcessStatus() == PointProcessStatus.PAYMENT) throw new CommerceException(ExceptionStatus.POINT_LACK);
+        MemberPoint memberPoint = this.getMemberPointIsNotExistsCreateMemberPoint(member);
+        memberPoint.pointAdjustment(request.point(), request.pointProcessStatus());
+        pointDao.memberPointSave(memberPoint);
 
-            point = MemberPoint.builder()
-                    .member(member)
-                    .point(request.point())
-                    .build();
-        }
-
-        // 3. Entity And History Save
-        this.entitySaveAndHistoryGenerate(point, request);
+        // 3. History Save
+        pointDao.pointHistorySave(memberPoint, request.point(), request.pointProcessStatus());
 
         return PointAdjustmentServiceResponse.builder()
                 .memberSeq(member.getMemberSeq())
                 .point(request.point())
-                .balancePoint(point.getPoint())
+                .balancePoint(memberPoint.getPoint())
                 .build();
     }
 
-    private void entitySaveAndHistoryGenerate(MemberPoint point, PointAdjustmentServiceRequest request) {
-        pointDao.memberPointSave(point);
-        pointDao.pointHistorySave(point.generateHistoryEntity(request.point(), request.pointProcessStatus()));
+    private MemberPoint getMemberPointIsNotExistsCreateMemberPoint(Member member) {
+        return pointDao.findByMember(member)
+                .orElseGet(() -> MemberPoint.builder()
+                        .member(member)
+                        .point(0L)
+                        .build()
+                );
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageListVO<PointAdjustmentServiceResponse> selectPointHistory(int pageNumber, int pageSize, Long memberSeq) {
-        Member member = memberService.selectMember(memberSeq)
-                .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
-
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<PointHistory> list = pointDao.findByMemberPaging(pageable, member);
+        Page<PointHistory> list = pointDao.findByMemberPaging(pageable, memberSeq);
 
         return PageListVO.<PointAdjustmentServiceResponse>builder()
                 .list(list.getContent().stream()

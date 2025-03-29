@@ -3,6 +3,7 @@ package com.commerce.core.point.domain;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.domain.entity.PointHistory;
+import com.commerce.core.point.vo.PointProcessStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,9 +14,9 @@ public interface PointDao {
 
     MemberPoint memberPointSave(MemberPoint point);
 
-    PointHistory pointHistorySave(PointHistory pointHistory);
+    PointHistory pointHistorySave(MemberPoint memberPoint, Long point, PointProcessStatus pointProcessStatus);
 
-    Page<PointHistory> findByMemberPaging(Pageable pageable, Member member);
+    Page<PointHistory> findByMemberPaging(Pageable pageable, Long memberSeq);
 
     Optional<MemberPoint> findByMemberSeq(Long memberSeq);
 }
