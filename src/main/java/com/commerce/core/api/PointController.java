@@ -26,9 +26,11 @@ public class PointController {
     @PostMapping("/adjustment")
     @Operation(summary = "포인트 충전/차감", description = "고객의 포인트를 충전 및 차감한다")
     public ResponseVO<PointAdjustmentResponse> pointCharge(@Valid @RequestBody PointRequest request) {
-        PointAdjustmentResponse response = pointService.pointAdjustment(request.toRequest()).toResponse();
+
         return ResponseVO.<PointAdjustmentResponse>builder()
-                .data(response)
+                .data(PointAdjustmentResponse.from(
+                        pointService.pointAdjustment(request.toRequest()))
+                )
                 .build();
     }
 

@@ -162,7 +162,7 @@ public class ProductViewServiceImpl implements ProductViewService {
         Page<ProductView> list = productDao.productViewFindAll(pageable);
         return PageListVO.<ProductViewServiceResponse>builder()
                 .list(list.getContent().stream()
-                        .map(ProductView::documentToResDto)
+                        .map(ProductViewServiceResponse::from)
                         .toList()
                 )
                 .totalPage(list.getTotalPages())
@@ -175,7 +175,7 @@ public class ProductViewServiceImpl implements ProductViewService {
         Page<AdminProductListDto> list = productDao.selectProductList(pageable);
         return PageListVO.<AdminProductListServiceResponse>builder()
                 .list(list.stream()
-                        .map(AdminProductListDto::toResponse)
+                        .map(AdminProductListServiceResponse::from)
                         .toList()
                 )
                 .totalPage(list.getTotalPages())

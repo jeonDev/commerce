@@ -1,6 +1,6 @@
 package com.commerce.core.member.service.response;
 
-import com.commerce.core.api.response.MyInfoResponse;
+import com.commerce.core.member.domain.dto.MemberInfoDto;
 import lombok.Builder;
 
 @Builder
@@ -14,15 +14,16 @@ public record MyPageInfoServiceResponse (
         Long point
 ) {
 
-    public MyInfoResponse toResponse() {
-        return MyInfoResponse.builder()
-                .id(id)
-                .name(name)
-                .tel(tel)
-                .addr(addr)
-                .addrDetail(addrDetail)
-                .zipCode(zipCode)
-                .point(point)
+    public static MyPageInfoServiceResponse from(MemberInfoDto response) {
+        return MyPageInfoServiceResponse.builder()
+                .id(response.getId())
+                .name(response.getName())
+                .tel(response.getTel())
+                .addr(response.getAddr())
+                .addrDetail(response.getAddrDetail())
+                .zipCode(response.getZipCode())
+                .point(response.getPoint())
                 .build();
     }
+
 }

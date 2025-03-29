@@ -2,7 +2,6 @@ package com.commerce.core.product.domain.entity.mongo;
 
 import com.commerce.core.product.vo.ProductOptions;
 import com.commerce.core.product.vo.ProductStockSummary;
-import com.commerce.core.product.service.response.ProductViewServiceResponse;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -77,17 +76,4 @@ public class ProductView {
         return this;
     }
 
-    public ProductViewServiceResponse documentToResDto() {
-        return ProductViewServiceResponse.builder()
-                .productInfoSeq(productInfoSeq)
-                .productName(productName)
-                .productDetail(productDetail)
-                .price(price)
-                .discountPrice(discountPrice)
-                .useYn(useYn)
-                .productOptions(productOptions)
-                .productStockSummary(productStockSummary)
-                .productStockSummaryName(productStockSummary.getStatus())
-                .build();
-    }
 }

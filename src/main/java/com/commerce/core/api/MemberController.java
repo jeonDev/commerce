@@ -45,8 +45,7 @@ public class MemberController {
     @Operation(summary = "로그인", description = "로그인을 처리한다.")
     public ResponseVO<LoginResponse> login(HttpServletResponse res,
                                            @Valid @RequestBody LoginRequest request) {
-        LoginResponse response = loginService.login(request.toRequest())
-                .toLoginResponse();
+        LoginResponse response = LoginResponse.from(loginService.login(request.toRequest()));
         res.addCookie(this.createCookie(response.refreshToken()));
         return ResponseVO.<LoginResponse>builder()
                 .data(response)
@@ -103,9 +102,9 @@ public class MemberController {
     @Operation(summary = "내 정보 조회", description = "개인 정보 내역 조회")
     public ResponseVO<MyInfoResponse> myUserInfo() {
         return ResponseVO.<MyInfoResponse>builder()
-                .data(memberService.selectMyInfo(SessionUtils.getMemberSeq())
-                        .toResponse()
-                )
+                .data(MyInfoResponse.from(
+                        memberService.selectMyInfo(SessionUtils.getMemberSeq())
+                ))
                 .build();
     }
 
@@ -130,9 +129,8 @@ public class MemberController {
     @Operation(summary = "Github OAuth Login Callback")
     public ResponseVO<LoginResponse> githubCallback(HttpServletResponse res,
                                                            @RequestParam("code") String code) {
-        LoginResponse response = oAuthService.getAccessToken("GITHUB", code).toLoginResponse();
+        LoginResponse response = LoginResponse.from(oAuthService.getAccessToken("GITHUB", code));
         res.addCookie(this.createCookie(response.refreshToken()));
-
         return ResponseVO.<LoginResponse>builder()
                 .data(response)
                 .build();

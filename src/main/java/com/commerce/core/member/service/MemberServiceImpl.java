@@ -59,8 +59,9 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     @Override
     public MyPageInfoServiceResponse selectMyInfo(Long memberSeq) {
-        return memberDao.selectMemberInfo(memberSeq)
-                .toResponse();
+        return MyPageInfoServiceResponse.from(
+                memberDao.selectMemberInfo(memberSeq)
+        );
     }
 
     @Transactional

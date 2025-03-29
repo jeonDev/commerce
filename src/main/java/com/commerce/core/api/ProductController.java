@@ -42,7 +42,9 @@ public class ProductController {
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
     public ResponseVO<ProductInfoResponse> productDetailList(@PathVariable("productInfoSeq") String productInfoSeq) {
         return ResponseVO.<ProductInfoResponse>builder()
-                .data(productViewService.selectProductViewDetail(Long.valueOf(productInfoSeq)).toResponse())
+                .data(ProductInfoResponse.from(
+                        productViewService.selectProductViewDetail(Long.valueOf(productInfoSeq))
+                ))
                 .build();
     }
 
@@ -50,7 +52,9 @@ public class ProductController {
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
     public ResponseVO<ProductOrderResponse> productList(@PathVariable("productSeq") String productSeq) {
         return ResponseVO.<ProductOrderResponse>builder()
-                .data(productViewService.selectProductView(Long.valueOf(productSeq)).toResponse())
+                .data(ProductOrderResponse.from(
+                        productViewService.selectProductView(Long.valueOf(productSeq))
+                ))
                 .build();
     }
 

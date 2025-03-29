@@ -1,5 +1,6 @@
 package com.commerce.core.product.service.response;
 
+import com.commerce.core.product.domain.entity.mongo.ProductView;
 import com.commerce.core.product.vo.ProductOptions;
 import com.commerce.core.product.vo.ProductStockSummary;
 import lombok.Builder;
@@ -18,5 +19,18 @@ public record ProductViewServiceResponse (
         ProductStockSummary productStockSummary,
         String productStockSummaryName
 ) {
+    public static ProductViewServiceResponse from(ProductView response) {
+        return ProductViewServiceResponse.builder()
+                .productInfoSeq(response.getProductInfoSeq())
+                .productName(response.getProductName())
+                .productDetail(response.getProductDetail())
+                .price(response.getPrice())
+                .discountPrice(response.getDiscountPrice())
+                .useYn(response.getUseYn())
+                .productOptions(response.getProductOptions())
+                .productStockSummary(response.getProductStockSummary())
+                .productStockSummaryName(response.getProductStockSummary().getStatus())
+                .build();
+    }
 
 }

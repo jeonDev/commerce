@@ -69,7 +69,7 @@ public class PointServiceImpl implements PointService {
 
         return PageListVO.<PointAdjustmentServiceResponse>builder()
                 .list(list.getContent().stream()
-                        .map(PointHistory::entityToResponse)
+                        .map(PointAdjustmentServiceResponse::from)
                         .toList()
                 )
                 .totalPage(list.getTotalPages())

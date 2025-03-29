@@ -93,8 +93,9 @@ public class OAuthServiceImpl implements OAuthService {
         OAuthType oAuthType = OAuthType.valueOf(type);
         switch (oAuthType) {
             case GITHUB -> {
-                GithubUserInfoResponse githubUserInfoResponse = this.githubGetUserInfo(authorization);
-                return githubUserInfoResponse.toResponse();
+                return OAuthUserInfoResponse.from(
+                        this.githubGetUserInfo(authorization)
+                );
             }
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }

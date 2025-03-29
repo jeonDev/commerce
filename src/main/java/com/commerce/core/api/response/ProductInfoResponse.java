@@ -1,5 +1,6 @@
 package com.commerce.core.api.response;
 
+import com.commerce.core.product.service.response.ProductDetailServiceResponse;
 import com.commerce.core.product.vo.ProductOptions;
 import lombok.Builder;
 
@@ -13,4 +14,13 @@ public record ProductInfoResponse(
         Long price,
         List<ProductOptions> productOptions
 ) {
+    public static ProductInfoResponse from(ProductDetailServiceResponse response) {
+        return ProductInfoResponse.builder()
+                .productInfoSeq(response.productInfoSeq())
+                .productName(response.productName())
+                .productDetail(response.productDetail())
+                .price(response.price())
+                .productOptions(response.productOptions())
+                .build();
+    }
 }

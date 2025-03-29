@@ -1,6 +1,6 @@
 package com.commerce.core.point.service.response;
 
-import com.commerce.core.api.response.PointAdjustmentResponse;
+import com.commerce.core.point.domain.entity.PointHistory;
 import com.commerce.core.point.vo.PointProcessStatus;
 import lombok.Builder;
 
@@ -15,13 +15,12 @@ public record PointAdjustmentServiceResponse(
         LocalDateTime createDt
 ) {
 
-    public PointAdjustmentResponse toResponse() {
-        return PointAdjustmentResponse.builder()
-                .memberSeq(memberSeq)
-                .point(point)
-                .balancePoint(balancePoint)
-                .pointProcessStatus(pointProcessStatus)
-                .createDt(createDt)
+    public static PointAdjustmentServiceResponse from(PointHistory pointHistory) {
+        return PointAdjustmentServiceResponse.builder()
+                .memberSeq(pointHistory.getMember().getMemberSeq())
+                .point(pointHistory.getPoint())
+                .pointProcessStatus(pointHistory.getPointProcessStatus())
+                .createDt(pointHistory.getCreateDt())
                 .build();
     }
 }
