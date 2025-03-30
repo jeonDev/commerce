@@ -31,4 +31,12 @@ public class PaymentHistory extends BaseEntity {
     @Column(name = "INOUT_DIVISION_STATUS")
     @Enumerated(EnumType.ORDINAL)
     private InoutDivisionStatus inoutDivisionStatus;
+
+    public static PaymentHistory from(OrderDetail orderDetail, Long point, InoutDivisionStatus status) {
+        return PaymentHistory.builder()
+                .orderDetail(orderDetail)
+                .point(point)
+                .inoutDivisionStatus(status)
+                .build();
+    }
 }

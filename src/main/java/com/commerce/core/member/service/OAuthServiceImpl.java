@@ -60,8 +60,8 @@ public class OAuthServiceImpl implements OAuthService {
                 GithubAccessTokenResponse githubAccessTokenResponse = this.githubGetAccessToken(code);
                 OAuthUserInfoResponse githubUserInfo =
                         this.getUserInfo("GITHUB", githubAccessTokenResponse.getTokenType() + " " + githubAccessTokenResponse.getAccessToken());
-                String githubId = githubUserInfo.getId();
-                name = githubUserInfo.getName();
+                String githubId = githubUserInfo.id();
+                name = githubUserInfo.name();
                 id = oAuthType + "_" + githubId;
             }
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);

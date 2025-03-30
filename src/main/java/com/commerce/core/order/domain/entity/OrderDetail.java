@@ -61,19 +61,6 @@ public class OrderDetail extends BaseEntity {
     private OrderStatus orderStatus;
 
     /**
-     * History Generator
-     */
-    public OrderDetailHistory generateHistoryEntity() {
-        return OrderDetailHistory.builder()
-                .orderDetail(this)
-                .orders(orders)
-                .product(product)
-                .cnt(cnt)
-                .orderStatus(orderStatus)
-                .build();
-    }
-
-    /**
      * Order Status Update
      */
     public void updateOrderStatus(OrderStatus orderStatus) {
@@ -85,17 +72,6 @@ public class OrderDetail extends BaseEntity {
      */
     public void paymentSuccessSettingPaidAmount(Long paidAmount) {
         this.paidAmount = paidAmount;
-    }
-
-    /**
-     * History Generator
-     */
-    public PaymentHistory generateHistoryEntity(Long point, InoutDivisionStatus status) {
-        return PaymentHistory.builder()
-                .orderDetail(this)
-                .point(point)
-                .inoutDivisionStatus(status)
-                .build();
     }
 
     public OrderDetailInfo entityToInfoDto() {

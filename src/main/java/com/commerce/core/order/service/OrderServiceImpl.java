@@ -4,16 +4,17 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
+import com.commerce.core.member.domain.entity.Member;
+import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.OrderDetailHistory;
 import com.commerce.core.order.domain.entity.Orders;
-import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.order.service.request.PaymentServiceRequest;
-import com.commerce.core.order.vo.*;
+import com.commerce.core.order.vo.BuyProduct;
+import com.commerce.core.order.vo.OrderStatus;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.ProductStockService;
@@ -24,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,39 +44,19 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public Orders order(OrderServiceRequest request) {
-        log.debug("order : {}",request.toString());
+        log.info("[Order] 주문 요청({}) : {} ", request.payment(), request.buyProducts());
         // 1. Member Use Check
         Member member = memberService.selectUseMember(request.memberSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        // 2. Data Setting
-        final List<OrderDetail> orderDetails = new ArrayList<>();
-        final List<OrderDetailHistory> orderDetailHistories = new ArrayList<>();
-        final Orders order = orderDao.save(Orders.builder()
-                        .member(member)
-                        .build());
+        // 2. Order
+        Orders order = this.order(member, request.buyProducts());
 
-        // 3. Product Stock Consume & Order Detail Setting
-        Arrays.stream(request.buyProducts())
-                .forEach(item -> {
-                    OrderDetail orderDetail = this.productStockConsumeAndOrderDetailSetting(order, item);
-                    orderDetails.add(orderDetail);
-                    orderDetailHistories.add(orderDetail.generateHistoryEntity());
-                });
-
-        orderDao.orderDetailSaveAll(orderDetails);
-        orderDao.orderDetailHistorySaveAll(orderDetailHistories);
-
-        // 4. 결제 & 결제 시도 안할 시, Event Send
+        // 3. 결제
         if (request.payment()) {
-            // 4-1. 결제
-            PaymentServiceRequest paymentRequest = PaymentServiceRequest.builder()
-                    .memberSeq(request.memberSeq())
-                    .orderSeq(order.getOrderSeq())
-                    .build();
-            paymentService.payment(paymentRequest);
+            this.payment(member.getMemberSeq(), order.getOrderSeq());
         } else {
-            // 4-2. Event Send (Order View Mongo DB)
+            // 바로 결제 안할 시, Event Send (내역 저장 용)
             OrderViewMergeServiceRequest orderViewDto = OrderViewMergeServiceRequest.builder()
                     .orderSeq(order.getOrderSeq())
                     .build();
@@ -86,12 +66,32 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    private Orders order(Member member, BuyProduct[] buyProducts) {
+        // 1. Order Create
+        final Orders order = orderDao.save(Orders.builder()
+                .member(member)
+                .build());
+
+        // 2. Product Stock Consume & Order Detail Setting
+        List<OrderDetail> orderDetails = Arrays.stream(buyProducts)
+                .map(item -> this.productStockConsumeAndOrderDetailSetting(order, item))
+                .toList();
+
+        orderDao.orderDetailSaveAll(orderDetails);
+        orderDao.orderDetailHistorySaveAll(orderDetails.stream()
+                .map(OrderDetailHistory::from)
+                .toList()
+        );
+
+        return order;
+    }
+
     private OrderDetail productStockConsumeAndOrderDetailSetting(Orders order, BuyProduct item) {
-        // 3-1. Product Stock Consume
+        // 1. Product Stock Consume
         Product product = this.productStockConsume(item);
         ProductInfo productInfo = product.getProductInfo();
 
-        // 3-2. Order Detail Setting
+        // 2. Order Detail Setting
         return OrderDetail.builder()
                 .product(product)
                 .cnt(item.getCnt())
@@ -110,7 +110,16 @@ public class OrderServiceImpl implements OrderService {
                 .productStockProcessStatus(ProductStockProcessStatus.CONSUME)
                 .build();
 
-        return productStockService.productStockAdjustment(request).getProduct();
+        return productStockService.productStockAdjustment(request)
+                .getProduct();
+    }
+
+    private void payment(Long memberSeq, Long orderSeq) {
+        PaymentServiceRequest paymentRequest = PaymentServiceRequest.builder()
+                .memberSeq(memberSeq)
+                .orderSeq(orderSeq)
+                .build();
+        paymentService.payment(paymentRequest);
     }
 
     @Transactional(readOnly = true)

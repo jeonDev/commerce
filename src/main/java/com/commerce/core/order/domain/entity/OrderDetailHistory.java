@@ -44,4 +44,14 @@ public class OrderDetailHistory extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
 
+    public static OrderDetailHistory from(OrderDetail orderDetail) {
+        return OrderDetailHistory.builder()
+                .orderDetail(orderDetail)
+                .orders(orderDetail.getOrders())
+                .product(orderDetail.getProduct())
+                .cnt(orderDetail.getCnt())
+                .orderStatus(orderDetail.getOrderStatus())
+                .build();
+    }
+
 }

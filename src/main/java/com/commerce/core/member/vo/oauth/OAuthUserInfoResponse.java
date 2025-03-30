@@ -1,10 +1,8 @@
 package com.commerce.core.member.vo.oauth;
 
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
-@Getter
 public record OAuthUserInfoResponse(
         String id,
         String name

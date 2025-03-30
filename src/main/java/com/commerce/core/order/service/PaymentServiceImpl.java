@@ -8,6 +8,7 @@ import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.OrderDetailHistory;
 import com.commerce.core.order.domain.entity.Orders;
+import com.commerce.core.order.domain.entity.PaymentHistory;
 import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.order.service.request.PaymentServiceRequest;
@@ -77,7 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
         this.updateOrderStatus(orderRequest);
 
-        orderDao.paymentHistorySave(item.generateHistoryEntity(item.getPaidAmount(), InoutDivisionStatus.PAYMENT));
+        orderDao.paymentHistorySave(PaymentHistory.from(item, item.getPaidAmount(), InoutDivisionStatus.PAYMENT));
     }
 
     private OrderDetail updateOrderStatus(OrderServiceRequest request) {
@@ -87,8 +88,7 @@ public class PaymentServiceImpl implements PaymentService {
         orderDetail.updateOrderStatus(request.orderStatus());
         orderDetail = orderDao.orderDetailSave(orderDetail);
 
-        OrderDetailHistory orderDetailHistory = orderDetail.generateHistoryEntity();
-        orderDao.orderDetailHistorySave(orderDetailHistory);
+        orderDao.orderDetailHistorySave(OrderDetailHistory.from(orderDetail));
 
         return orderDetail;
     }
