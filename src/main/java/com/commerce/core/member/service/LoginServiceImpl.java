@@ -4,9 +4,9 @@ import com.commerce.core.common.service.CacheService;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.config.security.IdentifierProvider;
-import com.commerce.core.common.config.security.vo.IdentificationGenerateVO;
-import com.commerce.core.common.config.security.vo.JwtIdentificationGenerateVO;
-import com.commerce.core.common.config.security.vo.JwtToken;
+import com.commerce.core.common.config.security.type.IdentificationGenerateRequest;
+import com.commerce.core.common.config.security.type.JwtIdentificationGenerateRequest;
+import com.commerce.core.common.config.security.type.JwtToken;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.request.LoginServiceRequest;
 import com.commerce.core.member.service.response.LoginServiceResponse;
@@ -44,13 +44,13 @@ public class LoginServiceImpl implements LoginService {
         // Login Success
         if(member.getOauthType() != null || passwordEncoder.matches(request.password(), member.getPassword())) {
             log.info("Login Success");
-            IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
+            IdentificationGenerateRequest accessTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
                     .id(member.getId())
                     .build();
             String accessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
-            IdentificationGenerateVO refreshTokenVO = JwtIdentificationGenerateVO.builder()
+            IdentificationGenerateRequest refreshTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.REFRESH_TOKEN)
                     .id(member.getId())
                     .build();
@@ -93,7 +93,7 @@ public class LoginServiceImpl implements LoginService {
             Claims tokenForSubject = jwtTokenProvider.getTokenForSubject(refreshToken);
             String subject = tokenForSubject.getSubject();
 
-            IdentificationGenerateVO accessTokenVO = JwtIdentificationGenerateVO.builder()
+            IdentificationGenerateRequest accessTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
                     .id(subject)
                     .build();

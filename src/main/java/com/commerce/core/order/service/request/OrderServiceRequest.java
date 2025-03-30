@@ -1,7 +1,7 @@
 package com.commerce.core.order.service.request;
 
-import com.commerce.core.order.vo.BuyProduct;
-import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.type.BuyProduct;
+import com.commerce.core.order.type.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 

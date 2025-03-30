@@ -1,8 +1,6 @@
-package com.commerce.core.common.config.security.vo;
+package com.commerce.core.common.config.security.type;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,13 +10,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
 @Builder
-@AllArgsConstructor
-public class CustomUserDetails implements UserDetails {
-
-    private final Long memberSeq;
-    private final Authority authority;
+public record CustomUserDetails(
+        Long memberSeq,
+        Authority authority
+) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

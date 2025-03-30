@@ -1,7 +1,7 @@
 package com.commerce.core.member.service;
 
 import com.commerce.core.member.service.response.LoginServiceResponse;
-import com.commerce.core.member.vo.oauth.OAuthUserInfoResponse;
+import com.commerce.core.member.type.oauth.OAuthUserInfoResponse;
 
 public interface OAuthService {
 

@@ -6,7 +6,7 @@ import com.commerce.core.point.domain.PointDao;
 import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
 import com.commerce.core.point.service.response.PointAdjustmentServiceResponse;
-import com.commerce.core.point.vo.PointProcessStatus;
+import com.commerce.core.point.type.PointProcessStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

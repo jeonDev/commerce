@@ -1,10 +1,10 @@
 package com.commerce.core.member.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.common.config.security.vo.Authority;
+import com.commerce.core.common.config.security.type.Authority;
 import com.commerce.core.common.utils.DateUtils;
 import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
-import com.commerce.core.member.vo.oauth.OAuthType;
+import com.commerce.core.member.type.oauth.OAuthType;
 import com.commerce.core.point.domain.entity.MemberPoint;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package com.commerce.core.order.service.response;
 
-import com.commerce.core.order.vo.OrderDetailInfo;
-import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.type.OrderDetailInfo;
+import com.commerce.core.order.type.OrderStatus;
 import lombok.Builder;
 
 import java.util.List;

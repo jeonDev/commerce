@@ -1,9 +1,9 @@
 package com.commerce.core.api.request;
 
 import com.commerce.core.common.utils.SessionUtils;
-import com.commerce.core.order.vo.BuyProduct;
+import com.commerce.core.order.type.BuyProduct;
 import com.commerce.core.order.service.request.OrderServiceRequest;
-import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.type.OrderStatus;
 
 public record OrderRequest(
         Long orderSeq,

@@ -5,7 +5,7 @@ import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.domain.entity.PointHistory;
 import com.commerce.core.point.domain.repository.PointHistoryRepository;
 import com.commerce.core.point.domain.repository.PointRepository;
-import com.commerce.core.point.vo.PointProcessStatus;
+import com.commerce.core.point.type.PointProcessStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

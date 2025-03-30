@@ -1,4 +1,4 @@
-package com.commerce.core.order.vo;
+package com.commerce.core.order.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;

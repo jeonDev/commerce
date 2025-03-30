@@ -1,7 +1,7 @@
 package com.commerce.core.api.response;
 
 import com.commerce.core.product.service.response.ProductDetailServiceResponse;
-import com.commerce.core.product.vo.ProductOptions;
+import com.commerce.core.product.type.ProductOptions;
 import lombok.Builder;
 
 import java.util.List;

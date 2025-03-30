@@ -1,8 +1,8 @@
 package com.commerce.core.order.domain.entity.mongo;
 
 import com.commerce.core.order.service.response.OrderViewServiceResponse;
-import com.commerce.core.order.vo.OrderDetailInfo;
-import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.type.OrderDetailInfo;
+import com.commerce.core.order.type.OrderStatus;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

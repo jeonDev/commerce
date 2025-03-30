@@ -1,4 +1,4 @@
-package com.commerce.core.point.vo;
+package com.commerce.core.product.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
@@ -8,15 +8,15 @@ import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
-public enum PointProcessStatus {
-
-    CHARGE("0"),        // 충전
-    PAYMENT("1");       // 결제
-
+public enum ProductStockProcessStatus {
+    
+    ADD("0"),           // 추가
+    CONSUME("1");       // 차감
+    
     private final String status;
-
+    
     @JsonCreator
-    public static PointProcessStatus from(String value) {
+    public static ProductStockProcessStatus from(String value) {
         return Arrays.stream(values())
                 .filter(v -> v.status.equals(value))
                 .findAny()

@@ -1,7 +1,7 @@
 package com.commerce.core.order.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.order.vo.InoutDivisionStatus;
+import com.commerce.core.order.type.InoutDivisionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

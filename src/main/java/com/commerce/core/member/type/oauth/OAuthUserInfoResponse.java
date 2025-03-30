@@ -1,4 +1,4 @@
-package com.commerce.core.member.vo.oauth;
+package com.commerce.core.member.type.oauth;
 
 import lombok.Builder;
 
@@ -10,8 +10,8 @@ public record OAuthUserInfoResponse(
 
     public static OAuthUserInfoResponse from(GithubUserInfoResponse response) {
         return OAuthUserInfoResponse.builder()
-                .id(response.getId())
-                .name(response.getName())
+                .id(response.id())
+                .name(response.name())
                 .build();
     }
 

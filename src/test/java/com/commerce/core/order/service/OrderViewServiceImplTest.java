@@ -3,7 +3,7 @@ package com.commerce.core.order.service;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.Orders;
-import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.type.OrderStatus;
 import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;

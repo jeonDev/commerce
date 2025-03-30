@@ -1,6 +1,6 @@
 package com.commerce.core.product.service.request;
 
-import com.commerce.core.product.vo.ProductStockProcessStatus;
+import com.commerce.core.product.type.ProductStockProcessStatus;
 import lombok.Builder;
 
 @Builder

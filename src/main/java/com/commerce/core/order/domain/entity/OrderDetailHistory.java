@@ -2,7 +2,7 @@ package com.commerce.core.order.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.product.domain.entity.Product;
-import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.type.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

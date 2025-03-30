@@ -2,7 +2,7 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
-import com.commerce.core.product.vo.ProductStockSummary;
+import com.commerce.core.product.type.ProductStockSummary;
 
 import java.util.Optional;
 

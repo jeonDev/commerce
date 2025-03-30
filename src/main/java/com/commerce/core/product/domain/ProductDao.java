@@ -3,7 +3,7 @@ package com.commerce.core.product.domain;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.mongo.ProductView;
-import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
+import com.commerce.core.product.domain.repository.dsl.dto.ProductDto;
 import com.commerce.core.product.domain.dto.AdminProductListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +28,7 @@ public interface ProductDao {
 
     ProductInfo selectProductDetail(Long productInfoSeq);
 
-    ProductDAO selectProduct(Long productSeq);
+    ProductDto selectProduct(Long productSeq);
 
     Page<ProductView> productViewFindAll(Pageable pageable);
 

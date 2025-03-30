@@ -1,6 +1,6 @@
 package com.commerce.core.common.config.security;
 
-import com.commerce.core.common.config.security.vo.IdentificationGenerateVO;
+import com.commerce.core.common.config.security.type.IdentificationGenerateRequest;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +24,14 @@ public class JwtTokenProvider implements IdentifierProvider {
     private String secretKey;
 
     @Override
-    public String generateIdentificationInfo(IdentificationGenerateVO vo) {
+    public String generateIdentificationInfo(IdentificationGenerateRequest vo) {
         return this.jwtTokenGenerate(vo);
     }
 
-    private String jwtTokenGenerate(IdentificationGenerateVO jwtIdentificationGenerateVO) {
-        Claims claims = Jwts.claims().setSubject(jwtIdentificationGenerateVO.getId());
+    private String jwtTokenGenerate(IdentificationGenerateRequest jwtIdentificationGenerateRequest) {
+        Claims claims = Jwts.claims().setSubject(jwtIdentificationGenerateRequest.getId());
         Date now = new Date();
-        Date expireDate = new Date(now.getTime() + jwtIdentificationGenerateVO.getJwtToken().getExpiredTime());
+        Date expireDate = new Date(now.getTime() + jwtIdentificationGenerateRequest.getJwtToken().getExpiredTime());
 
         return Jwts.builder()
                 .setClaims(claims)

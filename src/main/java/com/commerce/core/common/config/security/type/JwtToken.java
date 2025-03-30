@@ -1,4 +1,4 @@
-package com.commerce.core.common.config.security.vo;
+package com.commerce.core.common.config.security.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

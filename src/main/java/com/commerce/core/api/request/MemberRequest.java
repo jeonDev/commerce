@@ -1,7 +1,7 @@
 package com.commerce.core.api.request;
 
 import com.commerce.core.member.service.request.MemberServiceRequest;
-import com.commerce.core.member.vo.oauth.OAuthType;
+import com.commerce.core.member.type.oauth.OAuthType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 

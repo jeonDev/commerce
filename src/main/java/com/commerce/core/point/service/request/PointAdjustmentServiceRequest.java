@@ -1,6 +1,6 @@
 package com.commerce.core.point.service.request;
 
-import com.commerce.core.point.vo.PointProcessStatus;
+import com.commerce.core.point.type.PointProcessStatus;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

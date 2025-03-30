@@ -1,7 +1,7 @@
 package com.commerce.core.member.domain.dto;
 
-import com.commerce.core.common.config.security.vo.Authority;
-import com.commerce.core.member.vo.oauth.OAuthType;
+import com.commerce.core.common.config.security.type.Authority;
+import com.commerce.core.member.type.oauth.OAuthType;
 import lombok.Getter;
 import lombok.Setter;
 

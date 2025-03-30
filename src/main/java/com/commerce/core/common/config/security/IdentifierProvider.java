@@ -1,6 +1,6 @@
 package com.commerce.core.common.config.security;
 
-import com.commerce.core.common.config.security.vo.IdentificationGenerateVO;
+import com.commerce.core.common.config.security.type.IdentificationGenerateRequest;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.Authentication;
 
@@ -9,7 +9,7 @@ public interface IdentifierProvider {
     /**
      * Object For Authentication Generate
      */
-    Object generateIdentificationInfo(IdentificationGenerateVO vo);
+    Object generateIdentificationInfo(IdentificationGenerateRequest vo);
 
     /**
      * Authentication Info Get

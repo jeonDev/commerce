@@ -7,7 +7,7 @@ import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
-import com.commerce.core.product.vo.ProductStockProcessStatus;
+import com.commerce.core.product.type.ProductStockProcessStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

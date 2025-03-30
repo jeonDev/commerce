@@ -2,7 +2,7 @@ package com.commerce.core.point.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.common.vo.PageListVO;
+import com.commerce.core.common.type.PageListResponse;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.point.domain.PointDao;
@@ -63,11 +63,11 @@ public class PointServiceImpl implements PointService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageListVO<PointAdjustmentServiceResponse> selectPointHistory(int pageNumber, int pageSize, Long memberSeq) {
+    public PageListResponse<PointAdjustmentServiceResponse> selectPointHistory(int pageNumber, int pageSize, Long memberSeq) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<PointHistory> list = pointDao.findByMemberPaging(pageable, memberSeq);
 
-        return PageListVO.<PointAdjustmentServiceResponse>builder()
+        return PageListResponse.<PointAdjustmentServiceResponse>builder()
                 .list(list.getContent().stream()
                         .map(PointAdjustmentServiceResponse::from)
                         .toList()

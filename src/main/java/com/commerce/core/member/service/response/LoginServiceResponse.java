@@ -1,7 +1,7 @@
 package com.commerce.core.member.service.response;
 
 import com.commerce.core.api.response.LoginResponse;
-import com.commerce.core.common.config.security.vo.Authority;
+import com.commerce.core.common.config.security.type.Authority;
 import lombok.Builder;
 
 @Builder

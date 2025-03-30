@@ -1,6 +1,6 @@
 package com.commerce.core.product.domain.repository.dsl;
 
-import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
+import com.commerce.core.product.domain.repository.dsl.dto.ProductDto;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.dto.AdminProductListDto;
 import com.querydsl.core.types.Projections;
@@ -28,8 +28,8 @@ public class ProductDslRepository {
                 .fetchOne();
     }
 
-    public ProductDAO selectProduct(Long productSeq) {
-        return dsl.select(Projections.bean(ProductDAO.class,
+    public ProductDto selectProduct(Long productSeq) {
+        return dsl.select(Projections.bean(ProductDto.class,
                         product.productSeq,
                         product.productOptionCode,
                         productInfo.productInfoSeq,

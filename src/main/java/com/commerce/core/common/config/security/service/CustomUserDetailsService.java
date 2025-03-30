@@ -2,7 +2,7 @@ package com.commerce.core.common.config.security.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.common.config.security.vo.CustomUserDetails;
+import com.commerce.core.common.config.security.type.CustomUserDetails;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import lombok.RequiredArgsConstructor;

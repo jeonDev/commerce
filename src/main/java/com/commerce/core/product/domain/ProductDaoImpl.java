@@ -6,7 +6,7 @@ import com.commerce.core.product.domain.entity.mongo.ProductView;
 import com.commerce.core.product.domain.repository.ProductInfoRepository;
 import com.commerce.core.product.domain.repository.ProductRepository;
 import com.commerce.core.product.domain.repository.dsl.ProductDslRepository;
-import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
+import com.commerce.core.product.domain.repository.dsl.dto.ProductDto;
 import com.commerce.core.product.domain.repository.mongo.ProductViewRepository;
 import com.commerce.core.product.domain.dto.AdminProductListDto;
 import org.springframework.data.domain.Page;
@@ -75,7 +75,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public ProductDAO selectProduct(Long productSeq) {
+    public ProductDto selectProduct(Long productSeq) {
         return productDslRepository.selectProduct(productSeq);
     }
 

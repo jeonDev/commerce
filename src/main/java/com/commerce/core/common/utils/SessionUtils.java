@@ -1,6 +1,6 @@
 package com.commerce.core.common.utils;
 
-import com.commerce.core.common.config.security.vo.CustomUserDetails;
+import com.commerce.core.common.config.security.type.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

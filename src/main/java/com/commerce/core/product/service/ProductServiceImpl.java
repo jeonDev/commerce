@@ -10,7 +10,7 @@ import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.request.ProductServiceRequest;
 import com.commerce.core.product.service.response.ProductServiceResponse;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
-import com.commerce.core.product.vo.ProductViewStatus;
+import com.commerce.core.product.type.ProductViewStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

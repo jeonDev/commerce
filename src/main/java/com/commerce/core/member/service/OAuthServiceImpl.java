@@ -8,7 +8,7 @@ import com.commerce.core.member.domain.repository.MemberRepository;
 import com.commerce.core.member.service.request.LoginServiceRequest;
 import com.commerce.core.member.service.response.LoginServiceResponse;
 import com.commerce.core.member.service.request.MemberServiceRequest;
-import com.commerce.core.member.vo.oauth.*;
+import com.commerce.core.member.type.oauth.*;
 import com.commerce.core.member.external.OAuthApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class OAuthServiceImpl implements OAuthService {
             case GITHUB -> {
                 GithubAccessTokenResponse githubAccessTokenResponse = this.githubGetAccessToken(code);
                 OAuthUserInfoResponse githubUserInfo =
-                        this.getUserInfo("GITHUB", githubAccessTokenResponse.getTokenType() + " " + githubAccessTokenResponse.getAccessToken());
+                        this.getUserInfo("GITHUB", githubAccessTokenResponse.tokenType() + " " + githubAccessTokenResponse.accessToken());
                 String githubId = githubUserInfo.id();
                 name = githubUserInfo.name();
                 id = oAuthType + "_" + githubId;

@@ -1,7 +1,7 @@
 package com.commerce.core.api.response;
 
 import com.commerce.core.point.service.response.PointAdjustmentServiceResponse;
-import com.commerce.core.point.vo.PointProcessStatus;
+import com.commerce.core.point.type.PointProcessStatus;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

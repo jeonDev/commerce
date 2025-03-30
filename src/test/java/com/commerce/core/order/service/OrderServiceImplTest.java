@@ -5,7 +5,7 @@ import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.Orders;
-import com.commerce.core.order.vo.BuyProduct;
+import com.commerce.core.order.type.BuyProduct;
 import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;

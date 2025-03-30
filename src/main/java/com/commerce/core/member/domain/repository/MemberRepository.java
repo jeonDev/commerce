@@ -1,7 +1,7 @@
 package com.commerce.core.member.domain.repository;
 
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.vo.oauth.OAuthType;
+import com.commerce.core.member.type.oauth.OAuthType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

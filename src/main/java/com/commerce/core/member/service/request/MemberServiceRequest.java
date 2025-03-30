@@ -1,8 +1,8 @@
 package com.commerce.core.member.service.request;
 
-import com.commerce.core.common.config.security.vo.Authority;
+import com.commerce.core.common.config.security.type.Authority;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.vo.oauth.OAuthType;
+import com.commerce.core.member.type.oauth.OAuthType;
 import lombok.Builder;
 
 @Builder

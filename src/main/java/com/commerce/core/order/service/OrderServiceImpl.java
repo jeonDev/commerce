@@ -13,13 +13,13 @@ import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.order.service.request.PaymentServiceRequest;
-import com.commerce.core.order.vo.BuyProduct;
-import com.commerce.core.order.vo.OrderStatus;
+import com.commerce.core.order.type.BuyProduct;
+import com.commerce.core.order.type.OrderStatus;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
-import com.commerce.core.product.vo.ProductStockProcessStatus;
+import com.commerce.core.product.type.ProductStockProcessStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -94,9 +94,9 @@ public class OrderServiceImpl implements OrderService {
         // 2. Order Detail Setting
         return OrderDetail.builder()
                 .product(product)
-                .cnt(item.getCnt())
-                .amount(productInfo.getPrice() * item.getCnt())
-                .buyAmount(productInfo.getPrice() * item.getCnt())
+                .cnt(item.cnt())
+                .amount(productInfo.getPrice() * item.cnt())
+                .buyAmount(productInfo.getPrice() * item.cnt())
                 .paidAmount(0L)
                 .orders(order)
                 .orderStatus(OrderStatus.NEW_ORDER)
@@ -105,8 +105,8 @@ public class OrderServiceImpl implements OrderService {
 
     private Product productStockConsume(BuyProduct item) {
         ProductStockServiceRequest request = ProductStockServiceRequest.builder()
-                .productSeq(item.getProductSeq())
-                .stock(item.getCnt())
+                .productSeq(item.productSeq())
+                .stock(item.cnt())
                 .productStockProcessStatus(ProductStockProcessStatus.CONSUME)
                 .build();
 

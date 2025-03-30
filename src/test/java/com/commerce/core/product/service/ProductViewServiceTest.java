@@ -4,7 +4,7 @@ import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
-import com.commerce.core.product.vo.ProductViewStatus;
+import com.commerce.core.product.type.ProductViewStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

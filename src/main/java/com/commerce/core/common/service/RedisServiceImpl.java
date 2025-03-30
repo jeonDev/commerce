@@ -1,6 +1,6 @@
 package com.commerce.core.common.service;
 
-import com.commerce.core.common.config.security.vo.JwtToken;
+import com.commerce.core.common.config.security.type.JwtToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

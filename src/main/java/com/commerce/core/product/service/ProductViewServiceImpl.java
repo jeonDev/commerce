@@ -1,19 +1,20 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.common.vo.PageListVO;
+import com.commerce.core.common.type.PageListResponse;
 import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.mongo.ProductView;
-import com.commerce.core.product.domain.repository.dsl.vo.ProductDAO;
+import com.commerce.core.product.domain.repository.dsl.dto.ProductDto;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
 import com.commerce.core.product.domain.dto.AdminProductListDto;
 import com.commerce.core.product.service.response.AdminProductListServiceResponse;
 import com.commerce.core.product.service.response.ProductDetailServiceResponse;
 import com.commerce.core.product.service.response.ProductOrderServiceResponse;
 import com.commerce.core.product.service.response.ProductViewServiceResponse;
-import com.commerce.core.product.vo.*;
+import com.commerce.core.product.type.ProductOptions;
+import com.commerce.core.product.type.ProductStockSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -144,7 +145,7 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Override
     public ProductOrderServiceResponse selectProductView(Long productSeq) {
-        ProductDAO product = productDao.selectProduct(productSeq);
+        ProductDto product = productDao.selectProduct(productSeq);
         return ProductOrderServiceResponse.builder()
                 .productSeq(product.getProductSeq())
                 .productOptionCode(product.getProductOptionCode())
@@ -157,10 +158,10 @@ public class ProductViewServiceImpl implements ProductViewService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageListVO<ProductViewServiceResponse> selectProductViewList(int pageNumber, int pageSize) {
+    public PageListResponse<ProductViewServiceResponse> selectProductViewList(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<ProductView> list = productDao.productViewFindAll(pageable);
-        return PageListVO.<ProductViewServiceResponse>builder()
+        return PageListResponse.<ProductViewServiceResponse>builder()
                 .list(list.getContent().stream()
                         .map(ProductViewServiceResponse::from)
                         .toList()
@@ -170,10 +171,10 @@ public class ProductViewServiceImpl implements ProductViewService {
     }
 
     @Override
-    public PageListVO<AdminProductListServiceResponse> selectProductList(int pageNumber, int pageSize) {
+    public PageListResponse<AdminProductListServiceResponse> selectProductList(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<AdminProductListDto> list = productDao.selectProductList(pageable);
-        return PageListVO.<AdminProductListServiceResponse>builder()
+        return PageListResponse.<AdminProductListServiceResponse>builder()
                 .list(list.stream()
                         .map(AdminProductListServiceResponse::from)
                         .toList()
