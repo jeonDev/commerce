@@ -119,7 +119,9 @@ public class OrderServiceImpl implements OrderService {
                 .memberSeq(memberSeq)
                 .orderSeq(orderSeq)
                 .build();
-        paymentService.payment(paymentRequest);
+        boolean isPayment = paymentService.payment(paymentRequest);
+
+        if (!isPayment) throw new CommerceException(ExceptionStatus.PAYMENT_ERROR);
     }
 
     @Transactional(readOnly = true)

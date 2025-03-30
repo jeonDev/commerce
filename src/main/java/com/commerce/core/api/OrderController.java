@@ -34,9 +34,9 @@ public class OrderController {
 
     @PostMapping("/v1/payment")
     @Operation(summary = "주문 결제", description = "상품 주문 내역에 대한 결제 처리를 진행한다.")
-    public ResponseVO<Object> payment(@RequestBody PaymentRequest request) {
-        paymentService.payment(request.toRequest());
-        return ResponseVO.builder()
+    public ResponseVO<Boolean> payment(@RequestBody PaymentRequest request) {
+        return ResponseVO.<Boolean>builder()
+                .data(paymentService.payment(request.toRequest()))
                 .build();
     }
 

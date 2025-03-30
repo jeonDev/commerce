@@ -5,5 +5,5 @@ import com.commerce.core.order.service.request.PaymentServiceRequest;
 
 public interface PaymentService {
 
-    Orders payment(PaymentServiceRequest dto);
+    boolean payment(PaymentServiceRequest dto);
 }

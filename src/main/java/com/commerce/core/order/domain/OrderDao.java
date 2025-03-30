@@ -32,5 +32,6 @@ public interface OrderDao {
     Page<OrderView> orderViewFindAll(Pageable pageable);
 
     void paymentHistorySave(PaymentHistory paymentHistory);
+    void paymentHistorySaveAll(List<PaymentHistory> paymentHistory);
 
 }

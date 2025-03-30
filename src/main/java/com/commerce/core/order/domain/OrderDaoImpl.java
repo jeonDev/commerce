@@ -97,4 +97,9 @@ public class OrderDaoImpl implements OrderDao {
     public void paymentHistorySave(PaymentHistory paymentHistory) {
         paymentHistoryRepository.save(paymentHistory);
     }
+
+    @Override
+    public void paymentHistorySaveAll(List<PaymentHistory> paymentHistory) {
+        paymentHistoryRepository.saveAll(paymentHistory);
+    }
 }

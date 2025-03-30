@@ -1,7 +1,6 @@
 package com.commerce.core.order.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.order.vo.InoutDivisionStatus;
 import com.commerce.core.order.vo.OrderDetailInfo;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.order.vo.OrderStatus;
@@ -63,8 +62,8 @@ public class OrderDetail extends BaseEntity {
     /**
      * Order Status Update
      */
-    public void updateOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
+    public void paymentComplete() {
+        this.orderStatus = OrderStatus.PAYMENT_COMPLETE;
     }
 
     /**

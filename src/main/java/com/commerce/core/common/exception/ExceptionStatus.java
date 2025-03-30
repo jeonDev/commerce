@@ -27,6 +27,7 @@ public enum ExceptionStatus {
 
     // PAYMENT
     PAYMENT_AMOUNT_ERROR("PA001", "결제할 금액이 존재하지 않습니다."),
+    PAYMENT_ERROR("PA002", "결제 실패"),
 
     // COMMON_DATABASE
     ENTITY_IS_EMPTY("CD001", "조회된 데이터가 없습니다."),
