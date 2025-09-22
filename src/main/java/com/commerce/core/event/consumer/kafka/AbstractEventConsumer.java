@@ -3,7 +3,6 @@ package com.commerce.core.event.consumer.kafka;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.utils.ConverterUtils;
-import com.commerce.core.event.LocalEventDto;
 import com.commerce.core.event.consumer.EventConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -36,8 +35,6 @@ public abstract class AbstractEventConsumer<T> implements EventConsumer {
     private T dataConverter(Object data, Class<T> tClass) {
         if (data instanceof ConsumerRecord){
             return this.kafkaDataConverter(data, tClass);
-        } else if (data instanceof LocalEventDto eventData) {
-            return this.testDataConverter(eventData);
         } else {
             throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }
@@ -49,10 +46,5 @@ public abstract class AbstractEventConsumer<T> implements EventConsumer {
         log.info("Consumer Record Value : {}" ,record.toString());
 
         return ConverterUtils.strToObjectConverter(record.value(), tClass);
-    }
-
-    // test convert
-    private T testDataConverter(LocalEventDto eventData) {
-        return (T) eventData.getData();
     }
 }

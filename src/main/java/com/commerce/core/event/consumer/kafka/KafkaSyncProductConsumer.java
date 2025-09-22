@@ -5,14 +5,12 @@ import com.commerce.core.product.service.request.ProductViewServiceRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Profile("basic")
 public class KafkaSyncProductConsumer extends AbstractEventConsumer<ProductViewServiceRequest>  {
 
     private final static String TOPIC_NAME = "sync-product";

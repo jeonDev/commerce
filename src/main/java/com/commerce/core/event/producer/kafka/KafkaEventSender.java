@@ -5,14 +5,12 @@ import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Profile("basic")
 public class KafkaEventSender implements EventSender {
 
     private final KafkaTemplate<String ,Object> kafkaTemplate;

@@ -4,14 +4,12 @@ import com.commerce.core.order.service.OrderViewService;
 import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Profile("basic")
 public class KafkaSyncOrderConsumer extends AbstractEventConsumer<OrderViewMergeServiceRequest> {
     private final static String TOPIC_NAME = "sync-order";
     private final static String GROUP_ID = "group_1";
