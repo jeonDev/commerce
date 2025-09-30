@@ -57,7 +57,9 @@ public class SecurityConfig {
                                 , "/oauth/user"
                                 , "/h2-console/**"
                                 , "/swagger-ui/**"
-                                , "/v3/api-docs/**")
+                                , "/v3/api-docs/**"
+                                , "/actuator/**"
+                        )
                         .permitAll()
                 )
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer

@@ -40,3 +40,11 @@ security:
 
 cors:
   domain: http://localhost:5173
+
+management:
+  server:
+    port: 8011
+  endpoints:
+    web:
+      exposure:
+        include: "*"
