@@ -42,9 +42,10 @@ cors:
   domain: http://localhost:5173
 
 management:
-  server:
-    port: 8011
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: prometheus, health, info
+  metrics:
+    tags:
+      application: ${spring.application.name}
