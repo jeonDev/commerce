@@ -14,3 +14,25 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: '127.0.0.1'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - /Users/jjh/data/prometheus/config:/etc/prometheus
+      - /Users/jjh/data/prometheus/volume:/prometheus/data
+    ports:
+      - "9090:9090"
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always
+
+  grafana:
+    image: grafana/grafana:9.4.7
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - /Users/jjh/data/grafana/volume:/var/lib/grafana
+    restart: always
