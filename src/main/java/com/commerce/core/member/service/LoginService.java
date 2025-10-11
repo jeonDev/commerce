@@ -4,52 +4,60 @@ import com.commerce.core.common.service.CacheService;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.config.security.IdentifierProvider;
-import com.commerce.core.common.config.security.type.IdentificationGenerateRequest;
 import com.commerce.core.common.config.security.type.JwtIdentificationGenerateRequest;
 import com.commerce.core.common.config.security.type.JwtToken;
-import com.commerce.core.member.domain.entity.Member;
+import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.service.request.LoginServiceRequest;
 import com.commerce.core.member.service.response.LoginServiceResponse;
 import io.jsonwebtoken.Claims;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class LoginService {
 
     private final Long MAX_PASSWORD_WRONG_COUNT = 5L;
-    private final MemberService memberService;
+    private final MemberDao memberDao;
     private final IdentifierProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final CacheService<String, String> redisService;
+
+    public LoginService(MemberDao memberDao,
+                        IdentifierProvider jwtTokenProvider,
+                        PasswordEncoder passwordEncoder,
+                        CacheService<String, String> redisService
+    ) {
+        this.memberDao = memberDao;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
+        this.redisService = redisService;
+    }
 
     @Transactional(noRollbackFor = CommerceException.class)
     public LoginServiceResponse login(LoginServiceRequest request) {
         String id = request.id();
 
-        Member member = memberService.selectUseMember(id)
+        var member = memberDao.findByUsingId(id)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID));
 
         // passwordFailCount >= 5
-        if(member.getPasswordFailCount() >= MAX_PASSWORD_WRONG_COUNT) {
+        if (member.getPasswordFailCount() >= MAX_PASSWORD_WRONG_COUNT) {
             throw new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID);
         }
 
         // Login Success
-        if(member.getOauthType() != null || passwordEncoder.matches(request.password(), member.getPassword())) {
+        if (member.getOauthType() != null || passwordEncoder.matches(request.password(), member.getPassword())) {
             log.info("Login Success");
-            IdentificationGenerateRequest accessTokenVO = JwtIdentificationGenerateRequest.builder()
+            var accessTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
                     .id(member.getId())
                     .build();
             String accessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
-            IdentificationGenerateRequest refreshTokenVO = JwtIdentificationGenerateRequest.builder()
+            var refreshTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.REFRESH_TOKEN)
                     .id(member.getId())
                     .build();
@@ -57,7 +65,7 @@ public class LoginService {
 
             redisService.setCache(accessToken, refreshToken);
 
-            LoginServiceResponse login = LoginServiceResponse.builder()
+            var login = LoginServiceResponse.builder()
                     .id(member.getId())
                     .name(member.getName())
                     .tel(member.getTel())
@@ -70,12 +78,12 @@ public class LoginService {
                     .build();
 
             member.loginSuccess();
-            memberService.save(member);
+            memberDao.save(member);
             return login;
         } else {
             log.info("Login Fail");
             member.loginFailed();
-            memberService.save(member);
+            memberDao.save(member);
             throw new CommerceException(ExceptionStatus.LOGIN_PASSWORD_FAIL);
         }
     }
@@ -91,7 +99,7 @@ public class LoginService {
             Claims tokenForSubject = jwtTokenProvider.getTokenForSubject(refreshToken);
             String subject = tokenForSubject.getSubject();
 
-            IdentificationGenerateRequest accessTokenVO = JwtIdentificationGenerateRequest.builder()
+            var accessTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
                     .id(subject)
                     .build();

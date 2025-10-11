@@ -2,6 +2,7 @@ package com.commerce.core.member.service;
 
 import com.commerce.core.common.config.security.IdentifierProvider;
 import com.commerce.core.common.service.CacheService;
+import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.request.LoginServiceRequest;
 import com.commerce.core.member.service.response.LoginServiceResponse;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class LoginServiceTest {
 
     @Mock
-    MemberService memberService;
+    MemberDao memberDao;
     @Mock
     IdentifierProvider identifierProvider;
 
@@ -39,7 +40,7 @@ class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-        loginService = new LoginService(memberService,
+        loginService = new LoginService(memberDao,
                 identifierProvider, passwordEncoder, cacheService);
     }
 
@@ -58,7 +59,7 @@ class LoginServiceTest {
                         .passwordFailCount(0L)
                         .build()
         );
-        Mockito.when(memberService.selectUseMember("test"))
+        Mockito.when(memberDao.findByUsingId("test"))
                         .thenReturn(member);
         Mockito.when(passwordEncoder.matches(Mockito.any(), Mockito.any()))
                         .thenReturn(true);

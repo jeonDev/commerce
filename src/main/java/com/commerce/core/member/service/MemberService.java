@@ -5,21 +5,23 @@ import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.request.MemberServiceRequest;
 import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
 import com.commerce.core.member.service.response.MyPageInfoServiceResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class MemberService {
 
     private final MemberDao memberDao;
     private final PasswordEncoder passwordEncoder;
+
+    public MemberService(MemberDao memberDao,
+                         PasswordEncoder passwordEncoder) {
+        this.memberDao = memberDao;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     public Member createMember(MemberServiceRequest request) {
@@ -31,38 +33,18 @@ public class MemberService {
         return memberDao.save(member);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<Member> selectMember(Long memberSeq) {
-        return memberDao.findById(memberSeq);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Member> selectUseMember(Long memberSeq) {
-        return memberDao.findByUsingMemberSeq(memberSeq);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Member> selectUseMember(String id) {
-        return memberDao.findByUsingId(id);
-    }
-
     @Transactional
-    public Member save(Member member) {
-        return memberDao.save(member);
+    public void updateMember(MemberUpdateServiceRequest request, Long memberSeq) {
+        var member = memberDao.findById(memberSeq)
+                .orElseThrow()
+                .updateMyPageInfo(request);
+        memberDao.save(member);
     }
 
     @Transactional(readOnly = true)
     public MyPageInfoServiceResponse selectMyInfo(Long memberSeq) {
         return MyPageInfoServiceResponse.from(
                 memberDao.selectMemberInfo(memberSeq)
-        );
-    }
-
-    @Transactional
-    public void updateMember(MemberUpdateServiceRequest request, Long memberSeq) {
-        memberDao.save(this.selectMember(memberSeq)
-                .orElseThrow()
-                .updateMyPageInfo(request)
         );
     }
 }

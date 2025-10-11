@@ -11,30 +11,30 @@ import com.commerce.core.product.service.request.ProductServiceRequest;
 import com.commerce.core.product.service.response.ProductServiceResponse;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
 import com.commerce.core.product.type.ProductViewStatus;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class ProductService {
-
 
     private final ProductDao productDao;
     private final EventSender eventSender;
 
+    public ProductService(ProductDao productDao,
+                          EventSender eventSender) {
+        this.productDao = productDao;
+        this.eventSender = eventSender;
+    }
+
     @Transactional
     public ProductServiceResponse add(ProductServiceRequest request) {
         // 1. 상품 정보 조회
-        ProductInfo productInfo = this.mergeProductInfo(request);
+        var productInfo = this.mergeProductInfo(request);
 
         // 2. 상품 save
-        List<Product> list = request.productOptions()
+        var list = request.productOptions()
                 .stream()
                 .map(s -> Product.builder()
                         .productInfo(productInfo)
@@ -44,7 +44,7 @@ public class ProductService {
         productDao.saveAll(list);
 
         // 3. Event Producer Push
-        ProductViewServiceRequest productViewDto = ProductViewServiceRequest.builder()
+        var productViewDto = ProductViewServiceRequest.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())
                 .productViewStatus(ProductViewStatus.REGISTER)
                 .build();
@@ -58,37 +58,16 @@ public class ProductService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
-    public Optional<Product> selectProduct(Long productSeq) {
-        return productDao.findById(productSeq);
-    }
-
     private ProductInfo mergeProductInfo(ProductServiceRequest request) {
         // 1-1. 상품 정보 존재 시, 세팅
         Long productInfoSeq = request.productInfoSeq();
-        if(productInfoSeq == null) {
-            return this.productInfoAdd(request);
+        if (productInfoSeq == null) {
+            return productDao.productInfoSave(request.requestToEntity());
         }
         // 1-2. 상품 정보 없을 시, 등록 및 세팅
-        ProductInfo productInfo = this.selectProductInfo(productInfoSeq)
+        var productInfo = productDao.findProductInfoById(productInfoSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
         productInfo.update(request.productName(), request.productDetail(), request.price());
         return productInfo;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Product> selectProductToProductInfo(Long productInfoSeq) {
-        return productDao.findByProductInfoSeq(productInfoSeq);
-    }
-
-
-    @Transactional
-    public ProductInfo productInfoAdd(ProductServiceRequest request) {
-        return productDao.productInfoSave(request.requestToEntity());
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<ProductInfo> selectProductInfo(Long productInfoSeq) {
-        return productDao.findProductInfoById(productInfoSeq);
     }
 }

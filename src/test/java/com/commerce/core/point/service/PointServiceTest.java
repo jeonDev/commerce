@@ -1,7 +1,7 @@
 package com.commerce.core.point.service;
 
+import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.service.MemberService;
 import com.commerce.core.point.domain.PointDao;
 import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
@@ -25,18 +25,18 @@ class PointServiceTest {
     @Mock
     PointDao pointDao;
     @Mock
-    MemberService memberService;
+    MemberDao memberDao;
 
     PointService pointService;
 
 
     @BeforeEach
     void setUp() {
-        pointService = new PointService(pointDao, memberService);
+        pointService = new PointService(pointDao, memberDao);
         Member member = Member.builder()
                 .memberSeq(1L)
                 .build();
-        Mockito.when(memberService.selectUseMember(Mockito.anyLong()))
+        Mockito.when(memberDao.findByUsingMemberSeq(Mockito.anyLong()))
                 .thenReturn(Optional.of(member));
     }
 

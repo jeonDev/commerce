@@ -8,25 +8,22 @@ import com.commerce.core.order.service.response.OrderViewServiceResponse;
 import com.commerce.core.order.type.OrderDetailInfo;
 import com.commerce.core.order.type.OrderStatus;
 import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class OrderViewService {
 
     private final OrderDao orderDao;
-    private final OrderService orderService;
+
+    public OrderViewService(OrderDao orderDao) {
+        this.orderDao = orderDao;
+    }
 
     @Transactional
     public void merge(OrderViewMergeServiceRequest request) {
@@ -36,11 +33,11 @@ public class OrderViewService {
         Long amount = 0L;
         Long paidAmount = 0L;
         boolean isPaymentComplete = false;
-        List<OrderDetailInfo> orderDetailInfos = new ArrayList<>();
+        var orderDetailInfos = new ArrayList<OrderDetailInfo>();
 
         // 2. Order Detail Find
         Long orderSeq = request.orderSeq();
-        List<OrderDetail> orderDetails = orderService.selectOrderDetailList(orderSeq);
+        var orderDetails = orderDao.orderDetailListByOrderSeq(orderSeq);
 
         // 3. Amount Data Setting
         for (OrderDetail orderDetail : orderDetails) {
@@ -51,12 +48,12 @@ public class OrderViewService {
             if (OrderStatus.PAYMENT_COMPLETE == orderDetail.getOrderStatus()) isPaymentComplete = true;
         }
 
-        OrderStatus orderStatus = isPaymentComplete ? OrderStatus.PAYMENT_COMPLETE : OrderStatus.NEW_ORDER;
+        var orderStatus = isPaymentComplete ? OrderStatus.PAYMENT_COMPLETE : OrderStatus.NEW_ORDER;
 
         // 4. Order View Data Save
         OrderView orderView;
-        Optional<OrderView> optionalOrderView = orderDao.orderViewFindByOrderSeq(orderSeq);
-        if(optionalOrderView.isPresent()) {
+        var optionalOrderView = orderDao.orderViewFindByOrderSeq(orderSeq);
+        if (optionalOrderView.isPresent()) {
             orderView = optionalOrderView.get();
             orderView.settingData(amount, buyAmount, paidAmount, orderDetailInfos, orderStatus);
         } else {
@@ -75,8 +72,8 @@ public class OrderViewService {
 
     @Transactional(readOnly = true)
     public PageListResponse<OrderViewServiceResponse> selectOrderView(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<OrderView> list = orderDao.orderViewFindAll(pageable);
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var list = orderDao.orderViewFindAll(pageable);
         return PageListResponse.<OrderViewServiceResponse>builder()
                 .list(list.getContent().stream()
                         .map(OrderView::documentToResDto)

@@ -4,8 +4,8 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
+import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.OrderDetailHistory;
@@ -16,46 +16,53 @@ import com.commerce.core.order.service.request.PaymentServiceRequest;
 import com.commerce.core.order.type.BuyProduct;
 import com.commerce.core.order.type.OrderStatus;
 import com.commerce.core.product.domain.entity.Product;
-import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class OrderService {
 
     private final OrderDao orderDao;
+    private final MemberDao memberDao;
     private final ProductStockService productStockService;
-    private final MemberService memberService;
     private final EventSender eventSender;
     private final PaymentService paymentService;
+
+    public OrderService(OrderDao orderDao,
+                        MemberDao memberDao,
+                        ProductStockService productStockService,
+                        EventSender eventSender,
+                        PaymentService paymentService) {
+        this.orderDao = orderDao;
+        this.memberDao = memberDao;
+        this.productStockService = productStockService;
+        this.eventSender = eventSender;
+        this.paymentService = paymentService;
+    }
 
     @Transactional
     public Orders order(OrderServiceRequest request) {
         log.info("[Order] 주문 요청({}) : {} ", request.payment(), request.buyProducts());
         // 1. Member Use Check
-        Member member = memberService.selectUseMember(request.memberSeq())
+        var member = memberDao.findByUsingMemberSeq(request.memberSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Order
-        Orders order = this.order(member, request.buyProducts());
+        var order = this.order(member, request.buyProducts());
 
         // 3. 결제
         if (request.payment()) {
             this.payment(member.getMemberSeq(), order.getOrderSeq());
         } else {
             // 바로 결제 안할 시, Event Send (내역 저장 용)
-            OrderViewMergeServiceRequest orderViewDto = OrderViewMergeServiceRequest.builder()
+            var orderViewDto = OrderViewMergeServiceRequest.builder()
                     .orderSeq(order.getOrderSeq())
                     .build();
             eventSender.send(EventTopic.SYNC_ORDER, orderViewDto);
@@ -66,12 +73,12 @@ public class OrderService {
 
     private Orders order(Member member, BuyProduct[] buyProducts) {
         // 1. Order Create
-        final Orders order = orderDao.save(Orders.builder()
+        var order = orderDao.save(Orders.builder()
                 .member(member)
                 .build());
 
         // 2. Product Stock Consume & Order Detail Setting
-        List<OrderDetail> orderDetails = Arrays.stream(buyProducts)
+        var orderDetails = Arrays.stream(buyProducts)
                 .map(item -> this.productStockConsumeAndOrderDetailSetting(order, item))
                 .toList();
 
@@ -86,8 +93,8 @@ public class OrderService {
 
     private OrderDetail productStockConsumeAndOrderDetailSetting(Orders order, BuyProduct item) {
         // 1. Product Stock Consume
-        Product product = this.productStockConsume(item);
-        ProductInfo productInfo = product.getProductInfo();
+        var product = this.productStockConsume(item);
+        var productInfo = product.getProductInfo();
 
         // 2. Order Detail Setting
         return OrderDetail.builder()
@@ -102,7 +109,7 @@ public class OrderService {
     }
 
     private Product productStockConsume(BuyProduct item) {
-        ProductStockServiceRequest request = ProductStockServiceRequest.builder()
+        var request = ProductStockServiceRequest.builder()
                 .productSeq(item.productSeq())
                 .stock(item.cnt())
                 .productStockProcessStatus(ProductStockProcessStatus.CONSUME)
@@ -113,7 +120,7 @@ public class OrderService {
     }
 
     private void payment(Long memberSeq, Long orderSeq) {
-        PaymentServiceRequest paymentRequest = PaymentServiceRequest.builder()
+        var paymentRequest = PaymentServiceRequest.builder()
                 .memberSeq(memberSeq)
                 .orderSeq(orderSeq)
                 .build();
@@ -122,18 +129,4 @@ public class OrderService {
         if (!isPayment) throw new CommerceException(ExceptionStatus.PAYMENT_ERROR);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<Orders> selectOrder(Long orderSeq) {
-        return orderDao.findById(orderSeq);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<OrderDetail> selectOrderDetail(Long orderDetailSeq) {
-        return orderDao.orderDetailFindById(orderDetailSeq);
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrderDetail> selectOrderDetailList(Long orderSeq) {
-        return orderDao.orderDetailListByOrderSeq(orderSeq);
-    }
 }

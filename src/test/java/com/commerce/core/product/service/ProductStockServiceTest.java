@@ -2,6 +2,7 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.event.EventTopic;
 import com.commerce.core.event.producer.EventSender;
+import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
@@ -27,7 +28,7 @@ class ProductStockServiceTest {
     @Mock
     ProductStockDao productStockDao;
     @Mock
-    ProductService productService;
+    ProductDao productDao;
     @Mock
     EventSender eventSender;
 
@@ -36,7 +37,7 @@ class ProductStockServiceTest {
     @BeforeEach
     void setUp() {
         productStockService = new ProductStockService(productStockDao,
-                productService, eventSender);
+                productDao, eventSender);
     }
 
     @Test
@@ -57,7 +58,7 @@ class ProductStockServiceTest {
                 .productOptionCode("A")
                 .productInfo(productInfo)
                 .build();
-        Mockito.when(productService.selectProduct(Mockito.any()))
+        Mockito.when(productDao.findById(Mockito.any()))
                 .thenReturn(Optional.of(product));
 
         ProductStock productStock = ProductStock.builder()

@@ -14,7 +14,6 @@ import com.commerce.core.order.type.InoutDivisionStatus;
 import com.commerce.core.point.service.PointService;
 import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
 import com.commerce.core.point.type.PointProcessStatus;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class PaymentService {
 
@@ -31,12 +29,20 @@ public class PaymentService {
     private final PointService pointService;
     private final EventSender eventSender;
 
+    public PaymentService(OrderDao orderDao,
+                          PointService pointService,
+                          EventSender eventSender) {
+        this.orderDao = orderDao;
+        this.pointService = pointService;
+        this.eventSender = eventSender;
+    }
+
     @Transactional
     public boolean payment(PaymentServiceRequest request) {
         log.info("[Payment] 결제 요청 | 고객 번호 : {} | 주문 번호 : {}", request.memberSeq(), request.orderSeq());
         // 1. Order Detail Find
         Long orderSeq = request.orderSeq();
-        List<OrderDetail> orderDetails = orderDao.orderDetailListByOrderSeq(orderSeq);
+        var orderDetails = orderDao.orderDetailListByOrderSeq(orderSeq);
 
         // 2. Payment Amount Calculator
         long payAmount = orderDetails.stream()
@@ -54,7 +60,7 @@ public class PaymentService {
         this.paymentSuccessHistorySave(orderDetails);
 
         // 5. Event Send(Order View Mongo DB)
-        OrderViewMergeServiceRequest orderEventRequest = OrderViewMergeServiceRequest.builder()
+        var orderEventRequest = OrderViewMergeServiceRequest.builder()
                 .orderSeq(orderSeq)
                 .build();
         eventSender.send(EventTopic.SYNC_ORDER, orderEventRequest);
@@ -63,7 +69,7 @@ public class PaymentService {
     }
 
     public void pay(Long memberSeq, Long payAmount) {
-        PointAdjustmentServiceRequest pointAdjustmentRequest = PointAdjustmentServiceRequest.builder()
+        var pointAdjustmentRequest = PointAdjustmentServiceRequest.builder()
                 .memberSeq(memberSeq)
                 .point(payAmount)
                 .pointProcessStatus(PointProcessStatus.PAYMENT)
@@ -72,9 +78,9 @@ public class PaymentService {
     }
 
     public void paymentSuccessHistorySave(List<OrderDetail> list) {
-        List<OrderDetailHistory> orderDetailHistoryList = new ArrayList<>();
-        List<PaymentHistory> paymentHistoryList = new ArrayList<>();
-        List<OrderDetail> orderDetailList = list.stream()
+        var orderDetailHistoryList = new ArrayList<OrderDetailHistory>();
+        var paymentHistoryList = new ArrayList<PaymentHistory>();
+        var orderDetailList = list.stream()
                 .peek(item -> {
                     item.paymentSuccessSettingPaidAmount(item.getBuyAmount());
                     item.paymentComplete();

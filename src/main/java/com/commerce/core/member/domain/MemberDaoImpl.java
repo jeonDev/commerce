@@ -4,6 +4,7 @@ import com.commerce.core.member.domain.dto.MemberInfoDto;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.domain.repository.MemberDslRepository;
 import com.commerce.core.member.domain.repository.MemberRepository;
+import com.commerce.core.member.type.oauth.OAuthType;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -43,5 +44,10 @@ public class MemberDaoImpl implements MemberDao {
     @Override
     public MemberInfoDto selectMemberInfo(Long memberSeq) {
         return memberDslRepository.selectMemberInfo(memberSeq);
+    }
+
+    @Override
+    public Optional<Member> findByIdAndOauthType(String id, OAuthType oauthType) {
+        return memberRepository.findByIdAndOauthType(id, oauthType);
     }
 }

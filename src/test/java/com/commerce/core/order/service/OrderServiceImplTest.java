@@ -1,6 +1,7 @@
 package com.commerce.core.order.service;
 
 import com.commerce.core.event.producer.EventSender;
+import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.MemberService;
 import com.commerce.core.order.domain.OrderDao;
@@ -28,6 +29,8 @@ class OrderServiceImplTest {
     @Mock
     private OrderDao orderDao;
     @Mock
+    private MemberDao memberDao;
+    @Mock
     private ProductStockService productStockService;
     @Mock
     private MemberService memberService;
@@ -40,7 +43,7 @@ class OrderServiceImplTest {
     @BeforeEach
     void setUp() {
         orderService = new OrderService(orderDao,
-                productStockService, memberService, eventSender, paymentService);
+                memberDao, productStockService, eventSender, paymentService);
     }
 
     @Test
@@ -54,7 +57,7 @@ class OrderServiceImplTest {
                         .thenReturn(Orders.builder()
                                 .orderSeq(1L)
                                 .build());
-        Mockito.when(memberService.selectUseMember(Mockito.anyLong()))
+        Mockito.when(memberDao.findByUsingMemberSeq(Mockito.anyLong()))
                 .thenReturn(Optional.ofNullable(Member.builder()
                         .memberSeq(1L)
                         .build()));

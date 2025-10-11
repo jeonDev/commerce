@@ -24,14 +24,11 @@ class OrderViewServiceImplTest {
 
     @Mock
     private OrderDao orderDao;
-    @Mock
-    private OrderService orderService;
-
     private OrderViewService orderViewService;
 
     @BeforeEach
     void setUp() {
-        orderViewService = new OrderViewService(orderDao, orderService);
+        orderViewService = new OrderViewService(orderDao);
     }
 
     @Test
@@ -66,7 +63,7 @@ class OrderViewServiceImplTest {
                 .orderStatus(OrderStatus.NEW_ORDER)
                 .build();
 
-        Mockito.when(orderService.selectOrderDetailList(Mockito.anyLong()))
+        Mockito.when(orderDao.orderDetailListByOrderSeq(Mockito.anyLong()))
                         .thenReturn(List.of(orderDetail1, orderDetail2));
         Mockito.when(orderDao.orderViewFindByOrderSeq(Mockito.anyLong()))
                         .thenReturn(Optional.ofNullable(null));

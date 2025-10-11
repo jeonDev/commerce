@@ -3,8 +3,8 @@ package com.commerce.core.member.service;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.properties.GithubKeyProperties;
+import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.domain.repository.MemberRepository;
 import com.commerce.core.member.service.request.LoginServiceRequest;
 import com.commerce.core.member.service.response.LoginServiceResponse;
 import com.commerce.core.member.service.request.MemberServiceRequest;
@@ -19,18 +19,18 @@ import java.util.Optional;
 @Service
 public class OAuthService {
 
-    private final MemberRepository memberRepository;
+    private final MemberDao memberDao;
     private final MemberService memberService;
     private final LoginService loginService;
     private final GithubKeyProperties githubKeyProperties;
     private final OAuthApiClient githubOAuthClient;
 
-    public OAuthService(MemberRepository memberRepository,
+    public OAuthService(MemberDao memberDao,
                         MemberService memberService,
                         LoginService loginService,
                         GithubKeyProperties githubKeyProperties,
                         OAuthApiClient githubOAuthClient) {
-        this.memberRepository = memberRepository;
+        this.memberDao = memberDao;
         this.memberService = memberService;
         this.loginService = loginService;
         this.githubKeyProperties = githubKeyProperties;
@@ -38,7 +38,7 @@ public class OAuthService {
     }
 
     public String getPage(String type) {
-        OAuthType oAuthType = OAuthType.valueOf(type);
+        var oAuthType = OAuthType.valueOf(type);
 
         switch (oAuthType) {
             case GITHUB -> {
@@ -65,7 +65,7 @@ public class OAuthService {
             default -> throw new CommerceException(ExceptionStatus.VALID_ERROR);
         }
 
-        Optional<Member> optionalMember = memberRepository.findByIdAndOauthType(id, oAuthType);
+        Optional<Member> optionalMember = memberDao.findByIdAndOauthType(id, oAuthType);
         Member member = optionalMember.isPresent()
                 ? optionalMember.get()
                 : this.oauthCreateMember(id, name, oAuthType);
@@ -78,7 +78,7 @@ public class OAuthService {
     }
 
     private Member oauthCreateMember(String id, String name, OAuthType oAuthType) {
-        MemberServiceRequest request = MemberServiceRequest.builder()
+        var request = MemberServiceRequest.builder()
                 .id(id)
                 .name(name)
                 .oAuthType(oAuthType)
@@ -87,7 +87,7 @@ public class OAuthService {
     }
 
     public OAuthUserInfoResponse getUserInfo(String type, String authorization) {
-        OAuthType oAuthType = OAuthType.valueOf(type);
+        var oAuthType = OAuthType.valueOf(type);
         switch (oAuthType) {
             case GITHUB -> {
                 return OAuthUserInfoResponse.from(
@@ -103,7 +103,7 @@ public class OAuthService {
     }
 
     private GithubAccessTokenResponse githubGetAccessToken(String code) {
-        GithubAccessTokenRequest request = GithubAccessTokenRequest.builder()
+        var request = GithubAccessTokenRequest.builder()
                 .clientId(githubKeyProperties.getClientId())
                 .clientSecret(githubKeyProperties.getClientSecret())
                 .code(code)

@@ -1,6 +1,7 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.product.domain.ProductDao;
+import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
@@ -23,19 +24,16 @@ class ProductViewServiceTest {
     @Mock
     ProductDao productDao;
     @Mock
-    ProductService productService;
-    @Mock
-    ProductStockService productStockService;
+    ProductStockDao productStockDao;
     ProductViewService productViewService;
 
     @BeforeEach
     void setUp() {
-        productViewService = new ProductViewService(productDao,
-                productService, productStockService);
+        productViewService = new ProductViewService(productDao, productStockDao);
         ProductInfo productInfo = ProductInfo.builder()
                 .products(List.of(Product.builder().productOptionCode("A").build()))
                 .build();
-        Mockito.when(productService.selectProductInfo(Mockito.anyLong()))
+        Mockito.when(productDao.findProductInfoById(Mockito.anyLong()))
                 .thenReturn(Optional.of(productInfo));
     }
 
