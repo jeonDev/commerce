@@ -1,20 +1,68 @@
 package com.commerce.core.member.service;
 
+import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.request.MemberServiceRequest;
 import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
 import com.commerce.core.member.service.response.MyPageInfoServiceResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public interface MemberService {
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class MemberService {
 
-    Member createMember(MemberServiceRequest request);
-    Optional<Member> selectMember(Long memberSeq);
-    Optional<Member> selectUseMember(Long memberSeq);
-    Optional<Member> selectUseMember(String id);
-    Member save(Member member);
-    MyPageInfoServiceResponse selectMyInfo(Long memberSeq);
-    void updateMember(MemberUpdateServiceRequest request, Long memberSeq);
+    private final MemberDao memberDao;
+    private final PasswordEncoder passwordEncoder;
 
+    @Transactional
+    public Member createMember(MemberServiceRequest request) {
+        Member member = request.toEntity();
+
+        String encryptPassword = member.getOauthType() != null ? member.getPassword() : passwordEncoder.encode(member.getPassword());
+        member.setEncryptPassword(encryptPassword);
+
+        return memberDao.save(member);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Member> selectMember(Long memberSeq) {
+        return memberDao.findById(memberSeq);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Member> selectUseMember(Long memberSeq) {
+        return memberDao.findByUsingMemberSeq(memberSeq);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Member> selectUseMember(String id) {
+        return memberDao.findByUsingId(id);
+    }
+
+    @Transactional
+    public Member save(Member member) {
+        return memberDao.save(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MyPageInfoServiceResponse selectMyInfo(Long memberSeq) {
+        return MyPageInfoServiceResponse.from(
+                memberDao.selectMemberInfo(memberSeq)
+        );
+    }
+
+    @Transactional
+    public void updateMember(MemberUpdateServiceRequest request, Long memberSeq) {
+        memberDao.save(this.selectMember(memberSeq)
+                .orElseThrow()
+                .updateMyPageInfo(request)
+        );
+    }
 }

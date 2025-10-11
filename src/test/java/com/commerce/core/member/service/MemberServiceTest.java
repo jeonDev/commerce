@@ -28,7 +28,7 @@ class MemberServiceTest {
 
     @BeforeEach
     void setUp() {
-        memberService = new MemberServiceImpl(memberDao, passwordEncoder);
+        memberService = new MemberService(memberDao, passwordEncoder);
     }
 
     @Test

@@ -31,7 +31,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productService = new ProductServiceImpl(productDao, eventSender);
+        productService = new ProductService(productDao, eventSender);
     }
 
     @Test

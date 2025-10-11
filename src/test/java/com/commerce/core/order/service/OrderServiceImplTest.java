@@ -39,7 +39,7 @@ class OrderServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderServiceImpl(orderDao,
+        orderService = new OrderService(orderDao,
                 productStockService, memberService, eventSender, paymentService);
     }
 

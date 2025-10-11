@@ -32,7 +32,7 @@ class PointServiceTest {
 
     @BeforeEach
     void setUp() {
-        pointService = new PointServiceImpl(pointDao, memberService);
+        pointService = new PointService(pointDao, memberService);
         Member member = Member.builder()
                 .memberSeq(1L)
                 .build();

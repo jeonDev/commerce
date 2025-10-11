@@ -30,7 +30,7 @@ class ProductViewServiceTest {
 
     @BeforeEach
     void setUp() {
-        productViewService = new ProductViewServiceImpl(productDao,
+        productViewService = new ProductViewService(productDao,
                 productService, productStockService);
         ProductInfo productInfo = ProductInfo.builder()
                 .products(List.of(Product.builder().productOptionCode("A").build()))

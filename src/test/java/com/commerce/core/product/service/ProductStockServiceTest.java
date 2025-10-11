@@ -35,7 +35,7 @@ class ProductStockServiceTest {
 
     @BeforeEach
     void setUp() {
-        productStockService = new ProductStockServiceImpl(productStockDao,
+        productStockService = new ProductStockService(productStockDao,
                 productService, eventSender);
     }
 

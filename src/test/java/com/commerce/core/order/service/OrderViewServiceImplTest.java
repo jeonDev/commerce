@@ -31,7 +31,7 @@ class OrderViewServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        orderViewService = new OrderViewServiceImpl(orderDao, orderService);
+        orderViewService = new OrderViewService(orderDao, orderService);
     }
 
     @Test

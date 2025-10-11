@@ -39,7 +39,7 @@ class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-        loginService = new LoginServiceImpl(memberService,
+        loginService = new LoginService(memberService,
                 identifierProvider, passwordEncoder, cacheService);
     }
 
