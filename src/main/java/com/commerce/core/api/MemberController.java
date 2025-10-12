@@ -11,6 +11,7 @@ import com.commerce.core.common.utils.SessionUtils;
 import com.commerce.core.common.type.HttpResponse;
 import com.commerce.core.member.facade.MemberFacade;
 import com.commerce.core.member.facade.MemberQueryFacade;
+import com.commerce.core.member.type.oauth.OAuthType;
 import com.commerce.core.member.type.oauth.OAuthUserInfoResponse;
 import com.commerce.core.member.facade.LoginFacade;
 import com.commerce.core.member.facade.OAuthFacade;
@@ -131,7 +132,7 @@ public class MemberController {
     @Operation(summary = "Github OAuth Login Callback")
     public HttpResponse<LoginResponse> githubCallback(@RequestParam("code") String code,
                                                       HttpServletResponse res) {
-        LoginResponse response = LoginResponse.from(oAuthUseCase.getAccessToken("GITHUB", code));
+        LoginResponse response = LoginResponse.from(oAuthUseCase.getAccessToken(OAuthType.GITHUB, code));
         res.addCookie(this.createCookie(response.refreshToken()));
         return HttpResponse.<LoginResponse>builder()
                 .data(response)

@@ -4,10 +4,13 @@ import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.member.service.request.MemberServiceRequest;
 import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
+import com.commerce.core.member.type.oauth.OAuthType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,4 +43,7 @@ public class MemberService {
         memberDao.save(member);
     }
 
+    public Optional<Member> findByIdAndOauthType(String id, OAuthType oAuthType) {
+        return memberDao.findByIdAndOauthType(id, oAuthType);
+    }
 }
