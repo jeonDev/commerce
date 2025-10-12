@@ -5,8 +5,6 @@ import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.properties.GithubKeyProperties;
 import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.member.domain.entity.Member;
-import com.commerce.core.member.service.request.LoginServiceRequest;
-import com.commerce.core.member.service.response.LoginServiceResponse;
 import com.commerce.core.member.service.request.MemberServiceRequest;
 import com.commerce.core.member.type.oauth.*;
 import com.commerce.core.member.external.OAuthApiClient;
@@ -20,19 +18,17 @@ import java.util.Optional;
 public class OAuthService {
 
     private final MemberDao memberDao;
+    // TODO:
     private final MemberService memberService;
-    private final LoginService loginService;
     private final GithubKeyProperties githubKeyProperties;
     private final OAuthApiClient githubOAuthClient;
 
     public OAuthService(MemberDao memberDao,
                         MemberService memberService,
-                        LoginService loginService,
                         GithubKeyProperties githubKeyProperties,
                         OAuthApiClient githubOAuthClient) {
         this.memberDao = memberDao;
         this.memberService = memberService;
-        this.loginService = loginService;
         this.githubKeyProperties = githubKeyProperties;
         this.githubOAuthClient = githubOAuthClient;
     }
@@ -48,7 +44,7 @@ public class OAuthService {
         }
     }
 
-    public LoginServiceResponse getAccessToken(String type, String code) {
+    public Member getAccessToken(String type, String code) {
         OAuthType oAuthType = OAuthType.valueOf(type);
         String id = null;
         String name = null;
@@ -66,15 +62,9 @@ public class OAuthService {
         }
 
         Optional<Member> optionalMember = memberDao.findByIdAndOauthType(id, oAuthType);
-        Member member = optionalMember.isPresent()
+        return optionalMember.isPresent()
                 ? optionalMember.get()
                 : this.oauthCreateMember(id, name, oAuthType);
-
-        LoginServiceRequest request = LoginServiceRequest.builder()
-                .id(member.getId())
-                .build();
-
-        return loginService.login(request);
     }
 
     private Member oauthCreateMember(String id, String name, OAuthType oAuthType) {

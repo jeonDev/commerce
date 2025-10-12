@@ -9,10 +9,11 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.common.utils.SessionUtils;
 import com.commerce.core.common.type.HttpResponse;
-import com.commerce.core.member.service.LoginService;
-import com.commerce.core.member.service.MemberService;
-import com.commerce.core.member.service.OAuthService;
+import com.commerce.core.member.facade.MemberFacade;
+import com.commerce.core.member.facade.MemberQueryFacade;
 import com.commerce.core.member.type.oauth.OAuthUserInfoResponse;
+import com.commerce.core.member.facade.LoginFacade;
+import com.commerce.core.member.facade.OAuthFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -29,23 +30,24 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class MemberController {
 
-    private final MemberService memberService;
-    private final LoginService loginService;
-    private final OAuthService oAuthService;
+    private final MemberFacade memberFacade;
+    private final MemberQueryFacade memberQueryFacade;
+    private final LoginFacade loginFacade;
+    private final OAuthFacade oAuthUseCase;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 진행한다.")
     public HttpResponse<Object> signup(@Valid @RequestBody MemberRequest request) {
-        memberService.createMember(request.toRequest());
+        memberFacade.create(request.toRequest());
         return HttpResponse.builder()
                 .build();
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 처리한다.")
-    public HttpResponse<LoginResponse> login(HttpServletResponse res,
-                                             @Valid @RequestBody LoginRequest request) {
-        LoginResponse response = LoginResponse.from(loginService.login(request.toRequest()));
+    public HttpResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request,
+                                             HttpServletResponse res) {
+        LoginResponse response = LoginResponse.from(loginFacade.login(request.id(), request.password()));
         res.addCookie(this.createCookie(response.refreshToken()));
         return HttpResponse.<LoginResponse>builder()
                 .data(response)
@@ -77,12 +79,12 @@ public class MemberController {
 
     @PostMapping("/tokenReIssue")
     @Operation(summary = "토큰 재발급", description = "만료된 토큰을 재 발급한다.")
-    public HttpResponse<String> login(HttpServletRequest request,
-                                      HttpServletResponse response,
-                                      @RequestHeader("Authorization") String accessToken,
-                                      @CookieValue("refreshToken") String refreshToken) {
+    public HttpResponse<String> login(@RequestHeader("Authorization") String accessToken,
+                                      @CookieValue("refreshToken") String refreshToken,
+                                      HttpServletRequest request,
+                                      HttpServletResponse response) {
         try {
-            String token = loginService.tokenReIssue(accessToken, refreshToken);
+            String token = loginFacade.tokenReIssue(accessToken, refreshToken);
             return HttpResponse.<String>builder()
                     .data(token)
                     .build();
@@ -103,7 +105,7 @@ public class MemberController {
     public HttpResponse<MyInfoResponse> myUserInfo() {
         return HttpResponse.<MyInfoResponse>builder()
                 .data(MyInfoResponse.from(
-                        memberService.selectMyInfo(SessionUtils.getMemberSeq())
+                        memberQueryFacade.selectMyInfo(SessionUtils.getMemberSeq())
                 ))
                 .build();
     }
@@ -111,7 +113,7 @@ public class MemberController {
     @PutMapping("/v1/member/update")
     @Operation(summary = "내 정보 수정", description = "개인 정보 내역 수정")
     public HttpResponse<?> updateUserInfo(@RequestBody MemberUpdateRequest request) {
-        memberService.updateMember(request.toRequest(), SessionUtils.getMemberSeq());
+        memberFacade.update(request.toRequest(), SessionUtils.getMemberSeq());
         return HttpResponse.builder()
                 .build();
     }
@@ -119,7 +121,7 @@ public class MemberController {
     @GetMapping("/oauth/login")
     @Operation(summary = "OAuth 로그인 페이지 가져오기")
     public HttpResponse<String> getOAuthPage(@RequestParam("type") String type) {
-        String result = oAuthService.getPage(type);
+        String result = oAuthUseCase.getPage(type);
         return HttpResponse.<String>builder()
                 .data(result)
                 .build();
@@ -127,9 +129,9 @@ public class MemberController {
 
     @GetMapping("/oauth/github/callback")
     @Operation(summary = "Github OAuth Login Callback")
-    public HttpResponse<LoginResponse> githubCallback(HttpServletResponse res,
-                                                      @RequestParam("code") String code) {
-        LoginResponse response = LoginResponse.from(oAuthService.getAccessToken("GITHUB", code));
+    public HttpResponse<LoginResponse> githubCallback(@RequestParam("code") String code,
+                                                      HttpServletResponse res) {
+        LoginResponse response = LoginResponse.from(oAuthUseCase.getAccessToken("GITHUB", code));
         res.addCookie(this.createCookie(response.refreshToken()));
         return HttpResponse.<LoginResponse>builder()
                 .data(response)
@@ -138,11 +140,9 @@ public class MemberController {
 
     @GetMapping("/oauth/user")
     @Operation(summary = "OAuth User Info")
-    public HttpResponse<OAuthUserInfoResponse> getUserInfo(
-            @RequestParam("type") String type,
-            @RequestHeader(value = "Authorization", required = false) String authorization
-    ) {
-        OAuthUserInfoResponse userInfo = oAuthService.getUserInfo(type, authorization);
+    public HttpResponse<OAuthUserInfoResponse> getUserInfo(@RequestParam("type") String type,
+                                                           @RequestHeader(value = "Authorization", required = false) String authorization) {
+        OAuthUserInfoResponse userInfo = oAuthUseCase.getUserInfo(type, authorization);
         return HttpResponse.<OAuthUserInfoResponse>builder()
                 .data(userInfo)
                 .build();

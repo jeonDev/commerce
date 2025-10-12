@@ -7,7 +7,6 @@ import com.commerce.core.common.config.security.IdentifierProvider;
 import com.commerce.core.common.config.security.type.JwtIdentificationGenerateRequest;
 import com.commerce.core.common.config.security.type.JwtToken;
 import com.commerce.core.member.domain.MemberDao;
-import com.commerce.core.member.service.request.LoginServiceRequest;
 import com.commerce.core.member.service.response.LoginServiceResponse;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +36,7 @@ public class LoginService {
     }
 
     @Transactional(noRollbackFor = CommerceException.class)
-    public LoginServiceResponse login(LoginServiceRequest request) {
-        String id = request.id();
+    public LoginServiceResponse login(String id, String password) {
 
         var member = memberDao.findByUsingId(id)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID));
@@ -49,7 +47,7 @@ public class LoginService {
         }
 
         // Login Success
-        if (member.getOauthType() != null || passwordEncoder.matches(request.password(), member.getPassword())) {
+        if (member.getOauthType() != null || passwordEncoder.matches(password, member.getPassword())) {
             log.info("Login Success");
             var accessTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
