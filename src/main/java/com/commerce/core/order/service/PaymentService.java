@@ -2,17 +2,11 @@ package com.commerce.core.order.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.event.EventTopic;
-import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.OrderDetailHistory;
 import com.commerce.core.order.domain.entity.PaymentHistory;
-import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
-import com.commerce.core.order.service.request.PaymentServiceRequest;
 import com.commerce.core.order.type.InoutDivisionStatus;
-import com.commerce.core.point.service.PointService;
-import com.commerce.core.point.type.PointProcessStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,25 +19,17 @@ import java.util.List;
 public class PaymentService {
 
     private final OrderDao orderDao;
-    private final PointService pointService;
-    private final EventSender eventSender;
 
-    public PaymentService(OrderDao orderDao,
-                          PointService pointService,
-                          EventSender eventSender) {
+    public PaymentService(OrderDao orderDao) {
         this.orderDao = orderDao;
-        this.pointService = pointService;
-        this.eventSender = eventSender;
     }
 
-    @Transactional
-    public boolean payment(PaymentServiceRequest request) {
-        log.info("[Payment] 결제 요청 | 고객 번호 : {} | 주문 번호 : {}", request.memberSeq(), request.orderSeq());
-        // 1. Order Detail Find
-        Long orderSeq = request.orderSeq();
-        var orderDetails = orderDao.orderDetailListByOrderSeq(orderSeq);
+    @Transactional(readOnly = true)
+    public List<OrderDetail> getOrderDetailList(Long orderSeq) {
+        return orderDao.orderDetailListByOrderSeq(orderSeq);
+    }
 
-        // 2. Payment Amount Calculator
+    public Long getPaymentAmount(List<OrderDetail> orderDetails) {
         long payAmount = orderDetails.stream()
                 .mapToLong(item -> item.getBuyAmount() - item.getPaidAmount())
                 .sum();
@@ -52,21 +38,10 @@ public class PaymentService {
             throw new CommerceException(ExceptionStatus.PAYMENT_AMOUNT_ERROR);
         }
 
-        // 3. Payment (Point Withdraw)
-        pointService.pointAdjustment(request.memberSeq(), payAmount, PointProcessStatus.PAYMENT);
-
-        // 4. Payment Success Save
-        this.paymentSuccessHistorySave(orderDetails);
-
-        // 5. Event Send(Order View Mongo DB)
-        var orderEventRequest = OrderViewMergeServiceRequest.builder()
-                .orderSeq(orderSeq)
-                .build();
-        eventSender.send(EventTopic.SYNC_ORDER, orderEventRequest);
-
-        return true;
+        return payAmount;
     }
 
+    @Transactional
     public void paymentSuccessHistorySave(List<OrderDetail> list) {
         var orderDetailHistoryList = new ArrayList<OrderDetailHistory>();
         var paymentHistoryList = new ArrayList<PaymentHistory>();

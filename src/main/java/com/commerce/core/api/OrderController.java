@@ -4,9 +4,10 @@ import com.commerce.core.api.request.OrderRequest;
 import com.commerce.core.api.request.PaymentRequest;
 import com.commerce.core.common.type.PageListResponse;
 import com.commerce.core.common.type.HttpResponse;
+import com.commerce.core.common.utils.SessionUtils;
+import com.commerce.core.order.facade.PaymentFacade;
 import com.commerce.core.order.service.OrderService;
 import com.commerce.core.order.service.OrderViewService;
-import com.commerce.core.order.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderViewService orderViewService;
-    private final PaymentService paymentService;
+    private final PaymentFacade paymentFacade;
 
     @PostMapping("/v1/order")
     @Operation(summary = "상품 주문", description = "고객이 상품을 주문한다.")
@@ -36,7 +37,7 @@ public class OrderController {
     @Operation(summary = "주문 결제", description = "상품 주문 내역에 대한 결제 처리를 진행한다.")
     public HttpResponse<Boolean> payment(@RequestBody PaymentRequest request) {
         return HttpResponse.<Boolean>builder()
-                .data(paymentService.payment(request.toRequest()))
+                .data(paymentFacade.payment(request.orderSeq(), SessionUtils.getMemberSeq()))
                 .build();
     }
 
