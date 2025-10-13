@@ -12,7 +12,6 @@ import com.commerce.core.order.service.request.OrderViewMergeServiceRequest;
 import com.commerce.core.order.service.request.PaymentServiceRequest;
 import com.commerce.core.order.type.InoutDivisionStatus;
 import com.commerce.core.point.service.PointService;
-import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
 import com.commerce.core.point.type.PointProcessStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,7 +53,7 @@ public class PaymentService {
         }
 
         // 3. Payment (Point Withdraw)
-        this.pay(request.memberSeq(), payAmount);
+        pointService.pointAdjustment(request.memberSeq(), payAmount, PointProcessStatus.PAYMENT);
 
         // 4. Payment Success Save
         this.paymentSuccessHistorySave(orderDetails);
@@ -66,15 +65,6 @@ public class PaymentService {
         eventSender.send(EventTopic.SYNC_ORDER, orderEventRequest);
 
         return true;
-    }
-
-    public void pay(Long memberSeq, Long payAmount) {
-        var pointAdjustmentRequest = PointAdjustmentServiceRequest.builder()
-                .memberSeq(memberSeq)
-                .point(payAmount)
-                .pointProcessStatus(PointProcessStatus.PAYMENT)
-                .build();
-        pointService.pointAdjustment(pointAdjustmentRequest);
     }
 
     public void paymentSuccessHistorySave(List<OrderDetail> list) {

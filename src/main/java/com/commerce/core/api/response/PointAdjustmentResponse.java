@@ -1,27 +1,18 @@
 package com.commerce.core.api.response;
 
-import com.commerce.core.point.service.response.PointAdjustmentServiceResponse;
-import com.commerce.core.point.type.PointProcessStatus;
+import com.commerce.core.point.domain.entity.MemberPoint;
 import lombok.Builder;
-
-import java.time.LocalDateTime;
 
 @Builder
 public record PointAdjustmentResponse(
         Long memberSeq,
-        Long point,
-        Long balancePoint,
-        PointProcessStatus pointProcessStatus,
-        LocalDateTime createDt
+        Long balancePoint
 ) {
 
-    public static PointAdjustmentResponse from(PointAdjustmentServiceResponse response) {
+    public static PointAdjustmentResponse from(MemberPoint memberPoint) {
         return PointAdjustmentResponse.builder()
-                .memberSeq(response.memberSeq())
-                .point(response.point())
-                .balancePoint(response.balancePoint())
-                .pointProcessStatus(response.pointProcessStatus())
-                .createDt(response.createDt())
+                .memberSeq(memberPoint.getMember().getMemberSeq())
+                .balancePoint(memberPoint.getPoint())
                 .build();
     }
 }

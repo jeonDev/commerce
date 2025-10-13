@@ -1,7 +1,5 @@
 package com.commerce.core.api.request;
 
-import com.commerce.core.common.utils.SessionUtils;
-import com.commerce.core.point.service.request.PointAdjustmentServiceRequest;
 import com.commerce.core.point.type.PointProcessStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -17,14 +15,4 @@ public record PointRequest(
         PointProcessStatus pointProcessStatus,
         LocalDateTime createDt
 ) {
-
-    public PointAdjustmentServiceRequest toRequest() {
-        return PointAdjustmentServiceRequest.builder()
-                .memberSeq(SessionUtils.getMemberSeq())
-                .point(point)
-                .balancePoint(balancePoint)
-                .pointProcessStatus(pointProcessStatus)
-                .createDt(createDt)
-                .build();
-    }
 }
