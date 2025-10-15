@@ -6,8 +6,8 @@ import com.commerce.core.common.type.PageListResponse;
 import com.commerce.core.common.type.HttpResponse;
 import com.commerce.core.common.utils.SessionUtils;
 import com.commerce.core.order.facade.OrderFacade;
+import com.commerce.core.order.facade.OrderQueryFacade;
 import com.commerce.core.order.facade.PaymentFacade;
-import com.commerce.core.order.service.OrderViewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderFacade orderFacade;
-    private final OrderViewService orderViewService;
+    private final OrderQueryFacade orderQueryFacade;
     private final PaymentFacade paymentFacade;
 
     @PostMapping("/v1/order")
@@ -45,7 +45,7 @@ public class OrderController {
     public HttpResponse<PageListResponse<?>> selectOrderView(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
                                                              @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
         return HttpResponse.<PageListResponse<?>>builder()
-                .data(orderViewService.selectOrderView(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
+                .data(orderQueryFacade.selectOrderView(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
                 .build();
     }
 
