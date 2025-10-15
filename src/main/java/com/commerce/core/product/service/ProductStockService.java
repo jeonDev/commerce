@@ -8,6 +8,7 @@ import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductStock;
+import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
 import com.commerce.core.product.service.request.ProductViewServiceRequest;
@@ -34,7 +35,7 @@ public class ProductStockService {
     }
 
     @Transactional
-    public ProductStock productStockAdjustment(ProductStockServiceRequest request) {
+    public ProductStockHistory productStockAdjustment(ProductStockServiceRequest request) {
         // 1. Product Exists Check
         var product = productDao.findById(request.productSeq())
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
@@ -52,7 +53,7 @@ public class ProductStockService {
         // 3. Event Send(Product View Mongo DB)
         this.productStockEventSend(product.getProductInfo().getProductInfoSeq(), productStock.getStock(), isConsume);
 
-        return productStock;
+        return productStockHistory;
     }
 
     private ProductStock stockAdjustmentProcess(Product product, boolean isConsume, Long stock) {

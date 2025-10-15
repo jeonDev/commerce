@@ -5,8 +5,8 @@ import com.commerce.core.api.request.PaymentRequest;
 import com.commerce.core.common.type.PageListResponse;
 import com.commerce.core.common.type.HttpResponse;
 import com.commerce.core.common.utils.SessionUtils;
+import com.commerce.core.order.facade.OrderFacade;
 import com.commerce.core.order.facade.PaymentFacade;
-import com.commerce.core.order.service.OrderService;
 import com.commerce.core.order.service.OrderViewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderFacade orderFacade;
     private final OrderViewService orderViewService;
     private final PaymentFacade paymentFacade;
 
@@ -28,8 +28,7 @@ public class OrderController {
     @Operation(summary = "상품 주문", description = "고객이 상품을 주문한다.")
     public HttpResponse<Long> order(@RequestBody OrderRequest request) {
         return HttpResponse.<Long>builder()
-                .data(orderService.order(request.toRequest())
-                        .getOrderSeq())
+                .data(orderFacade.order(request.toRequest()))
                 .build();
     }
 

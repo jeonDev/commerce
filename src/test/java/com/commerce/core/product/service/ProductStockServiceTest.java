@@ -7,6 +7,7 @@ import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
+import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +47,7 @@ class ProductStockServiceTest {
         // given
         ProductStockServiceRequest productStockRequest = ProductStockServiceRequest.builder()
                 .productSeq(1L)
-                .stock(1L)
+                .stock(2L)
                 .productStockProcessStatus(ProductStockProcessStatus.ADD)
                 .build();
 
@@ -65,13 +66,13 @@ class ProductStockServiceTest {
                 .stock(1L)
                 .product(product)
                 .build();
-        Mockito.when(productStockDao.productStockFindById(Mockito.anyLong()))
+        Mockito.when(productStockDao.lockFindById(Mockito.anyLong()))
                 .thenReturn(Optional.of(productStock));
 
         Mockito.doNothing().when(eventSender).send(Mockito.any(EventTopic.class), Mockito.any());
 
         // when
-        ProductStock result = productStockService.productStockAdjustment(productStockRequest);
+        ProductStockHistory result = productStockService.productStockAdjustment(productStockRequest);
 
         // then
         assertThat(result.getStock()).isEqualTo(2L);

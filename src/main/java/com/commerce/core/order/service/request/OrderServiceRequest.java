@@ -13,7 +13,7 @@ public record OrderServiceRequest(
         OrderStatus orderStatus,
         BuyProduct[] buyProducts,
         @JsonProperty("isPayment")
-        boolean payment
+        boolean isPayment
 ) {
 
 }
