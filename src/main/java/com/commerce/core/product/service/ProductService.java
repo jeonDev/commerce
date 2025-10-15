@@ -29,7 +29,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductServiceResponse add(ProductServiceRequest request) {
+    public ProductInfo add(ProductServiceRequest request) {
         // 1. 상품 정보 조회
         var productInfo = this.mergeProductInfo(request);
 
@@ -50,12 +50,7 @@ public class ProductService {
                 .build();
         eventSender.send(EventTopic.SYNC_PRODUCT, productViewDto);
 
-        return ProductServiceResponse.builder()
-                .productInfoSeq(productInfo.getProductInfoSeq())
-                .productName(productInfo.getProductName())
-                .productDetail(productInfo.getProductDetail())
-                .price(productInfo.getPrice())
-                .build();
+        return productInfo;
     }
 
     private ProductInfo mergeProductInfo(ProductServiceRequest request) {

@@ -51,12 +51,12 @@ class ProductServiceTest {
                 .thenReturn(Optional.of(productInfo));
 
         // when
-        ProductServiceResponse result = productService.add(productDto);
+        ProductInfo result = productService.add(productDto);
 
         // then
-        assertThat(result.price()).isEqualTo(productDto.price());
-        assertThat(result.productName()).isEqualTo(productDto.productName());
-        assertThat(result.productDetail()).isEqualTo(productDto.productDetail());
-        assertThat(result.productInfoSeq()).isEqualTo(productDto.productInfoSeq());
+        assertThat(result.getPrice()).isEqualTo(productDto.price());
+        assertThat(result.getProductName()).isEqualTo(productDto.productName());
+        assertThat(result.getProductDetail()).isEqualTo(productDto.productDetail());
+        assertThat(result.getProductInfoSeq()).isEqualTo(productDto.productInfoSeq());
     }
 }
