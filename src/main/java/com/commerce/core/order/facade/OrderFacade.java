@@ -38,10 +38,6 @@ public class OrderFacade {
         // 3. 주문 상품 저장
         List<OrderDetail> orderDetails = orderService.order(order, productStockHistoryList);
 
-        if (request.isPayment()) {
-            // TODO: 결제 이벤트
-        }
-
         return order.getOrderSeq();
     }
 
