@@ -20,8 +20,8 @@ public class KafkaOrderCompleteConsumer extends AbstractEventConsumer<OrderCompl
     @KafkaListener(topics = TOPIC_NAME, groupId = GROUP_ID)
     @Override
     public void listener(Object data) {
+        log.info("[Kakfa] Event Receive : {}", TOPIC_NAME);
         eventExecuteTemplate(data, OrderCompleteEventRequest.class);
-
     }
 
     @Override
