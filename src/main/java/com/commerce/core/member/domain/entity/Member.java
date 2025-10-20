@@ -63,10 +63,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_SEQ", referencedColumnName = "MEMBER_SEQ")
-    private MemberPoint memberPoint;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "OAUTH_TYPE")
     private OAuthType oauthType;

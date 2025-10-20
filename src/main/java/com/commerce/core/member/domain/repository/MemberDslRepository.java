@@ -35,7 +35,8 @@ public class MemberDslRepository {
                         )
                 )
                 .from(member)
-                .leftJoin(member.memberPoint, memberPoint)
+                .leftJoin(memberPoint)
+                    .on(member.memberSeq.eq(memberPoint.memberSeq))
                 .where(member.memberSeq.eq(memberSeq))
                 .fetchOne();
     }
