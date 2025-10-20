@@ -1,16 +1,10 @@
 package com.commerce.core.api.request;
 
-import com.commerce.core.common.utils.SessionUtils;
-import com.commerce.core.order.service.request.PaymentServiceRequest;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public record PaymentRequest(
+        @Schema(description = "주문번호", example = "1")
         Long orderSeq
 ) {
 
-    public PaymentServiceRequest toRequest() {
-        return PaymentServiceRequest.builder()
-                .memberSeq(SessionUtils.getMemberSeq())
-                .orderSeq(orderSeq)
-                .build();
-    }
 }
