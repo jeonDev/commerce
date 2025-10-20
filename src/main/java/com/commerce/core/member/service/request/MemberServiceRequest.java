@@ -22,7 +22,7 @@ public record MemberServiceRequest(
 
     public Member toEntity() {
         return Member.builder()
-                .id(id)
+                .loginId(id)
                 .memberSeq(memberSeq)
                 .name(name)
                 .password(password)

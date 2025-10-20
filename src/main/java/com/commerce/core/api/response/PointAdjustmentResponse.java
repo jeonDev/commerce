@@ -11,7 +11,7 @@ public record PointAdjustmentResponse(
 
     public static PointAdjustmentResponse from(MemberPoint memberPoint) {
         return PointAdjustmentResponse.builder()
-                .memberSeq(memberPoint.getMember().getMemberSeq())
+                .memberSeq(memberPoint.getMemberSeq())
                 .balancePoint(memberPoint.getPoint())
                 .build();
     }

@@ -37,8 +37,8 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public Optional<Member> findByUsingId(String id) {
-        return memberRepository.findByIdAndUseYn(id, "Y");
+    public Optional<Member> findByUsingLoginId(String loginId) {
+        return memberRepository.findByLoginIdAndUseYn(loginId, "Y");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public Optional<Member> findByIdAndOauthType(String id, OAuthType oauthType) {
-        return memberRepository.findByIdAndOauthType(id, oauthType);
+    public Optional<Member> findByLoginIdAndOauthType(String loginId, OAuthType oauthType) {
+        return memberRepository.findByLoginIdAndOauthType(loginId, oauthType);
     }
 }

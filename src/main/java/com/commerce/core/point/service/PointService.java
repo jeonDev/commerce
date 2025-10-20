@@ -35,9 +35,9 @@ public class PointService {
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. Existing Point Find & Point Setting
-        var memberPoint = pointDao.findByMember(member)
+        var memberPoint = pointDao.findByMemberSeqForUpdate(member.getMemberSeq())
                 .orElseGet(() -> MemberPoint.builder()
-                        .member(member)
+                        .memberSeq(member.getMemberSeq())
                         .point(0L)
                         .build()
                 );

@@ -12,8 +12,8 @@ public interface MemberDao {
 
     Optional<Member> findByUsingMemberSeq(Long memberSeq);
 
-    Optional<Member> findByUsingId(String id);
+    Optional<Member> findByUsingLoginId(String id);
 
     MemberInfoDto selectMemberInfo(Long memberSeq);
-    Optional<Member> findByIdAndOauthType(String id, OAuthType oauthType);
+    Optional<Member> findByLoginIdAndOauthType(String id, OAuthType oauthType);
 }

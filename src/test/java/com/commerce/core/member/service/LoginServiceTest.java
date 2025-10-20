@@ -51,12 +51,12 @@ class LoginServiceTest {
         String password = "1234";
 
         Optional<Member> member = Optional.of(Member.builder()
-                        .id("test")
+                        .loginId("test")
                         .password("1234")
                         .passwordFailCount(0L)
                         .build()
         );
-        Mockito.when(memberDao.findByUsingId("test"))
+        Mockito.when(memberDao.findByUsingLoginId("test"))
                         .thenReturn(member);
         Mockito.when(passwordEncoder.matches(Mockito.any(), Mockito.any()))
                         .thenReturn(true);

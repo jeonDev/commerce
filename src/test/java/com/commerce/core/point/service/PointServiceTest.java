@@ -47,9 +47,9 @@ class PointServiceTest {
 
         MemberPoint memberPoint = MemberPoint.builder()
                 .point(10000L)
-                .id(1L)
+                .memberSeq(1L)
                 .build();
-        Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
+        Mockito.when(pointDao.findByMemberSeqForUpdate(Mockito.any(Long.class)))
                 .thenReturn(Optional.of(memberPoint));
         // when
         MemberPoint result = pointService.pointAdjustment(memberSeq, point, pointProcessStatus);
@@ -67,9 +67,9 @@ class PointServiceTest {
 
         MemberPoint memberPoint = MemberPoint.builder()
                 .point(10000L)
-                .id(1L)
+                .memberSeq(1L)
                 .build();
-        Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
+        Mockito.when(pointDao.findByMemberSeqForUpdate(Mockito.any(Long.class)))
                 .thenReturn(Optional.of(memberPoint));
 
         // when
@@ -86,7 +86,7 @@ class PointServiceTest {
         long point = 100L;
         PointProcessStatus pointProcessStatus = PointProcessStatus.CHARGE;
 
-        Mockito.when(pointDao.findByMember(Mockito.any(Member.class)))
+        Mockito.when(pointDao.findByMemberSeqForUpdate(Mockito.any(Long.class)))
                 .thenReturn(Optional.ofNullable(null));
         // when
         MemberPoint result = pointService.pointAdjustment(memberSeq, point, pointProcessStatus);

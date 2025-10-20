@@ -3,7 +3,6 @@ package com.commerce.core.point.domain.entity;
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.point.type.PointProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,12 +21,7 @@ public class MemberPoint extends BaseEntity {
 
     @Id
     @Column(name = "MEMBER_SEQ")
-    private Long id;
-
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_SEQ")
-    private Member member;
+    private Long memberSeq;
 
     @ColumnDefault("0")
     @Column(name = "POINT", nullable = false)
@@ -56,7 +50,7 @@ public class MemberPoint extends BaseEntity {
 
     public PointHistory generateHistoryEntity(Long point, PointProcessStatus status) {
         return PointHistory.builder()
-                .member(this.member)
+                .memberSeq(this.memberSeq)
                 .point(point)
                 .pointProcessStatus(status)
                 .build();

@@ -29,8 +29,8 @@ public class Member extends BaseEntity {
     @Column(name = "MEMBER_SEQ")
     private Long memberSeq;
 
-    @Column(name = "ID", unique = true)
-    private String id;
+    @Column(name = "LOGIN_ID", unique = true)
+    private String loginId;
 
     @Column(name = "PASSWORD")
     private String password;
@@ -63,7 +63,8 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_SEQ", referencedColumnName = "MEMBER_SEQ")
     private MemberPoint memberPoint;
 
     @Enumerated(EnumType.STRING)

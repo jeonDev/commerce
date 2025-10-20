@@ -1,6 +1,5 @@
 package com.commerce.core.point.domain;
 
-import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.point.domain.entity.MemberPoint;
 import com.commerce.core.point.domain.entity.PointHistory;
 import com.commerce.core.point.domain.repository.PointHistoryRepository;
@@ -26,8 +25,8 @@ public class PointDaoImpl implements PointDao {
     }
 
     @Override
-    public Optional<MemberPoint> findByMember(Member member) {
-        return pointRepository.findByMember(member);
+    public Optional<MemberPoint> findByMemberSeqForUpdate(Long memberSeq) {
+        return pointRepository.findByMemberSeqForUpdate(memberSeq);
     }
 
     @Override
@@ -42,11 +41,11 @@ public class PointDaoImpl implements PointDao {
 
     @Override
     public Page<PointHistory> findByMemberPaging(Pageable pageable, Long memberSeq) {
-        return pointHistoryRepository.findByMember_MemberSeq(pageable, memberSeq);
+        return pointHistoryRepository.findByMemberSeq(pageable, memberSeq);
     }
 
     @Override
     public Optional<MemberPoint> findByMemberSeq(Long memberSeq) {
-        return pointRepository.findByMember_MemberSeq(memberSeq);
+        return pointRepository.findByMemberSeq(memberSeq);
     }
 }

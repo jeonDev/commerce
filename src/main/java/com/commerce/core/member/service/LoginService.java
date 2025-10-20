@@ -38,7 +38,7 @@ public class LoginService {
     @Transactional(noRollbackFor = CommerceException.class)
     public LoginServiceResponse login(String id, String password) {
 
-        var member = memberDao.findByUsingId(id)
+        var member = memberDao.findByUsingLoginId(id)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.LOGIN_NOT_EXISTS_ID));
 
         // passwordFailCount >= 5
@@ -51,20 +51,20 @@ public class LoginService {
             log.info("Login Success");
             var accessTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.ACCESS_TOKEN)
-                    .id(member.getId())
+                    .id(member.getLoginId())
                     .build();
             String accessToken = (String) jwtTokenProvider.generateIdentificationInfo(accessTokenVO);
 
             var refreshTokenVO = JwtIdentificationGenerateRequest.builder()
                     .jwtToken(JwtToken.REFRESH_TOKEN)
-                    .id(member.getId())
+                    .id(member.getLoginId())
                     .build();
             String refreshToken = (String) jwtTokenProvider.generateIdentificationInfo(refreshTokenVO);
 
             redisService.setCache(accessToken, refreshToken);
 
             var login = LoginServiceResponse.builder()
-                    .id(member.getId())
+                    .id(member.getLoginId())
                     .name(member.getName())
                     .tel(member.getTel())
                     .addr(member.getAddr())

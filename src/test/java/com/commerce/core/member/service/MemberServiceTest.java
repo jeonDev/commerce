@@ -51,7 +51,7 @@ class MemberServiceTest {
         Member member = memberService.createMember(memberDto);
 
         // then
-        assertThat(member.getId()).isEqualTo(memberDto.id());
+        assertThat(member.getLoginId()).isEqualTo(memberDto.id());
 //        assertThat(member.getPassword()).isEqualTo("9999");
         assertThat(member.getAddr()).isEqualTo(memberDto.addr());
     }

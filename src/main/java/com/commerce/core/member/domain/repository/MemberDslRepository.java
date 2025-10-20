@@ -20,7 +20,7 @@ public class MemberDslRepository {
     public MemberInfoDto selectMemberInfo(Long memberSeq) {
         return dsl.select(Projections.bean(MemberInfoDto.class,
                                 member.memberSeq,
-                                member.id,
+                                member.loginId,
                                 member.name,
                                 member.tel,
                                 member.addr,

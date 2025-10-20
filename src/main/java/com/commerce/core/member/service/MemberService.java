@@ -44,6 +44,6 @@ public class MemberService {
     }
 
     public Optional<Member> findByIdAndOauthType(String id, OAuthType oAuthType) {
-        return memberDao.findByIdAndOauthType(id, oAuthType);
+        return memberDao.findByLoginIdAndOauthType(id, oAuthType);
     }
 }

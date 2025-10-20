@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberDao.findByUsingId(username)
+        Member member = memberDao.findByUsingLoginId(username)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.AUTH_UNAUTHORIZED));
 
         return CustomUserDetails.builder()

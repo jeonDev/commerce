@@ -37,7 +37,7 @@ public class OAuthFacade {
         var optionalMember = memberService.findByIdAndOauthType(oAuthMemberResponse.id(), oAuthType);
         var member = optionalMember.orElseGet(() -> this.oauthCreateMember(oAuthMemberResponse, oAuthType));
 
-        return loginService.login(member.getId(), null);
+        return loginService.login(member.getLoginId(), null);
     }
 
     private Member oauthCreateMember(OAuthMemberResponse oAuthMemberResponse, OAuthType oAuthType) {

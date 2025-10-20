@@ -17,7 +17,7 @@ public record PointAdjustmentServiceResponse(
 
     public static PointAdjustmentServiceResponse from(PointHistory pointHistory) {
         return PointAdjustmentServiceResponse.builder()
-                .memberSeq(pointHistory.getMember().getMemberSeq())
+                .memberSeq(pointHistory.getMemberSeq())
                 .point(pointHistory.getPoint())
                 .pointProcessStatus(pointHistory.getPointProcessStatus())
                 .createDt(pointHistory.getCreateDt())

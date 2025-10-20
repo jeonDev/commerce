@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     
     Optional<Member> findByMemberSeqAndUseYn(Long memberSeq, String useYn);
-    Optional<Member> findByIdAndUseYn(String id, String useYn);
-    Optional<Member> findByIdAndOauthType(String id, OAuthType oauthType);
+    Optional<Member> findByLoginIdAndUseYn(String id, String useYn);
+    Optional<Member> findByLoginIdAndOauthType(String id, OAuthType oauthType);
 }

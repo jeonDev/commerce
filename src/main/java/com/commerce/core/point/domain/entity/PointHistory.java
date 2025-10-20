@@ -1,7 +1,6 @@
 package com.commerce.core.point.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.member.domain.entity.Member;
 import com.commerce.core.point.type.PointProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,9 +21,8 @@ public class PointHistory extends BaseEntity {
     @Column(name = "POINT_HISTORY_SEQ")
     private Long pointHistorySeq;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_SEQ")
-    private Member member;
+    @Column(name = "MEMBER_SEQ")
+    private Long memberSeq;
 
     @Column(name = "POINT")
     private Long point;
