@@ -6,6 +6,7 @@ import com.commerce.core.event.request.OrderCompleteEventRequest;
 import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
+import com.commerce.core.order.domain.entity.OrderDetailHistory;
 import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.type.OrderStatus;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
@@ -32,31 +33,39 @@ public class OrderService {
         this.memberDao = memberDao;
         this.publisher = publisher;
     }
+
     @Transactional
-    public Orders save(Long memberSeq) {
-        // 1. Member Use Check
+    public Orders order(List<ProductStockHistory> productStockHistoryList, Long memberSeq, boolean isPayment) {
+        // 1. 고객 정보 체크
         var member = memberDao.findByUsingMemberSeq(memberSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        // 2. Order
-        return orderDao.save(Orders.builder()
+        // 2. 주문 정보 생성
+        Orders order = orderDao.save(Orders.builder()
                 .member(member)
                 .build());
-    }
 
-    @Transactional
-    public List<OrderDetail> order(Orders order, List<ProductStockHistory> productStockHistoryList, boolean isPayment) {
+        // 3. 주문 상품 정보 생성 & 내역 저장
         List<OrderDetail> orderDetailList = productStockHistoryList.stream()
                 .map(item -> this.orderDetailEntitySetting(item, order))
                 .toList();
 
+        orderDao.orderDetailSaveAll(orderDetailList);
+
+        List<OrderDetailHistory> orderDetailHistoryList = orderDetailList.stream()
+                .map(OrderDetailHistory::from)
+                .toList();
+
+        orderDao.orderDetailHistorySaveAll(orderDetailHistoryList);
+
+        // 4. 주문 완료 이벤트 호출 (트랜잭션 커밋)
         var eventRequest = new OrderCompleteEventRequest(order.getOrderSeq(),
                 order.getMember().getMemberSeq(),
                 isPayment
         );
         publisher.publishEvent(eventRequest);
 
-        return orderDetailList;
+        return order;
     }
 
     private OrderDetail orderDetailEntitySetting(ProductStockHistory productStockHistory, Orders order) {

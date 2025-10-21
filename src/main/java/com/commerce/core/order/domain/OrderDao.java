@@ -15,13 +15,10 @@ public interface OrderDao {
     Orders save(Orders order);
 
     void orderDetailSaveAll(List<OrderDetail> orderDetails);
-    OrderDetail orderDetailSave(OrderDetail orderDetail);
 
     void orderDetailHistorySaveAll(List<OrderDetailHistory> orderDetailHistories);
-    OrderDetailHistory orderDetailHistorySave(OrderDetailHistory orderDetailHistorie);
 
     Optional<Orders> findById(Long orderSeq);
-    Optional<OrderDetail> orderDetailFindById(Long orderDetailSeq);
 
     List<OrderDetail> orderDetailListByOrderSeq(Long orderSeq);
 
@@ -31,7 +28,6 @@ public interface OrderDao {
 
     Page<OrderView> orderViewFindAll(Pageable pageable);
 
-    void paymentHistorySave(PaymentHistory paymentHistory);
     void paymentHistorySaveAll(List<PaymentHistory> paymentHistory);
 
 }

@@ -1,5 +1,6 @@
 package com.commerce.core.order.facade;
 
+import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.service.OrderService;
 import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.order.type.BuyProduct;
@@ -25,16 +26,13 @@ public class OrderFacade {
 
     @Transactional
     public Long order(OrderServiceRequest request) {
-        // 1. 주문 정보 생성
-        var order = orderService.save(request.memberSeq());
-
-        // 2. 상품 재고 검증 및 재고 감소
+        // 1. 상품 재고 검증 및 재고 감소
         var productStockHistoryList = Arrays.stream(request.buyProducts())
                 .map(this::productStockConsume)
                 .toList();
 
-        // 3. 주문 상품 저장
-        orderService.order(order, productStockHistoryList, request.isPayment());
+        // 2. 상품 주문 (주문 정보 생성 & 주문 상품 저장)
+        Orders order = orderService.order(productStockHistoryList, request.memberSeq(), request.isPayment());
 
         return order.getOrderSeq();
     }

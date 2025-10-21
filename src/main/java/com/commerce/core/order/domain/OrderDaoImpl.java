@@ -49,28 +49,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public OrderDetail orderDetailSave(OrderDetail orderDetail) {
-        return orderDetailsRepository.save(orderDetail);
-    }
-
-    @Override
     public void orderDetailHistorySaveAll(List<OrderDetailHistory> orderDetailHistories) {
         orderDetailHistoryRepository.saveAll(orderDetailHistories);
     }
 
     @Override
-    public OrderDetailHistory orderDetailHistorySave(OrderDetailHistory orderDetailHistorie) {
-        return orderDetailHistoryRepository.save(orderDetailHistorie);
-    }
-
-    @Override
     public Optional<Orders> findById(Long orderSeq) {
         return ordersRepository.findById(orderSeq);
-    }
-
-    @Override
-    public Optional<OrderDetail> orderDetailFindById(Long orderDetailSeq) {
-        return orderDetailsRepository.findById(orderDetailSeq);
     }
 
     @Override
@@ -91,11 +76,6 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Page<OrderView> orderViewFindAll(Pageable pageable) {
         return orderViewRepository.findAll(pageable);
-    }
-
-    @Override
-    public void paymentHistorySave(PaymentHistory paymentHistory) {
-        paymentHistoryRepository.save(paymentHistory);
     }
 
     @Override
