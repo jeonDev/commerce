@@ -25,7 +25,6 @@ public class OrderService {
     private final MemberDao memberDao;
     private final ApplicationEventPublisher publisher;
 
-
     public OrderService(OrderDao orderDao,
                         MemberDao memberDao,
                         ApplicationEventPublisher publisher) {
@@ -71,7 +70,7 @@ public class OrderService {
     private OrderDetail orderDetailEntitySetting(ProductStockHistory productStockHistory, Orders order) {
         var product = productStockHistory.getProduct();
         var productInfo = productStockHistory.getProduct().getProductInfo();
-        Long stock = productStockHistory.getStock();
+        Long stock = Math.abs(productStockHistory.getStock());
 
         // 2. Order Detail Setting
         return OrderDetail.builder()
