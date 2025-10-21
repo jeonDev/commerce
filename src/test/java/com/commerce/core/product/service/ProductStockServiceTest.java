@@ -1,7 +1,5 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.event.EventTopic;
-import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
@@ -15,12 +13,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("상품 재고 서비스")
@@ -31,14 +33,14 @@ class ProductStockServiceTest {
     @Mock
     ProductDao productDao;
     @Mock
-    EventSender eventSender;
+    ApplicationEventPublisher publisher;
 
     ProductStockService productStockService;
 
     @BeforeEach
     void setUp() {
         productStockService = new ProductStockService(productStockDao,
-                productDao, eventSender);
+                productDao, publisher);
     }
 
     @Test
@@ -59,17 +61,17 @@ class ProductStockServiceTest {
                 .productOptionCode("A")
                 .productInfo(productInfo)
                 .build();
-        Mockito.when(productDao.findById(Mockito.any()))
+        when(productDao.findById(any()))
                 .thenReturn(Optional.of(product));
 
         ProductStock productStock = ProductStock.builder()
                 .stock(1L)
                 .product(product)
                 .build();
-        Mockito.when(productStockDao.lockFindById(Mockito.anyLong()))
+        when(productStockDao.lockFindById(anyLong()))
                 .thenReturn(Optional.of(productStock));
 
-        Mockito.doNothing().when(eventSender).send(Mockito.any(EventTopic.class), Mockito.any());
+        doNothing().when(publisher).publishEvent(any());
 
         // when
         ProductStockHistory result = productStockService.productStockAdjustment(productStockRequest);

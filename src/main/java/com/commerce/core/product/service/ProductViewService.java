@@ -6,7 +6,7 @@ import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.mongo.ProductView;
-import com.commerce.core.product.service.request.ProductViewServiceRequest;
+import com.commerce.core.event.request.ProductViewEventRequest;
 import com.commerce.core.product.type.ProductOptions;
 import com.commerce.core.product.type.ProductStockSummary;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class ProductViewService {
     }
 
     @Transactional
-    public void merge(ProductViewServiceRequest request) {
+    public void merge(ProductViewEventRequest request) {
         log.info("Event Request : {} {} ", request.productInfoSeq(), request.productViewStatus());
 
         switch (request.productViewStatus()) {

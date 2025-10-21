@@ -1,22 +1,22 @@
 package com.commerce.core.product.service;
 
-import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.request.ProductServiceRequest;
-import com.commerce.core.product.service.response.ProductServiceResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("상품 서비스")
@@ -25,13 +25,13 @@ class ProductServiceTest {
     @Mock
     ProductDao productDao;
     @Mock
-    EventSender eventSender;
+    ApplicationEventPublisher publisher;
 
     ProductService productService;
 
     @BeforeEach
     void setUp() {
-        productService = new ProductService(productDao, eventSender);
+        productService = new ProductService(productDao, publisher);
     }
 
     @Test
@@ -47,7 +47,7 @@ class ProductServiceTest {
                 .build();
 
         ProductInfo productInfo = productDto.requestToEntity();
-        Mockito.when(productDao.findProductInfoById(Mockito.any()))
+        when(productDao.findProductInfoById(any()))
                 .thenReturn(Optional.of(productInfo));
 
         // when

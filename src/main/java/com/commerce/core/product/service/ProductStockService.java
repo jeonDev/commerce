@@ -2,8 +2,6 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.event.EventTopic;
-import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
@@ -11,9 +9,10 @@ import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
-import com.commerce.core.product.service.request.ProductViewServiceRequest;
+import com.commerce.core.event.request.ProductViewEventRequest;
 import com.commerce.core.product.type.ProductViewStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +23,14 @@ public class ProductStockService {
     private final Long STOCK_SOLD_OUT_COUNT = 0L;
     private final ProductStockDao productStockDao;
     private final ProductDao productDao;
-    private final EventSender eventSender;
+    private final ApplicationEventPublisher publisher;
 
     public ProductStockService(ProductStockDao productStockDao,
                                ProductDao productDao,
-                               EventSender eventSender) {
+                               ApplicationEventPublisher publisher) {
         this.productStockDao = productStockDao;
         this.productDao = productDao;
-        this.eventSender = eventSender;
+        this.publisher = publisher;
     }
 
     @Transactional
@@ -91,11 +90,11 @@ public class ProductStockService {
 
         if (!isEventSend) return;
 
-        var productViewDto = ProductViewServiceRequest.builder()
+        var productViewDto = ProductViewEventRequest.builder()
                 .productInfoSeq(productInfoSeq)
                 .productViewStatus(ProductViewStatus.STOCK_ADJUSTMENT)
                 .build();
-        eventSender.send(EventTopic.SYNC_PRODUCT, productViewDto);
+        publisher.publishEvent(productViewDto);
     }
 
     private boolean isEventSendTarget(Long stock) {

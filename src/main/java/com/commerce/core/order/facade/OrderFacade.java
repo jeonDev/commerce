@@ -1,6 +1,5 @@
 package com.commerce.core.order.facade;
 
-import com.commerce.core.event.request.OrderCompleteEventRequest;
 import com.commerce.core.order.service.OrderService;
 import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.order.type.BuyProduct;
@@ -8,7 +7,6 @@ import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.ProductStockService;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +16,11 @@ import java.util.Arrays;
 public class OrderFacade {
     private final OrderService orderService;
     private final ProductStockService productStockService;
-    private final ApplicationEventPublisher publisher;
 
     public OrderFacade(OrderService orderService,
-                       ProductStockService productStockService,
-                       ApplicationEventPublisher publisher) {
+                       ProductStockService productStockService) {
         this.orderService = orderService;
         this.productStockService = productStockService;
-        this.publisher = publisher;
     }
 
     @Transactional
@@ -39,13 +34,8 @@ public class OrderFacade {
                 .toList();
 
         // 3. 주문 상품 저장
-        orderService.order(order, productStockHistoryList);
+        orderService.order(order, productStockHistoryList, request.isPayment());
 
-        var eventRequest = new OrderCompleteEventRequest(order.getOrderSeq(),
-                request.memberSeq(),
-                request.isPayment()
-        );
-        publisher.publishEvent(eventRequest);
         return order.getOrderSeq();
     }
 

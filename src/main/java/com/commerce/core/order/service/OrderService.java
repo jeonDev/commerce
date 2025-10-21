@@ -2,6 +2,7 @@ package com.commerce.core.order.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.event.request.OrderCompleteEventRequest;
 import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
@@ -9,6 +10,7 @@ import com.commerce.core.order.domain.entity.Orders;
 import com.commerce.core.order.type.OrderStatus;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +22,15 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final MemberDao memberDao;
+    private final ApplicationEventPublisher publisher;
+
 
     public OrderService(OrderDao orderDao,
-                        MemberDao memberDao) {
+                        MemberDao memberDao,
+                        ApplicationEventPublisher publisher) {
         this.orderDao = orderDao;
         this.memberDao = memberDao;
+        this.publisher = publisher;
     }
     @Transactional
     public Orders save(Long memberSeq) {
@@ -39,10 +45,18 @@ public class OrderService {
     }
 
     @Transactional
-    public List<OrderDetail> order(Orders order, List<ProductStockHistory> productStockHistoryList) {
-        return productStockHistoryList.stream()
+    public List<OrderDetail> order(Orders order, List<ProductStockHistory> productStockHistoryList, boolean isPayment) {
+        List<OrderDetail> orderDetailList = productStockHistoryList.stream()
                 .map(item -> this.orderDetailEntitySetting(item, order))
                 .toList();
+
+        var eventRequest = new OrderCompleteEventRequest(order.getOrderSeq(),
+                order.getMember().getMemberSeq(),
+                isPayment
+        );
+        publisher.publishEvent(eventRequest);
+
+        return orderDetailList;
     }
 
     private OrderDetail orderDetailEntitySetting(ProductStockHistory productStockHistory, Orders order) {

@@ -2,16 +2,14 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.event.EventTopic;
-import com.commerce.core.event.producer.EventSender;
 import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.request.ProductServiceRequest;
-import com.commerce.core.product.service.response.ProductServiceResponse;
-import com.commerce.core.product.service.request.ProductViewServiceRequest;
+import com.commerce.core.event.request.ProductViewEventRequest;
 import com.commerce.core.product.type.ProductViewStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductDao productDao;
-    private final EventSender eventSender;
+    private final ApplicationEventPublisher publisher;
 
     public ProductService(ProductDao productDao,
-                          EventSender eventSender) {
+                          ApplicationEventPublisher publisher) {
         this.productDao = productDao;
-        this.eventSender = eventSender;
+        this.publisher = publisher;
     }
 
     @Transactional
@@ -44,11 +42,11 @@ public class ProductService {
         productDao.saveAll(list);
 
         // 3. Event Producer Push
-        var productViewDto = ProductViewServiceRequest.builder()
+        var productViewDto = ProductViewEventRequest.builder()
                 .productInfoSeq(productInfo.getProductInfoSeq())
                 .productViewStatus(ProductViewStatus.REGISTER)
                 .build();
-        eventSender.send(EventTopic.SYNC_PRODUCT, productViewDto);
+        publisher.publishEvent(productViewDto);
 
         return productInfo;
     }
