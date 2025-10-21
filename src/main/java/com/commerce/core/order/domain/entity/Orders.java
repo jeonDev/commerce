@@ -1,6 +1,7 @@
 package com.commerce.core.order.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.event.request.OrderCompleteEventRequest;
 import com.commerce.core.member.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,11 @@ public class Orders extends BaseEntity {
     @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
 
+
+    public OrderCompleteEventRequest orderCompleteMakeEventPublisherRequest(boolean isPayment) {
+        return new OrderCompleteEventRequest(this.orderSeq,
+                this.member.getMemberSeq(),
+                isPayment
+        );
+    }
 }

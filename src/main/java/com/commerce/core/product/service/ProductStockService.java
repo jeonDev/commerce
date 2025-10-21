@@ -5,11 +5,11 @@ import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
+import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
-import com.commerce.core.event.request.ProductViewEventRequest;
 import com.commerce.core.product.type.ProductViewStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -50,7 +50,7 @@ public class ProductStockService {
         productStockDao.productStockHistorySave(productStockHistory);
 
         // 3. Event Send(Product View Mongo DB)
-        this.productStockEventSend(product.getProductInfo().getProductInfoSeq(), productStock.getStock(), isConsume);
+        this.productStockEventSend(product.getProductInfo(), productStock.getStock(), isConsume);
 
         return productStockHistory;
     }
@@ -81,7 +81,7 @@ public class ProductStockService {
      *  add -> event Send
      *  consume -> 5 under Event Sends
      */
-    private void productStockEventSend(Long productInfoSeq, Long stock, boolean isConsume) {
+    private void productStockEventSend(ProductInfo productInfo, Long stock, boolean isConsume) {
         boolean isEventSend = true;
 
         if (isConsume) {
@@ -90,11 +90,7 @@ public class ProductStockService {
 
         if (!isEventSend) return;
 
-        var productViewDto = ProductViewEventRequest.builder()
-                .productInfoSeq(productInfoSeq)
-                .productViewStatus(ProductViewStatus.STOCK_ADJUSTMENT)
-                .build();
-        publisher.publishEvent(productViewDto);
+        publisher.publishEvent(productInfo.productMakeEventPublisherRequest(ProductViewStatus.STOCK_ADJUSTMENT));
     }
 
     private boolean isEventSendTarget(Long stock) {

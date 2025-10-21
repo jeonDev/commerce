@@ -58,11 +58,7 @@ public class OrderService {
         orderDao.orderDetailHistorySaveAll(orderDetailHistoryList);
 
         // 4. 주문 완료 이벤트 호출 (트랜잭션 커밋)
-        var eventRequest = new OrderCompleteEventRequest(order.getOrderSeq(),
-                order.getMember().getMemberSeq(),
-                isPayment
-        );
-        publisher.publishEvent(eventRequest);
+        publisher.publishEvent(order.orderCompleteMakeEventPublisherRequest(isPayment));
 
         return order;
     }

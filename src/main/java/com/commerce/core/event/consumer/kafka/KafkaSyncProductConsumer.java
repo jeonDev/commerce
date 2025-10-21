@@ -1,7 +1,7 @@
 package com.commerce.core.event.consumer.kafka;
 
 import com.commerce.core.product.service.ProductViewService;
-import com.commerce.core.event.request.ProductViewEventRequest;
+import com.commerce.core.event.request.ProductEventRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class KafkaSyncProductConsumer extends AbstractEventConsumer<ProductViewEventRequest>  {
+public class KafkaSyncProductConsumer extends AbstractEventConsumer<ProductEventRequest>  {
 
     private final static String TOPIC_NAME = "sync-product";
     private final static String GROUP_ID = "group_1";
@@ -25,11 +25,11 @@ public class KafkaSyncProductConsumer extends AbstractEventConsumer<ProductViewE
     @Override
     public void listener(Object data) {
         log.info("[Kakfa] Event Receive : {}", TOPIC_NAME);
-        eventExecuteTemplate(data, ProductViewEventRequest.class);
+        eventExecuteTemplate(data, ProductEventRequest.class);
     }
 
     @Override
-    public void eventProcess(ProductViewEventRequest request) {
+    public void eventProcess(ProductEventRequest request) {
         log.info(request.toString());
         productViewService.merge(request);
     }

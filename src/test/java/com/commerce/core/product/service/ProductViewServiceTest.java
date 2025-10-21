@@ -4,7 +4,7 @@ import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
-import com.commerce.core.event.request.ProductViewEventRequest;
+import com.commerce.core.event.request.ProductEventRequest;
 import com.commerce.core.product.type.ProductViewStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,10 +41,7 @@ class ProductViewServiceTest {
     @DisplayName("상품 등록 동기화")
     void 상품등록동기화_성공() {
         // given
-        ProductViewEventRequest request = ProductViewEventRequest.builder()
-                .productInfoSeq(1L)
-                .productViewStatus(ProductViewStatus.REGISTER)
-                .build();
+        ProductEventRequest request = new ProductEventRequest(1L, ProductViewStatus.REGISTER);
 
         // when
         productViewService.merge(request);
@@ -56,10 +53,7 @@ class ProductViewServiceTest {
     @DisplayName("상품 재고 동기화")
     void 상품재고동기화_성공() {
         // given
-        ProductViewEventRequest request = ProductViewEventRequest.builder()
-                .productInfoSeq(1L)
-                .productViewStatus(ProductViewStatus.STOCK_ADJUSTMENT)
-                .build();
+        ProductEventRequest request = new ProductEventRequest(1L, ProductViewStatus.STOCK_ADJUSTMENT);
 
         // when
         productViewService.merge(request);

@@ -6,7 +6,6 @@ import com.commerce.core.product.domain.ProductDao;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.service.request.ProductServiceRequest;
-import com.commerce.core.event.request.ProductViewEventRequest;
 import com.commerce.core.product.type.ProductViewStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,11 +41,7 @@ public class ProductService {
         productDao.saveAll(list);
 
         // 3. Event Producer Push
-        var productViewDto = ProductViewEventRequest.builder()
-                .productInfoSeq(productInfo.getProductInfoSeq())
-                .productViewStatus(ProductViewStatus.REGISTER)
-                .build();
-        publisher.publishEvent(productViewDto);
+        publisher.publishEvent(productInfo.productMakeEventPublisherRequest(ProductViewStatus.REGISTER));
 
         return productInfo;
     }

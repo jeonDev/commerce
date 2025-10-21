@@ -1,6 +1,8 @@
 package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.event.request.ProductEventRequest;
+import com.commerce.core.product.type.ProductViewStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +54,10 @@ public class ProductInfo extends BaseEntity {
         this.productName = productName;
         this.productDetail = productDetail;
         this.price = price;
+    }
+
+    public ProductEventRequest productMakeEventPublisherRequest(ProductViewStatus status) {
+        return new ProductEventRequest(this.productInfoSeq, status);
     }
 
 }
