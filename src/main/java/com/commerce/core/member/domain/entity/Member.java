@@ -5,21 +5,16 @@ import com.commerce.core.common.config.security.type.Authority;
 import com.commerce.core.common.utils.DateUtils;
 import com.commerce.core.member.service.request.MemberUpdateServiceRequest;
 import com.commerce.core.member.type.oauth.OAuthType;
-import com.commerce.core.point.domain.entity.MemberPoint;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@Builder
 @Getter
 @Table(name = "MEMBER")
 public class Member extends BaseEntity {
@@ -66,6 +61,34 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "OAUTH_TYPE")
     private OAuthType oauthType;
+
+    public static Member of(
+            String loginId,
+            String password,
+            String name,
+            String tel,
+            String addr,
+            String addrDetail,
+            String zipCode,
+            Authority authority,
+            OAuthType oAuthType
+    ) {
+        return new Member(
+                null,
+                loginId,
+                password,
+                name,
+                tel,
+                addr,
+                addrDetail,
+                zipCode,
+                null,
+                0L,
+                "Y",
+                authority,
+                oAuthType
+        );
+    }
 
     public void setEncryptPassword(String encPassword) {
         this.password = encPassword;

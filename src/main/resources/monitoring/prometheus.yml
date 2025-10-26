@@ -15,7 +15,7 @@ scrape_configs:
   - job_name: "prometheus"
     static_configs:
       - targets:
-          - "prometheus:8011"
+          - "prometheus:8010"
   - job_name: "springboot"
     metrics_path: "/actuator/prometheus"
     scheme: http

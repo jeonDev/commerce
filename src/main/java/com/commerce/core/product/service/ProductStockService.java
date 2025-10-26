@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductStockService {
 
-    private final Long STOCK_SOLD_OUT_COUNT = 0L;
     private final ProductStockDao productStockDao;
     private final ProductDao productDao;
     private final ApplicationEventPublisher publisher;
@@ -62,18 +61,12 @@ public class ProductStockService {
             ProductStock productStock = optionalProductStock.get();
             productStock.inventoryAdjustment(stock);
 
-            if (STOCK_SOLD_OUT_COUNT > productStock.getStock())
-                throw new CommerceException(ExceptionStatus.SOLD_OUT);
-
             return productStock;
         }
 
         if (isConsume) throw new CommerceException(ExceptionStatus.SOLD_OUT);
 
-        return ProductStock.builder()
-                .product(product)
-                .stock(stock)
-                .build();
+        return ProductStock.of(product, stock);
     }
 
     /**

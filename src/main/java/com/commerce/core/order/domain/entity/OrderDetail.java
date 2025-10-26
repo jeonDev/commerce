@@ -4,16 +4,13 @@ import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.order.type.OrderDetailInfo;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.order.type.OrderStatus;
+import com.commerce.core.product.domain.entity.ProductInfo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "ORDER_DETAIL")
 public class OrderDetail extends BaseEntity {
@@ -59,16 +56,31 @@ public class OrderDetail extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
 
-    /**
-     * Order Status Update
-     */
+
+    public static OrderDetail of(Orders order,
+                                 Product product,
+                                 Long cnt) {
+        ProductInfo productInfo = product.getProductInfo();
+        return new OrderDetail(
+                null,
+                order,
+                product,
+                cnt,
+                productInfo.getPrice() * cnt,
+                productInfo.getPrice() * cnt,
+                0L,
+                OrderStatus.NEW_ORDER
+        );
+    }
+
     public void paymentComplete() {
         this.orderStatus = OrderStatus.PAYMENT_COMPLETE;
     }
 
-    /**
-     * 결제 성공 후, 납부 금액에 구매 금액 세팅
-     */
+    public Long getPaymentAmount() {
+        return this.getBuyAmount() - this.getPaidAmount();
+    }
+
     public void paymentSuccessSettingPaidAmount(Long paidAmount) {
         this.paidAmount = paidAmount;
     }

@@ -4,15 +4,11 @@ import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.order.type.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "ORDER_DETAIL_HISTORY")
 public class OrderDetailHistory extends BaseEntity {
@@ -45,13 +41,14 @@ public class OrderDetailHistory extends BaseEntity {
     private OrderStatus orderStatus;
 
     public static OrderDetailHistory from(OrderDetail orderDetail) {
-        return OrderDetailHistory.builder()
-                .orderDetail(orderDetail)
-                .orders(orderDetail.getOrders())
-                .product(orderDetail.getProduct())
-                .cnt(orderDetail.getCnt())
-                .orderStatus(orderDetail.getOrderStatus())
-                .build();
+        return new OrderDetailHistory(
+                null,
+                orderDetail,
+                orderDetail.getOrders(),
+                orderDetail.getProduct(),
+                orderDetail.getCnt(),
+                orderDetail.getOrderStatus()
+        );
     }
 
 }

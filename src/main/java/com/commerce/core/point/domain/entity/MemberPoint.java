@@ -5,16 +5,12 @@ import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.point.type.PointProcessStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "MEMBER_POINT")
 public class MemberPoint extends BaseEntity {
@@ -26,6 +22,10 @@ public class MemberPoint extends BaseEntity {
     @ColumnDefault("0")
     @Column(name = "POINT", nullable = false)
     private Long point;
+
+    public static MemberPoint of(Long memberSeq, Long point) {
+        return new MemberPoint(memberSeq, point);
+    }
 
     public void pointAdjustment(Long point, PointProcessStatus status) {
         if (point <= 0 || status == null) throw new CommerceException(ExceptionStatus.VALID_ERROR);
@@ -49,11 +49,7 @@ public class MemberPoint extends BaseEntity {
     }
 
     public PointHistory generateHistoryEntity(Long point, PointProcessStatus status) {
-        return PointHistory.builder()
-                .memberSeq(this.memberSeq)
-                .point(point)
-                .pointProcessStatus(status)
-                .build();
+        return PointHistory.of(this.memberSeq, point, status);
     }
 
 }

@@ -2,18 +2,14 @@ package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 상품
  */
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "PRODUCT")
 public class Product extends BaseEntity {
@@ -33,5 +29,9 @@ public class Product extends BaseEntity {
     @Column(name = "PRODUCT_OPTION_CODE")
     private String productOptionCode;
 
+    public static Product of(ProductInfo productInfo,
+                             String productOptionCode) {
+        return new Product(null, productInfo, productOptionCode);
+    }
 
 }

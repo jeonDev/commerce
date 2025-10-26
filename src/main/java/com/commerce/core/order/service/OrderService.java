@@ -2,13 +2,11 @@ package com.commerce.core.order.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.event.request.OrderCompleteEventRequest;
 import com.commerce.core.member.domain.MemberDao;
 import com.commerce.core.order.domain.OrderDao;
 import com.commerce.core.order.domain.entity.OrderDetail;
 import com.commerce.core.order.domain.entity.OrderDetailHistory;
 import com.commerce.core.order.domain.entity.Orders;
-import com.commerce.core.order.type.OrderStatus;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -40,9 +38,7 @@ public class OrderService {
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
         // 2. 주문 정보 생성
-        Orders order = orderDao.save(Orders.builder()
-                .member(member)
-                .build());
+        Orders order = orderDao.save(Orders.of(member));
 
         // 3. 주문 상품 정보 생성 & 내역 저장
         List<OrderDetail> orderDetailList = productStockHistoryList.stream()
@@ -65,18 +61,9 @@ public class OrderService {
 
     private OrderDetail orderDetailEntitySetting(ProductStockHistory productStockHistory, Orders order) {
         var product = productStockHistory.getProduct();
-        var productInfo = productStockHistory.getProduct().getProductInfo();
         Long stock = Math.abs(productStockHistory.getStock());
 
         // 2. Order Detail Setting
-        return OrderDetail.builder()
-                .product(product)
-                .cnt(stock)
-                .amount(productInfo.getPrice() * stock)
-                .buyAmount(productInfo.getPrice() * stock)
-                .paidAmount(0L)
-                .orders(order)
-                .orderStatus(OrderStatus.NEW_ORDER)
-                .build();
+        return OrderDetail.of(order, product, stock);
     }
 }

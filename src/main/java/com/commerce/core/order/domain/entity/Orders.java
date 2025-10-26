@@ -4,15 +4,11 @@ import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.event.request.OrderCompleteEventRequest;
 import com.commerce.core.member.domain.entity.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "ORDERS")
 public class Orders extends BaseEntity {
@@ -26,6 +22,9 @@ public class Orders extends BaseEntity {
     @JoinColumn(name = "MEMBER_SEQ")
     private Member member;
 
+    public static Orders of(Member member) {
+        return new Orders(null, member);
+    }
 
     public OrderCompleteEventRequest orderCompleteMakeEventPublisherRequest(boolean isPayment) {
         return new OrderCompleteEventRequest(this.orderSeq,

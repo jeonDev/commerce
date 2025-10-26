@@ -36,11 +36,8 @@ public class PointService {
 
         // 2. Existing Point Find & Point Setting
         var memberPoint = pointDao.findByMemberSeqForUpdate(member.getMemberSeq())
-                .orElseGet(() -> MemberPoint.builder()
-                        .memberSeq(member.getMemberSeq())
-                        .point(0L)
-                        .build()
-                );
+                .orElseGet(() -> MemberPoint.of(member.getMemberSeq(), 0L));
+
         memberPoint.pointAdjustment(point, pointProcessStatus);
         pointDao.memberPointSave(memberPoint);
 

@@ -4,10 +4,7 @@ import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.event.request.ProductEventRequest;
 import com.commerce.core.product.type.ProductViewStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +13,8 @@ import java.util.List;
  * 상품 정보
  */
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "PRODUCT_INFO")
 public class ProductInfo extends BaseEntity {
@@ -49,6 +45,21 @@ public class ProductInfo extends BaseEntity {
     @OneToMany(mappedBy = "productInfo")
     private List<Product> products = new ArrayList<>();
 
+
+    public static ProductInfo of(
+            Long productInfoSeq,
+            String productName,
+            String productDetail,
+            Long price
+    ) {
+        return new ProductInfo(
+                productInfoSeq,
+                productName,
+                productDetail,
+                price,
+                null
+        );
+    }
 
     public void update(String productName, String productDetail, Long price) {
         this.productName = productName;

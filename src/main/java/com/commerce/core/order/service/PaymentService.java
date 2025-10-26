@@ -31,7 +31,7 @@ public class PaymentService {
 
     public Long getPaymentAmount(List<OrderDetail> orderDetails) {
         long payAmount = orderDetails.stream()
-                .mapToLong(item -> item.getBuyAmount() - item.getPaidAmount())
+                .mapToLong(OrderDetail::getPaymentAmount)
                 .sum();
 
         if (payAmount <= 0) {

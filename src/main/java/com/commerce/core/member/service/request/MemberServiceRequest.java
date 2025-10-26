@@ -21,19 +21,16 @@ public record MemberServiceRequest(
 
 
     public Member toEntity() {
-        return Member.builder()
-                .loginId(id)
-                .memberSeq(memberSeq)
-                .name(name)
-                .password(password)
-                .tel(tel)
-                .addr(addr)
-                .addrDetail(addrDetail)
-                .zipCode(zipCode)
-                .passwordFailCount(0L)
-                .authority(Authority.ROLE_USER)
-                .useYn("Y")
-                .oauthType(oAuthType)
-                .build();
+        return Member.of(
+                id,
+                password,
+                name,
+                tel,
+                addr,
+                addrDetail,
+                zipCode,
+                Authority.ROLE_USER,
+                oAuthType
+                );
     }
 }

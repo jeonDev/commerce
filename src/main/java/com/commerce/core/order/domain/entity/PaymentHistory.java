@@ -3,15 +3,11 @@ package com.commerce.core.order.domain.entity;
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.order.type.InoutDivisionStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "PAYMENT_HISTORY")
 public class PaymentHistory extends BaseEntity {
@@ -33,10 +29,11 @@ public class PaymentHistory extends BaseEntity {
     private InoutDivisionStatus inoutDivisionStatus;
 
     public static PaymentHistory from(OrderDetail orderDetail, Long point, InoutDivisionStatus status) {
-        return PaymentHistory.builder()
-                .orderDetail(orderDetail)
-                .point(point)
-                .inoutDivisionStatus(status)
-                .build();
+        return new PaymentHistory(
+                null,
+                orderDetail,
+                point,
+                status
+        );
     }
 }

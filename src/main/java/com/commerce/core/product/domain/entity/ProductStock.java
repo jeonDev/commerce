@@ -1,20 +1,20 @@
 package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.product.type.ProductStockProcessStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "PRODUCT_STOCK")
 public class ProductStock extends BaseEntity {
+
+    private static final Long STOCK_SOLD_OUT_COUNT = 0L;
 
     @Id
     @Column(name = "PRODUCT_SEQ")
@@ -28,20 +28,19 @@ public class ProductStock extends BaseEntity {
     @Column(name = "STOCK")
     private Long stock;
 
-    public ProductStock inventoryAdjustment(Long stock) {
-        this.stock += stock;
-        return this;
+    public static ProductStock of(Product product, Long stock) {
+        return new ProductStock(null, product, stock);
     }
 
-    /**
-     * History Entity Generate
-     */
+    public void inventoryAdjustment(Long stock) {
+        this.stock += stock;
+        if (STOCK_SOLD_OUT_COUNT > this.stock) {
+            throw new CommerceException(ExceptionStatus.SOLD_OUT);
+        }
+    }
+
     public ProductStockHistory generateHistoryEntity(Long stock, ProductStockProcessStatus productStockProcessStatus) {
-        return ProductStockHistory.builder()
-                .product(product)
-                .stock(stock)
-                .productStockProcessStatus(productStockProcessStatus)
-                .build();
+        return ProductStockHistory.of(product, stock, productStockProcessStatus);
     }
 
 }

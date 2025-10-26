@@ -33,10 +33,7 @@ public class ProductService {
         // 2. 상품 save
         var list = request.productOptions()
                 .stream()
-                .map(s -> Product.builder()
-                        .productInfo(productInfo)
-                        .productOptionCode(s)
-                        .build())
+                .map(s -> Product.of(productInfo, s))
                 .toList();
         productDao.saveAll(list);
 
@@ -52,6 +49,7 @@ public class ProductService {
         if (productInfoSeq == null) {
             return productDao.productInfoSave(request.requestToEntity());
         }
+
         // 1-2. 상품 정보 없을 시, 등록 및 세팅
         var productInfo = productDao.findProductInfoById(productInfoSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));

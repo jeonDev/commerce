@@ -15,11 +15,10 @@ public record ProductServiceRequest(
 ) {
 
     public ProductInfo requestToEntity() {
-        return ProductInfo.builder()
-                .productInfoSeq(this.productInfoSeq)
-                .productName(this.productName)
-                .productDetail(this.productDetail)
-                .price(this.price)
-                .build();
+        return ProductInfo.of(this.productInfoSeq,
+                this.productName,
+                this.productDetail,
+                this.price
+        );
     }
 }

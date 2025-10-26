@@ -38,30 +38,17 @@ class OrderViewServiceImplTest {
                 .orderSeq(1L)
                 .build();
 
-        ProductInfo productInfo = ProductInfo.builder()
-                .productInfoSeq(1L)
-                .productName("123")
-                .build();
-        OrderDetail orderDetail1 = OrderDetail.builder()
-                .orderDetailSeq(1L)
-                .orders(Orders.builder().orderSeq(1L).build())
-                .product(Product.builder().productSeq(1L).productInfo(productInfo).build())
-                .cnt(2L)
-                .amount(10000L)
-                .buyAmount(10000L)
-                .paidAmount(0L)
-                .orderStatus(OrderStatus.NEW_ORDER)
-                .build();
-        OrderDetail orderDetail2 = OrderDetail.builder()
-                .orderDetailSeq(1L)
-                .orders(Orders.builder().orderSeq(1L).build())
-                .product(Product.builder().productSeq(2L).productInfo(productInfo).build())
-                .cnt(2L)
-                .amount(15000L)
-                .buyAmount(15000L)
-                .paidAmount(0L)
-                .orderStatus(OrderStatus.NEW_ORDER)
-                .build();
+        ProductInfo productInfo = ProductInfo.of(1L, "123", null, null);
+        OrderDetail orderDetail1 = OrderDetail.of(
+                null,
+                Product.of(productInfo, ""),
+                2L
+        );
+        OrderDetail orderDetail2 = OrderDetail.of(
+                null,
+                Product.of(productInfo, ""),
+                2L
+        );
 
         Mockito.when(orderDao.orderDetailListByOrderSeq(Mockito.anyLong()))
                         .thenReturn(List.of(orderDetail1, orderDetail2));

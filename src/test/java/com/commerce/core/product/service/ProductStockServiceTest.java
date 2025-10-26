@@ -53,21 +53,12 @@ class ProductStockServiceTest {
                 .productStockProcessStatus(ProductStockProcessStatus.ADD)
                 .build();
 
-        ProductInfo productInfo = ProductInfo.builder()
-                .productInfoSeq(1L)
-                .build();
-        Product product = Product.builder()
-                .productSeq(1L)
-                .productOptionCode("A")
-                .productInfo(productInfo)
-                .build();
+        ProductInfo productInfo = ProductInfo.of(1L, null, null, null);
+        Product product = Product.of(productInfo, "A");
         when(productDao.findById(any()))
                 .thenReturn(Optional.of(product));
 
-        ProductStock productStock = ProductStock.builder()
-                .stock(1L)
-                .product(product)
-                .build();
+        ProductStock productStock = ProductStock.of(product, 1L);
         when(productStockDao.lockFindById(anyLong()))
                 .thenReturn(Optional.of(productStock));
 

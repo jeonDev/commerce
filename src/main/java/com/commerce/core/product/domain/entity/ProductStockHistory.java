@@ -3,15 +3,11 @@ package com.commerce.core.product.domain.entity;
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.product.type.ProductStockProcessStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "PRODUCT_STOCK_HISTORY")
 public class ProductStockHistory extends BaseEntity {
@@ -31,4 +27,17 @@ public class ProductStockHistory extends BaseEntity {
     @Column(name = "PRODUCT_STOCK_PROCESS_STATUS")
     @Enumerated(EnumType.ORDINAL)
     private ProductStockProcessStatus productStockProcessStatus;
+
+    public static ProductStockHistory of(
+            Product product,
+            Long stock,
+            ProductStockProcessStatus productStockProcessStatus
+    ) {
+        return new ProductStockHistory(
+                null,
+                product,
+                stock,
+                productStockProcessStatus
+        );
+    }
 }
