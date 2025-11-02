@@ -1,6 +1,6 @@
 package com.commerce.core.product.service.response;
 
-import com.commerce.core.product.domain.entity.mongo.ProductView;
+import com.commerce.core.product.domain.entity.ProductView;
 import com.commerce.core.product.type.ProductOptions;
 import com.commerce.core.product.type.ProductStockSummary;
 import lombok.Builder;

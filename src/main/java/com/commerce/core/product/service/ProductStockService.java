@@ -49,7 +49,7 @@ public class ProductStockService {
         productStockDao.productStockHistorySave(productStockHistory);
 
         // 3. Event Send(Product View Mongo DB)
-        this.productStockEventSend(product.getProductInfo(), productStock.getStock(), isConsume);
+//        this.productStockEventSend(product.getProductInfo(), productStock.getStock(), isConsume);
 
         return productStockHistory;
     }

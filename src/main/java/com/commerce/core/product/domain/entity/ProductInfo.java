@@ -42,8 +42,8 @@ public class ProductInfo extends BaseEntity {
     @Column(name = "PRICE")
     private Long price;
 
-    @OneToMany(mappedBy = "productInfo")
-    private List<Product> products = new ArrayList<>();
+//    @OneToMany(mappedBy = "productInfo")
+//    private List<Product> products = new ArrayList<>();
 
 
     public static ProductInfo of(
@@ -56,8 +56,8 @@ public class ProductInfo extends BaseEntity {
                 productInfoSeq,
                 productName,
                 productDetail,
-                price,
-                null
+                price
+//                null
         );
     }
 

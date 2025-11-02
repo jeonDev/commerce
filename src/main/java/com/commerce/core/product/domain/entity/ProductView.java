@@ -1,4 +1,4 @@
-package com.commerce.core.product.domain.entity.mongo;
+package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.product.type.ProductOptions;
 import com.commerce.core.product.type.ProductStockSummary;

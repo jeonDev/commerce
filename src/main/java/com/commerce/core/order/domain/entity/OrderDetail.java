@@ -60,14 +60,15 @@ public class OrderDetail extends BaseEntity {
     public static OrderDetail of(Orders order,
                                  Product product,
                                  Long cnt) {
-        ProductInfo productInfo = product.getProductInfo();
+//        ProductInfo productInfo = product.getProductInfo();
         return new OrderDetail(
                 null,
                 order,
                 product,
                 cnt,
-                productInfo.getPrice() * cnt,
-                productInfo.getPrice() * cnt,
+//                productInfo.getPrice() * cnt,
+//                productInfo.getPrice() * cnt,
+                0L,0L,
                 0L,
                 OrderStatus.NEW_ORDER
         );
@@ -90,7 +91,7 @@ public class OrderDetail extends BaseEntity {
                 .orderDetailSeq(this.orderDetailSeq)
                 .productSeq(this.product.getProductSeq())
                 .cnt(cnt)
-                .productName(this.product.getProductInfo().getProductName())
+//                .productName(this.product.getProductInfo().getProductName())
                 .amount(this.amount)
                 .buyAmount(this.buyAmount)
                 .paidAmount(this.paidAmount)

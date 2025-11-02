@@ -1,9 +1,10 @@
-package com.commerce.core.product.domain;
+package com.commerce.core.product.infra.dao;
 
+import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
-import com.commerce.core.product.domain.repository.ProductStockHistoryRepository;
-import com.commerce.core.product.domain.repository.ProductStockRepository;
+import com.commerce.core.product.infra.dao.jpa.ProductStockHistoryRepository;
+import com.commerce.core.product.infra.dao.jpa.ProductStockRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

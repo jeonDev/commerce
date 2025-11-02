@@ -1,4 +1,4 @@
-package com.commerce.core.product.domain.repository;
+package com.commerce.core.product.infra.dao.jpa;
 
 import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductStock;

@@ -1,6 +1,6 @@
-package com.commerce.core.product.domain.repository.mongo;
+package com.commerce.core.product.infra.dao.mongo;
 
-import com.commerce.core.product.domain.entity.mongo.ProductView;
+import com.commerce.core.product.domain.entity.ProductView;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

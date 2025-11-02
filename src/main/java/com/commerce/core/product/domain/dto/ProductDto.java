@@ -1,4 +1,4 @@
-package com.commerce.core.product.domain.repository.dsl.dto;
+package com.commerce.core.product.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
