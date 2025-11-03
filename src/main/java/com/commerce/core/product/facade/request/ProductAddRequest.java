@@ -1,6 +1,7 @@
 package com.commerce.core.product.facade.request;
 
 import com.commerce.core.product.domain.entity.*;
+import com.commerce.core.product.domain.type.ProductStatus;
 import lombok.Builder;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
+import com.commerce.core.product.domain.type.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

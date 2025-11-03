@@ -1,7 +1,7 @@
 package com.commerce.core.product.facade;
 
 import com.commerce.core.product.service.ProductStockService;
-import com.commerce.core.product.type.ProductStockProcessStatus;
+import com.commerce.core.product.domain.type.ProductStockProcessStatus;
 import org.springframework.stereotype.Component;
 
 @Component

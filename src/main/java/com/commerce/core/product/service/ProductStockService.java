@@ -5,7 +5,7 @@ import com.commerce.core.common.exception.ExceptionStatus;
 import com.commerce.core.product.domain.ProductOptionDao;
 import com.commerce.core.product.domain.ProductStockHistoryDao;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
-import com.commerce.core.product.type.ProductStockProcessStatus;
+import com.commerce.core.product.domain.type.ProductStockProcessStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

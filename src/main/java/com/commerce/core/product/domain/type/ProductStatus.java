@@ -1,4 +1,4 @@
-package com.commerce.core.product.domain.entity;
+package com.commerce.core.product.domain.type;
 
 public enum ProductStatus {
     ACTIVE,

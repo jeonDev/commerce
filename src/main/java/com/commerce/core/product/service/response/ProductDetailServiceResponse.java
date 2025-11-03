@@ -1,6 +1,6 @@
 package com.commerce.core.product.service.response;
 
-import com.commerce.core.product.type.ProductOptions;
+import com.commerce.core.product.domain.type.ProductOptions;
 import lombok.Builder;
 
 import java.util.List;

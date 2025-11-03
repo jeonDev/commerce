@@ -1,4 +1,4 @@
-package com.commerce.core.product.type;
+package com.commerce.core.product.domain.type;
 
 import lombok.Getter;
 

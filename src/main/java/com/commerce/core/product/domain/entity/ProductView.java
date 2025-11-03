@@ -1,7 +1,7 @@
 package com.commerce.core.product.domain.entity;
 
-import com.commerce.core.product.type.ProductOptions;
-import com.commerce.core.product.type.ProductStockSummary;
+import com.commerce.core.product.domain.type.ProductOptions;
+import com.commerce.core.product.domain.type.ProductStockSummary;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

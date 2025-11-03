@@ -2,7 +2,7 @@ package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.product.type.ProductStockProcessStatus;
+import com.commerce.core.product.domain.type.ProductStockProcessStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

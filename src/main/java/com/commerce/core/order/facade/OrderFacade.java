@@ -6,7 +6,7 @@ import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.order.type.BuyProduct;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.ProductStockService;
-import com.commerce.core.product.type.ProductStockProcessStatus;
+import com.commerce.core.product.domain.type.ProductStockProcessStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

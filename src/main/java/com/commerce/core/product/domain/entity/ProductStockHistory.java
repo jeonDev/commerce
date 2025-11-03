@@ -1,7 +1,7 @@
 package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.product.type.ProductStockProcessStatus;
+import com.commerce.core.product.domain.type.ProductStockProcessStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,17 +1,10 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.product.domain.ProductDao;
-import com.commerce.core.product.domain.entity.Product;
-import com.commerce.core.product.domain.entity.ProductView;
 import com.commerce.core.event.request.ProductEventRequest;
-import com.commerce.core.product.type.ProductOptions;
-import com.commerce.core.product.type.ProductStockSummary;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service

@@ -1,8 +1,8 @@
 package com.commerce.core.product.service.response;
 
 import com.commerce.core.product.domain.entity.ProductView;
-import com.commerce.core.product.type.ProductOptions;
-import com.commerce.core.product.type.ProductStockSummary;
+import com.commerce.core.product.domain.type.ProductOptions;
+import com.commerce.core.product.domain.type.ProductStockSummary;
 import lombok.Builder;
 
 import java.util.List;

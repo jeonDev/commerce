@@ -6,7 +6,6 @@ import com.commerce.core.product.service.response.AdminProductListServiceRespons
 import com.commerce.core.product.service.response.ProductDetailServiceResponse;
 import com.commerce.core.product.service.response.ProductOrderServiceResponse;
 import com.commerce.core.product.service.response.ProductViewServiceResponse;
-import com.commerce.core.product.type.ProductOptions;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
