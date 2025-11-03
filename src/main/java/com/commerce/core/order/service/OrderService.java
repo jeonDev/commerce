@@ -60,10 +60,10 @@ public class OrderService {
     }
 
     private OrderDetail orderDetailEntitySetting(ProductStockHistory productStockHistory, Orders order) {
-        var product = productStockHistory.getProduct();
+        var productOption = productStockHistory.getProductOption();
         Long stock = Math.abs(productStockHistory.getStock());
 
         // 2. Order Detail Setting
-        return OrderDetail.of(order, product, stock);
+        return OrderDetail.of(order, productOption, stock);
     }
 }

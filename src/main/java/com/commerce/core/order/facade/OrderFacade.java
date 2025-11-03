@@ -6,7 +6,6 @@ import com.commerce.core.order.service.request.OrderServiceRequest;
 import com.commerce.core.order.type.BuyProduct;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
 import com.commerce.core.product.service.ProductStockService;
-import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +37,6 @@ public class OrderFacade {
     }
 
     private ProductStockHistory productStockConsume(BuyProduct item) {
-        var request = ProductStockServiceRequest.builder()
-                .productSeq(item.productSeq())
-                .stock(item.cnt())
-                .productStockProcessStatus(ProductStockProcessStatus.CONSUME)
-                .build();
-
-        return productStockService.productStockAdjustment(request);
+        return productStockService.productStockAdjustment(item.productSeq(), ProductStockProcessStatus.CONSUME, item.cnt());
     }
 }

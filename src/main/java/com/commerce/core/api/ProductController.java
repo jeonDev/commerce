@@ -70,7 +70,7 @@ public class ProductController {
     @PostMapping("/admin/stock/adjustment")
     @Operation(summary = "상품 재고 조정", description = "관리자가 상품의 재고를 조정한다.")
     public HttpResponse<Object> productStockAdjustment(@RequestBody ProductStockRequest request) {
-        productStockFacade.adjustment(request.toRequest());
+        productStockFacade.adjustment(request.productSeq(), request.productStockProcessStatus(), request.stock());
         return HttpResponse.builder()
                 .build();
     }

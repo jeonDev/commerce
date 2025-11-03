@@ -1,6 +1,5 @@
 package com.commerce.core.product.domain.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,23 +32,19 @@ public class ProductOption {
     @Column(name = "DESCRIPTION", length = 150)
     private String description;
 
+    @Column(name = "PRICE")
+    private Long price;
+
+    @Column(name = "STOCK")
+    private Long stock;
 
     public static ProductOption of(
             Product product,
             String productOptionName,
-            String description
+            String description,
+            Long price,
+            Long stock
     ) {
-        return new ProductOption(null, product, productOptionName, description);
+        return new ProductOption(null, product, productOptionName, description, price, stock);
     }
-    // 재고 / 상품 가격 어디서?
-    /**
-     * # 고려사항
-     *  - 옵션이 없는 상품
-     *  - 대표 가격 뿌려줘야 하자나.
-     *  - 상품별 할인 / 옵션별 할인
-     *  - 재고의 경우는 재고를 두고 거기에 Product.id / ProductOption.id 이렇게 두는것도 괜찮을 듯.
-     *  - 기타 이벤트
-     *   ㄴ 브랜드별 카테고리별 등등 할인..
-     *  -
-     */
 }

@@ -1,7 +1,6 @@
 package com.commerce.core.product.infra.dao.querydsl;
 
 import com.commerce.core.product.domain.dto.ProductDto;
-import com.commerce.core.product.domain.entity.ProductInfo;
 import com.commerce.core.product.domain.dto.AdminProductListDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.commerce.core.product.domain.entity.QProduct.product;
-import static com.commerce.core.product.domain.entity.QProductInfo.productInfo;
 
 @RequiredArgsConstructor
 @Repository

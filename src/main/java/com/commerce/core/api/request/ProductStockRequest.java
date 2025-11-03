@@ -1,6 +1,5 @@
 package com.commerce.core.api.request;
 
-import com.commerce.core.product.service.request.ProductStockServiceRequest;
 import com.commerce.core.product.type.ProductStockProcessStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
@@ -11,11 +10,4 @@ public record ProductStockRequest(
         @Schema(description = "재고", example = "10") @Min(0) @NotNull Long stock,
         @Schema(description = "재고 추가 차감 여부", example = "0") @NotNull ProductStockProcessStatus productStockProcessStatus
 ) {
-    public ProductStockServiceRequest toRequest() {
-        return ProductStockServiceRequest.builder()
-                .productSeq(productSeq)
-                .stock(stock)
-                .productStockProcessStatus(productStockProcessStatus)
-                .build();
-    }
 }

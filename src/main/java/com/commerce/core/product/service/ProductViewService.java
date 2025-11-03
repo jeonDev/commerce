@@ -1,10 +1,7 @@
 package com.commerce.core.product.service;
 
 import com.commerce.core.product.domain.ProductDao;
-import com.commerce.core.product.domain.ProductStockDao;
 import com.commerce.core.product.domain.entity.Product;
-import com.commerce.core.product.domain.entity.ProductInfo;
-import com.commerce.core.product.domain.entity.ProductStock;
 import com.commerce.core.product.domain.entity.ProductView;
 import com.commerce.core.event.request.ProductEventRequest;
 import com.commerce.core.product.type.ProductOptions;
@@ -21,12 +18,9 @@ import java.util.Optional;
 public class ProductViewService {
 
     private final ProductDao productDao;
-    private final ProductStockDao productStockDao;
 
-    public ProductViewService(ProductDao productDao,
-                              ProductStockDao productStockDao) {
+    public ProductViewService(ProductDao productDao) {
         this.productDao = productDao;
-        this.productStockDao = productStockDao;
     }
 
     @Transactional
@@ -73,7 +67,7 @@ public class ProductViewService {
 //        this.productViewMerge(productInfo, productStockSummary, null);
     }
 
-    private void productViewMerge(ProductInfo productInfo, ProductStockSummary productStockSummary, List<ProductOptions> productOptions) {
+//    private void productViewMerge(ProductInfo productInfo, ProductStockSummary productStockSummary, List<ProductOptions> productOptions) {
 //        productDao.productViewFindByProductInfoSeq(productInfo.getProductInfoSeq())
 //                .ifPresentOrElse(item -> {
 //                    item.productViewSyncUpdate(productInfo.getProductInfoSeq(),
@@ -96,20 +90,20 @@ public class ProductViewService {
 //                            .build();
 //                    productDao.productViewSave(productView);
 //                });
-    }
+//    }
 
-    private ProductStockSummary makingProductStockSummary(List<Product> productList) {
-        Long stock = productList.stream()
-                .mapToLong(product -> {
-                    Optional<ProductStock> optionalProductStock = productStockDao.productStockFindById(product.getProductSeq());
-                    if (optionalProductStock.isPresent()) {
-                        return optionalProductStock.get().getStock();
-                    }
-                    return 0L;
-                })
-                .sum();
-
-        return ProductStockSummary.of(stock);
-    }
+//    private ProductStockSummary makingProductStockSummary(List<Product> productList) {
+//        Long stock = productList.stream()
+//                .mapToLong(product -> {
+//                    Optional<ProductStock> optionalProductStock = productStockDao.productStockFindById(product.getProductSeq());
+//                    if (optionalProductStock.isPresent()) {
+//                        return optionalProductStock.get().getStock();
+//                    }
+//                    return 0L;
+//                })
+//                .sum();
+//
+//        return ProductStockSummary.of(stock);
+//    }
 
 }

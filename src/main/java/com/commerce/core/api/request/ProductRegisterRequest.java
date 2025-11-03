@@ -13,18 +13,20 @@ public record ProductRegisterRequest(
         @Schema(description = "카테고리", example = "1") Long categorySeq,
         @Schema(description = "상품이름", example = "상푸움") @NotNull String productName,
         @Schema(description = "상품 상세 설명", example = "디스크립션") @NotNull String productDescription,
-        @Schema(description = "상품 가격", example = "10000") @Min(0) @NotNull Long price,
-        @Schema(description = "재고", example = "100") @Min(0) @NotNull Long stock,
         @Schema(description = "상품 옵션") @NotNull List<ProductRegisterOptionRequest> productOptions
 ) {
     public record ProductRegisterOptionRequest (
         @Schema(description = "상품 옵션 이름", example = "M") @NotNull String productOptionName,
-        @Schema(description = "상품 옵션 설명", example = "Medium") @NotNull String productOptionDescription
+        @Schema(description = "상품 옵션 설명", example = "Medium") @NotNull String productOptionDescription,
+        @Schema(description = "상품 가격", example = "10000") @Min(0) @NotNull Long price,
+        @Schema(description = "재고", example = "100") @NotNull Long stock
     ) {
         public ProductOptionRequest toOptionsRequest() {
             return ProductOptionRequest.builder()
                     .productOptionName(productOptionName)
                     .productOptionDescription(productOptionDescription)
+                    .stock(stock)
+                    .price(price)
                     .build();
         }
     }
@@ -35,8 +37,6 @@ public record ProductRegisterRequest(
                 .categorySeq(categorySeq)
                 .productName(productName)
                 .productDescription(productDescription)
-                .price(price)
-                .stock(stock)
                 .productOptionRequestList(productOptions.stream()
                         .map(ProductRegisterOptionRequest::toOptionsRequest)
                         .toList())

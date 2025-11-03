@@ -19,10 +19,12 @@ public record ProductAddRequest(
     @Builder
     public record ProductOptionRequest(
             String productOptionName,
-            String productOptionDescription
+            String productOptionDescription,
+            Long stock,
+            Long price
     ) {
         public ProductOption toEntity(Product product) {
-            return ProductOption.of(product, productOptionName, productOptionDescription);
+            return ProductOption.of(product, productOptionName, productOptionDescription, price, stock);
         }
     }
 
