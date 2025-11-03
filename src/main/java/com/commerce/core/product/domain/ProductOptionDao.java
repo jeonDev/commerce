@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface ProductOptionDao {
     ProductOption save(ProductOption productOption);
     Optional<ProductOption> findById(Long productOptionSeq);
+    Optional<ProductOption> findByIdForUpdate(Long productOptionSeq);
 }

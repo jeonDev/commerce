@@ -25,4 +25,9 @@ public class ProductOptionDaoImpl implements ProductOptionDao {
     public Optional<ProductOption> findById(Long productOptionSeq) {
         return productOptionJpaRepository.findById(productOptionSeq);
     }
+
+    @Override
+    public Optional<ProductOption> findByIdForUpdate(Long productOptionSeq) {
+        return productOptionJpaRepository.findByIdForUpdate(productOptionSeq);
+    }
 }

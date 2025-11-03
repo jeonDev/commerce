@@ -1,5 +1,8 @@
 package com.commerce.core.product.domain.entity;
 
+import com.commerce.core.common.exception.CommerceException;
+import com.commerce.core.common.exception.ExceptionStatus;
+import com.commerce.core.product.type.ProductStockProcessStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -46,5 +49,26 @@ public class ProductOption {
             Long stock
     ) {
         return new ProductOption(null, product, productOptionName, description, price, stock);
+    }
+
+    public ProductStockHistory adjustment(ProductStockProcessStatus productStockProcessStatus, Long stock) {
+        if (stock <= 0) {
+            throw new CommerceException(ExceptionStatus.VALID_ERROR);
+        }
+
+        if (productStockProcessStatus == ProductStockProcessStatus.ADD) {
+            this.stock = this.stock + stock;
+        } else if (productStockProcessStatus == ProductStockProcessStatus.CONSUME) {
+            if (this.stock < stock) {
+                throw new CommerceException(ExceptionStatus.SOLD_OUT);
+            }
+            this.stock = this.stock - stock;
+        }
+
+        return ProductStockHistory.of(
+                this,
+                stock,
+                productStockProcessStatus
+        );
     }
 }

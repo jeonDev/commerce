@@ -25,13 +25,14 @@ public class ProductStockService {
 
     @Transactional
     public ProductStockHistory productStockAdjustment(Long productOptionSeq, ProductStockProcessStatus productStockProcessStatus, Long stock) {
-
-        var productOption = productOptionDao.findById(productOptionSeq)
+        var productOption = productOptionDao.findByIdForUpdate(productOptionSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        
+        var productStockHistory = productOption.adjustment(productStockProcessStatus, stock);
+        productOptionDao.save(productOption);
+        productStockHistoryDao.save(productStockHistory);
 
-        return null;
+        return productStockHistory;
     }
 
 }
