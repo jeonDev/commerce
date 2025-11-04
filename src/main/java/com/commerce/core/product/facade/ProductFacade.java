@@ -9,7 +9,7 @@ import com.commerce.core.product.domain.entity.ProductOption;
 import com.commerce.core.product.facade.request.ProductAddRequest;
 import com.commerce.core.product.service.ProductOptionService;
 import com.commerce.core.product.service.ProductService;
-import com.commerce.core.product.service.response.ProductServiceResponse;
+import com.commerce.core.product.facade.response.ProductServiceResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

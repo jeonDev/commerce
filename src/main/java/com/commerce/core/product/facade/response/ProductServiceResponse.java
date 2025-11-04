@@ -1,4 +1,4 @@
-package com.commerce.core.product.service.response;
+package com.commerce.core.product.facade.response;
 
 import lombok.Builder;
 

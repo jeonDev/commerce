@@ -2,18 +2,14 @@ package com.commerce.core.api;
 
 import com.commerce.core.api.request.ProductRegisterRequest;
 import com.commerce.core.api.request.ProductStockRequest;
-import com.commerce.core.api.response.ProductInfoResponse;
-import com.commerce.core.api.response.ProductOrderResponse;
 import com.commerce.core.common.type.PageListResponse;
 import com.commerce.core.common.type.HttpResponse;
 import com.commerce.core.product.facade.ProductFacade;
 import com.commerce.core.product.facade.ProductQueryFacade;
 import com.commerce.core.product.facade.ProductStockFacade;
-import com.commerce.core.product.service.ProductService;
-import com.commerce.core.product.service.ProductStockService;
-import com.commerce.core.product.service.ProductViewService;
-import com.commerce.core.product.service.response.AdminProductListServiceResponse;
-import com.commerce.core.product.service.response.ProductViewServiceResponse;
+import com.commerce.core.product.facade.response.AdminProductListServiceResponse;
+import com.commerce.core.product.facade.response.ProductResponse;
+import com.commerce.core.product.facade.response.ProductViewServiceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -39,23 +35,11 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping("/v2/productInfo/{productInfoSeq}")
-    @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
-    public HttpResponse<ProductInfoResponse> productDetailList(@PathVariable("productInfoSeq") String productInfoSeq) {
-        return HttpResponse.<ProductInfoResponse>builder()
-                .data(ProductInfoResponse.from(
-                        productQueryFacade.selectProductViewDetail(Long.valueOf(productInfoSeq))
-                ))
-                .build();
-    }
-
     @GetMapping("/v2/product/{productSeq}")
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
-    public HttpResponse<ProductOrderResponse> productList(@PathVariable("productSeq") String productSeq) {
-        return HttpResponse.<ProductOrderResponse>builder()
-                .data(ProductOrderResponse.from(
-                        productQueryFacade.selectProductView(Long.valueOf(productSeq))
-                ))
+    public HttpResponse<ProductResponse> productList(@PathVariable("productSeq") String productSeq) {
+        return HttpResponse.<ProductResponse>builder()
+                .data(productQueryFacade.getProduct(Long.valueOf(productSeq)))
                 .build();
     }
 

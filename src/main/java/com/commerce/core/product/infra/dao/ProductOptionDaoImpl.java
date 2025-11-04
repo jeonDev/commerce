@@ -1,10 +1,12 @@
 package com.commerce.core.product.infra.dao;
 
 import com.commerce.core.product.domain.ProductOptionDao;
+import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.product.domain.entity.ProductOption;
 import com.commerce.core.product.infra.dao.jpa.ProductOptionJpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,6 +26,11 @@ public class ProductOptionDaoImpl implements ProductOptionDao {
     @Override
     public Optional<ProductOption> findById(Long productOptionSeq) {
         return productOptionJpaRepository.findById(productOptionSeq);
+    }
+
+    @Override
+    public List<ProductOption> findByProduct(Product product) {
+        return productOptionJpaRepository.findByProduct(product);
     }
 
     @Override
