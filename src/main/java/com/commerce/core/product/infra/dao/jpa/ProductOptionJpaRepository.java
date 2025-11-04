@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -15,5 +16,5 @@ public interface ProductOptionJpaRepository extends JpaRepository<ProductOption,
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({ @QueryHint(name = "javax.persistence.lock.timeout", value = "5000") }) // 5초
     @Query("SELECT p FROM ProductOption p WHERE p.productOptionSeq = :productOptionSeq")
-    Optional<ProductOption> findByIdForUpdate(Long productOptionSeq);
+    Optional<ProductOption> findByIdForUpdate(@Param("productOptionSeq") Long productOptionSeq);
 }
