@@ -2,14 +2,11 @@ package com.commerce.core.api;
 
 import com.commerce.core.api.request.ProductRegisterRequest;
 import com.commerce.core.api.request.ProductStockRequest;
-import com.commerce.core.common.type.PageListResponse;
 import com.commerce.core.common.type.HttpResponse;
 import com.commerce.core.product.facade.ProductFacade;
 import com.commerce.core.product.facade.ProductQueryFacade;
 import com.commerce.core.product.facade.ProductStockFacade;
-import com.commerce.core.product.facade.response.AdminProductListServiceResponse;
 import com.commerce.core.product.facade.response.ProductResponse;
-import com.commerce.core.product.facade.response.ProductViewServiceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,15 +22,6 @@ public class ProductController {
     private final ProductFacade productFacade;
     private final ProductStockFacade productStockFacade;
     private final ProductQueryFacade productQueryFacade;
-
-    @GetMapping("/v2/product/view")
-    @Operation(summary = "상품 목록", description = "고객에게 보여줄 상품 목록을 출력한다. (MongoDB)")
-    public HttpResponse<PageListResponse<ProductViewServiceResponse>> productViewList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
-                                                                                      @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
-        return HttpResponse.<PageListResponse<ProductViewServiceResponse>>builder()
-                .data(productQueryFacade.selectProductViewList(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
-                .build();
-    }
 
     @GetMapping("/v2/product/{productSeq}")
     @Operation(summary = "상품 상세", description = "상품 상세내용을 출력한다.")
@@ -59,11 +47,4 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping("/admin/product/list")
-    public HttpResponse<PageListResponse<AdminProductListServiceResponse>> adminProductList(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) String pageNumber,
-                                                                                            @RequestParam(name = "pageSize", defaultValue = "10", required = false) String pageSize) {
-        return HttpResponse.<PageListResponse<AdminProductListServiceResponse>>builder()
-                .data(productQueryFacade.selectProductList(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
-                .build();
-    }
 }
