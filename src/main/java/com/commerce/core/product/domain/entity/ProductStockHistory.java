@@ -1,7 +1,7 @@
 package com.commerce.core.product.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.product.type.ProductStockProcessStatus;
+import com.commerce.core.product.domain.type.ProductStockProcessStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,12 +14,12 @@ public class ProductStockHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PRODUCT_HISTORY_SEQ")
-    private Long productHistorySeq;
+    @Column(name = "PRODUCT_STOCK_HISTORY_SEQ")
+    private Long productStockHistorySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_SEQ")
-    private Product product;
+    @JoinColumn(name = "PRODUCT_OPTION_SEQ")
+    private ProductOption productOption;
 
     @Column(name = "STOCK")
     private Long stock;
@@ -29,13 +29,13 @@ public class ProductStockHistory extends BaseEntity {
     private ProductStockProcessStatus productStockProcessStatus;
 
     public static ProductStockHistory of(
-            Product product,
+            ProductOption productOption,
             Long stock,
             ProductStockProcessStatus productStockProcessStatus
     ) {
         return new ProductStockHistory(
                 null,
-                product,
+                productOption,
                 stock,
                 productStockProcessStatus
         );

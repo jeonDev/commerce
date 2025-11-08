@@ -2,17 +2,11 @@ package com.commerce.core.product.service;
 
 import com.commerce.core.common.exception.CommerceException;
 import com.commerce.core.common.exception.ExceptionStatus;
-import com.commerce.core.product.domain.ProductDao;
-import com.commerce.core.product.domain.ProductStockDao;
-import com.commerce.core.product.domain.entity.Product;
-import com.commerce.core.product.domain.entity.ProductInfo;
-import com.commerce.core.product.domain.entity.ProductStock;
+import com.commerce.core.product.domain.ProductOptionDao;
+import com.commerce.core.product.domain.ProductStockHistoryDao;
 import com.commerce.core.product.domain.entity.ProductStockHistory;
-import com.commerce.core.product.service.request.ProductStockServiceRequest;
-import com.commerce.core.product.type.ProductStockProcessStatus;
-import com.commerce.core.product.type.ProductViewStatus;
+import com.commerce.core.product.domain.type.ProductStockProcessStatus;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,74 +14,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductStockService {
 
-    private final ProductStockDao productStockDao;
-    private final ProductDao productDao;
-    private final ApplicationEventPublisher publisher;
+    private final ProductOptionDao productOptionDao;
+    private final ProductStockHistoryDao productStockHistoryDao;
 
-    public ProductStockService(ProductStockDao productStockDao,
-                               ProductDao productDao,
-                               ApplicationEventPublisher publisher) {
-        this.productStockDao = productStockDao;
-        this.productDao = productDao;
-        this.publisher = publisher;
+    public ProductStockService(ProductOptionDao productOptionDao,
+                               ProductStockHistoryDao productStockHistoryDao) {
+        this.productOptionDao = productOptionDao;
+        this.productStockHistoryDao = productStockHistoryDao;
     }
 
     @Transactional
-    public ProductStockHistory productStockAdjustment(ProductStockServiceRequest request) {
-        // 1. Product Exists Check
-        var product = productDao.findById(request.productSeq())
+    public ProductStockHistory productStockAdjustment(Long productOptionSeq, ProductStockProcessStatus productStockProcessStatus, Long stock) {
+        var productOption = productOptionDao.findByIdForUpdate(productOptionSeq)
                 .orElseThrow(() -> new CommerceException(ExceptionStatus.ENTITY_IS_EMPTY));
 
-        // 2. Product Stock Adjustment
-        final boolean isConsume = request.productStockProcessStatus() == ProductStockProcessStatus.CONSUME;
-        final Long stock = Math.abs(request.stock()) * (isConsume ? -1 : 1);
-
-        var productStock = this.stockAdjustmentProcess(product, isConsume, stock);
-
-        productStockDao.save(productStock);
-        var productStockHistory = productStock.generateHistoryEntity(stock, request.productStockProcessStatus());
-        productStockDao.productStockHistorySave(productStockHistory);
-
-        // 3. Event Send(Product View Mongo DB)
-        this.productStockEventSend(product.getProductInfo(), productStock.getStock(), isConsume);
+        var productStockHistory = productOption.adjustment(productStockProcessStatus, stock);
+        productOptionDao.save(productOption);
+        productStockHistoryDao.save(productStockHistory);
 
         return productStockHistory;
-    }
-
-    private ProductStock stockAdjustmentProcess(Product product, boolean isConsume, Long stock) {
-        var optionalProductStock = productStockDao.lockFindById(product.getProductSeq());
-
-        if (optionalProductStock.isPresent()) {
-            ProductStock productStock = optionalProductStock.get();
-            productStock.inventoryAdjustment(stock);
-
-            return productStock;
-        }
-
-        if (isConsume) throw new CommerceException(ExceptionStatus.SOLD_OUT);
-
-        return ProductStock.of(product, stock);
-    }
-
-    /**
-     * Product View Event Send
-     *  add -> event Send
-     *  consume -> 5 under Event Sends
-     */
-    private void productStockEventSend(ProductInfo productInfo, Long stock, boolean isConsume) {
-        boolean isEventSend = true;
-
-        if (isConsume) {
-            isEventSend = isEventSendTarget(stock);
-        }
-
-        if (!isEventSend) return;
-
-        publisher.publishEvent(productInfo.productMakeEventPublisherRequest(ProductViewStatus.STOCK_ADJUSTMENT));
-    }
-
-    private boolean isEventSendTarget(Long stock) {
-        return stock.compareTo(5L) <= 0;
     }
 
 }

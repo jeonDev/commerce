@@ -2,9 +2,8 @@ package com.commerce.core.order.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
 import com.commerce.core.order.type.OrderDetailInfo;
-import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.order.type.OrderStatus;
-import com.commerce.core.product.domain.entity.ProductInfo;
+import com.commerce.core.product.domain.entity.ProductOption;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,8 +24,8 @@ public class OrderDetail extends BaseEntity {
     private Orders orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_SEQ")
-    private Product product;
+    @JoinColumn(name = "PRODUCT_OPTION_SEQ")
+    private ProductOption productOption;
 
     @Column(name = "CNT", nullable = false)
     private Long cnt;
@@ -58,16 +57,14 @@ public class OrderDetail extends BaseEntity {
 
 
     public static OrderDetail of(Orders order,
-                                 Product product,
+                                 ProductOption productOption,
                                  Long cnt) {
-        ProductInfo productInfo = product.getProductInfo();
         return new OrderDetail(
                 null,
                 order,
-                product,
+                productOption,
                 cnt,
-                productInfo.getPrice() * cnt,
-                productInfo.getPrice() * cnt,
+                0L,0L,
                 0L,
                 OrderStatus.NEW_ORDER
         );
@@ -88,9 +85,9 @@ public class OrderDetail extends BaseEntity {
     public OrderDetailInfo entityToInfoDto() {
         return OrderDetailInfo.builder()
                 .orderDetailSeq(this.orderDetailSeq)
-                .productSeq(this.product.getProductSeq())
+                .productSeq(this.productOption.getProductOptionSeq())
                 .cnt(cnt)
-                .productName(this.product.getProductInfo().getProductName())
+//                .productName(this.product.getProductInfo().getProductName())
                 .amount(this.amount)
                 .buyAmount(this.buyAmount)
                 .paidAmount(this.paidAmount)

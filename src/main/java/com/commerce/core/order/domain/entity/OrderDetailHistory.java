@@ -1,8 +1,8 @@
 package com.commerce.core.order.domain.entity;
 
 import com.commerce.core.common.entity.BaseEntity;
-import com.commerce.core.product.domain.entity.Product;
 import com.commerce.core.order.type.OrderStatus;
+import com.commerce.core.product.domain.entity.ProductOption;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +27,8 @@ public class OrderDetailHistory extends BaseEntity {
     private Orders orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_SEQ")
-    private Product product;
+    @JoinColumn(name = "PRODUCT_OPTION_SEQ")
+    private ProductOption productOption;
 
     @Column(name = "CNT")
     private Long cnt;
@@ -45,7 +45,7 @@ public class OrderDetailHistory extends BaseEntity {
                 null,
                 orderDetail,
                 orderDetail.getOrders(),
-                orderDetail.getProduct(),
+                orderDetail.getProductOption(),
                 orderDetail.getCnt(),
                 orderDetail.getOrderStatus()
         );
